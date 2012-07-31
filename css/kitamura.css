@@ -1,0 +1,464 @@
+body *{
+ margin:0;
+ padding:0;
+}
+
+body{
+        font-family:'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,Verdana,'ＭＳ Ｐゴシック',sans-serif;
+}
+
+/*
+div{
+ border-top: solid 1px #000000;
+ border-left: solid 1px #000000;
+ border-right: solid 1px #000000;
+}
+*/
+
+/* wrapper */
+div#wrapper{
+ width:1000px;
+ margin:0 auto;
+}
+
+/* navi */
+div#navi{
+ width:980px;
+ margin:0 auto;
+}
+
+/*leftside*/
+div#leftside{
+ width:180px;
+ float:left;
+ padding-left:10px;
+}
+
+/*rightside*/
+div#rightside{
+ width:180px;
+ float:right;
+ padding-right:10px;
+}
+
+/*main*/
+div#main{
+ width:600px;
+ float:left;
+}
+
+/*footer*/
+div#footer{
+ width:980px;
+}
+
+div.clr{
+ clear:both;
+}
+
+div.logo{
+ float:left;
+ width:230px;
+ height:90px;
+}
+
+div.hello{
+ float:left;
+ width:250px;
+ height:50px;
+ margin:20px 10px 0 10px;
+}
+
+div.mininavi{
+ float:left;
+ height:50px;
+ margin:0 0 0 180px;
+}
+
+div.mininavi ul li{
+ font-size:12px;
+}
+div.timesale{
+ width:700px;
+ margin:0px 10px 0px 10px;
+ float:left;
+ font-size:15px;
+}
+
+div#header ul li{
+ display:inline;
+ margin-right:20px;
+}
+
+div#allcate{
+ width:180px;
+ height:35px;
+ padding-top:15px;
+ padding-left:2px;
+ float:left;
+ color:#FFFFFF;
+ background-color:#146EB4;
+ background-color:#3CB371;
+}
+
+div#search{
+ width:780px;
+ height:35px;
+ padding-top:15px;
+ float:left;
+ color:#FFFFFF;
+ background-color:#146EB4;
+ background-color:#3CB371;
+}
+
+div#leftside ul {
+ list-style-type:none;
+}
+
+div#leftside ul li{
+ margin:0 0 2px 0;
+ padding:3px 5px;
+ font-size:15px;
+}
+
+div#leftside ul li a{
+ display:block;
+ text-decoration:none;
+ color:#000000;
+ border:solid 2px #F5F5F5;
+ padding:10px;
+}
+
+div#leftside ul li a img{
+ /*
+ width:96px;
+ height:72px;
+ */
+}
+div#leftside ul li a div.item_sname{
+ height:1.2em;
+ overflow:hidden;
+}
+
+div#main div.event{
+ width:100%;
+ height:200px;
+ border-bottom:1px solid #000000;
+ padding:5px; 
+}
+
+div#main dl.dtgroup {
+ height:5em;
+}
+div#main dl.dtgroup dt{
+ float:left;
+ width:200px;
+}
+
+div#main dl.dtgroup dd{
+ width:400px;
+ float:left;
+}
+
+div#main h3{
+ margin:10px;
+}
+
+/*
+div#main img{
+ float:left;
+ width:200px;
+ height:150px;
+ margin:10px;
+}
+*/
+div#main h4{
+ margin:10px 0px;
+}
+
+div#main div ul{
+ list-style:none;
+ margin:10px;
+}
+
+div#main div dl{
+ margin:10px;
+}
+
+div#main ul{
+ list-style:none;
+}
+
+/*
+div#main ul li{
+ float:left;
+}
+*/
+div.youbi{
+ width:80px;
+ border-top:solid 1px #000000;
+ border-bottom:solid 1px #000000;
+ border-left:solid 1px #000000;
+ float:left;
+ text-align:center;
+}
+
+div.endcolumn{
+ border-right:solid 1px #000000;
+}
+
+div.daily{
+ width:80px;
+ height:120px;
+ border-bottom:solid 1px #000000;
+ border-left:solid 1px #000000;
+ float:left;
+}
+
+div.calendartitle{
+ height:40px;
+ overflow:hidden;
+ font-size:16px;
+ padding:5px;
+}
+
+div.baika{
+ text-align:right;
+}
+span.rate{
+ font-size:32px;
+}
+
+span.tani{
+}
+
+div.item{
+ margin:10px;
+}
+
+div.item a{
+ text-decoration:none;
+ color:#000000;
+}
+div#rightside div.event{
+ width:100%;
+ height:250px;
+ border-bottom:1px solid #000000;
+ padding:5px; 
+}
+div#rightside a{
+ text-decoration:none;
+ color:#000000;
+}
+
+div.calendarright{
+ height:130px;
+}
+
+div.caltitle_r{
+ width:100%;
+ height:40px;
+ font-size:24px;
+ overflow:hidden;
+
+}
+
+div.calbaika_r{
+ text-align:center;
+}
+span.calrate_r{
+ font-size:36px;
+}
+
+div#tirasi ul{
+ list-style:none;
+ width:1000px;;
+}
+
+div#tirasi ul li div{
+ width:80px;
+ float:left;
+ overflow:hidden;
+ height:1em;
+ font-size:0.5em;
+}
+
+/*
+div#tirasiitem ul {
+ width:100%;
+}
+
+div#tirasiitem ul li img{
+ float:left;
+}
+
+div#tirasiitem ul li dl dt{
+ float:left;
+ width:100px;
+}
+*/
+div#tirasiitem ul {
+ list-style:none;
+}
+
+div#tirasiitem ul li div.image_item{
+ width :180px;
+ height:180px;
+ overflow:hidden;
+ float:left;
+ margin:10px;
+ padding:10px;
+ border:solid 2px #F5F5F5;
+}
+
+div#tirasiitem ul li img{
+ /*
+ width :120px;
+ height:120px;
+ */
+ float:left;
+ margin:2px;
+}
+
+div#tirasiitem ul li div.list_item{
+ float:left;
+ width:130px;
+ height:48px;
+ border:1px solid #F5F5F5;
+ margin:2px;
+}
+
+div#tirasiitem div.item{
+ width:125px;
+ height:250px;
+ float:left;
+ border:solid 2px #F5F5F5;
+ padding-left:1px;
+}
+
+div#tirasiitem div.item div.item_medama{
+ width:120px;
+ height:2em;
+ overflow:hidden;
+}
+
+div.item_img{
+ width:120px;
+ height:90px;
+ overflow:hidden;
+}
+
+div#tirasiitem div.item div.item_sname{
+ width:95%;
+ height:3em;
+ overflow:hidden;
+ font-size:14px;
+}
+
+div#tirasiitem div.item div.item_tani{
+ width:95%;
+ height:2em;
+ overflow:hidden;
+ font-size:12px;
+}
+
+div#tirasiitem div.item div.item_baika{
+ text-align:right;
+ font-size:12px;
+ color:#DC143C;
+}
+
+div#tirasiitem div.item div.item_baika span{
+ font-size:40px;
+}
+
+div#tirasiitem div.item div.item_baika_s span{
+ font-size:20px;
+}
+
+div#tirasiitem div.item div.item_lastsale{
+ font-size:12px;
+}
+div.tanpin{
+ width:100%;
+ height:250px;
+ border:2px solid #F5F5F5;
+}
+
+div.tanpin img.tanpin_img{
+ /*
+ width:280px;
+ height:210px;
+ */
+ float:left;
+ margin:10px;
+}
+
+div.tanpin_meisai {
+ width:240px;
+ height:210px;
+ float:left;
+ margin:10px;
+}
+
+div.tanpin_maker{
+ width:100%;
+ height:1.4em;
+ overflow:hidden;
+}
+
+div.tanpin_tani{
+ width:40%;
+ height:2.4em;
+ float:left;
+}
+div.tanpin_baika{
+ width:60%;
+ float:left;
+ text-align:right;
+ color:#DC143C;
+}
+
+div.tanpin_baika span{
+ font-size:48px;
+}
+
+div.notice p{
+ font-size:10px;
+}
+
+div.test{
+ width:280px;
+ height:210px;
+ overflow:hidden;
+ float:left;
+}
+
+div.col1{
+ float        :left;
+ width        :85px;
+ height       :2.4em;
+ border-top   :solid 2px #F5F5F5;
+ border-right :solid 2px #F5F5F5;
+ text-align   :center;
+ font-size    :12px;
+ overflow     :hidden;
+}
+
+div.col1start{
+ border-left  :solid 2px #F5F5F5;
+}
+
+div.row1end{
+ border-bottom:solid 2px #F5F5F5;
+}
+
+div#main div.datazone ul{
+ width:800px;
+ height:600px;
+ overflow:scroll;
+}
+
+div#main div.datazone ul li{
+ width:1500px;
+}

@@ -1,0 +1,324 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="ja">
+ <head>
+  <!-- META系(全ページ共通) -->
+  <meta http-equiv="Content-language" content="ja">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Script-Type" content="text/javascript">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta name="ROBOTS" content="noindex,nofollow">
+  <meta name="description" content="東京都大田区南馬込にある食品スーパーマーケット、スーパーキタムラの公式サイト。年中無休、営業時間AM9:30-PM10:00。">
+  <meta name="keywords" content="キタムラ,スーパーキタムラ,スーパーきたむら,スーパー北村,シェノール,惣菜,パン,お酒,日本酒,焼酎,ワイン,配達">
+
+  <!-- タイトル(ページごとに変更) -->
+  <title>データ更新:食品スーパーマーケット　</title>
+
+  <!-- link(ページごとに変更) -->
+  <link rel="icon" href="../../img/kitamura.ico" type="type/ico" sizes="16x16" /> 
+  <link rel="stylesheet" href="../../css/kitamura.css" /> 
+  <link rel="next" href="" /> <!-- 次のページ -->
+  <link rel="prev" href=""/>  <!-- 前のページ -->
+
+  <!-- スクリプト(全ページ共通) -->
+  <script type="text/javascript" src="../../js/jquery.js"></script>
+  <script type="text/javascript" src="../../js/jquery.upload.js"></script>
+  <script>
+//======================== global変数 ==================//
+var h="div#header";
+var l="div#leftside";
+var r="div#rightside";
+var m="div#main";
+var f="div#footer";
+var bz=m+" div.btnzone";
+var dz=m+" div.datazone";
+//======================== global変数 ==================//
+
+
+//======================== $(function) 開始 ==================//
+$(function(){
+
+ $("#leftside ul li a").click(function(){
+  var cls=$(this).attr("class");
+  Init(cls);
+ });
+});
+//======================== $(function) 終了 ==================//
+
+//======================== Init 開始 ==================//
+function Init(filename){
+ //mainを初期化
+ $(bz).empty();
+ $(dz).empty();
+
+
+ //ボタン追加
+ var btn="<input type='file' name='"+filename+"' enctype='multipart/form-data'>";
+ $(bz).append(btn);
+
+ //イベント追加
+ $(bz+" input[name='"+filename+"']").change(function(){
+  var n=$(this).attr("name");
+  if(n=="calendar")    setCalendarCSV($(this));
+  if(n=="tirasititle") setTirasiTitleCSV($(this));
+  if(n=="tirasiitem")  setTirasiItemCSV($(this));
+  if(n=="tirasiimage") setTirasiImageCSV($(this));
+  if(n=="janmas")      setJanMasCSV($(this));
+ });
+
+}
+//======================== Init 終了 ==================//
+
+
+//======================== setLi 開始 ==================//
+function setLi(json){
+ //初期化
+ $(dz).empty();
+
+ var li="";
+ var msg;
+ //更新結果をセット
+ if(json["status"]) msg="更新しました";
+ else msg="エラーがあります";
+ li+="<li>"+msg+"</li>\n";
+
+ //列名セット
+ li+="<li>";
+ for( var i=0;i<json["local"].length;i++){
+  li+="<div class='col1";
+  if(i==0) li+=" col1start'";
+  li+="'>";
+
+  li+=json["local"][i];
+  li+="</div>";
+ }
+ li+="<div class='clr'></div>";
+ li+="</li>\n";
+
+ //データセット
+ var flg=1;
+
+ var data=json["data"];
+
+ for(var i in data){
+  li+="<li>";
+  for(var j in data[i]){
+   var divcls="";
+   divcls+="<div class='col1";
+   if(j==0) divcls+=" col1start";
+   if(i==data.length-1) divcls+=" row1end";
+   divcls+="'>";
+
+   li+=divcls;
+   li+=data[i][j];
+   li+="</div>";
+  }//for j
+  li+="<div class='clr'></div>";
+  li+="</li>\n";
+ } //for i
+
+ //データ表示
+ $("<ul>").append(li)
+          .appendTo($(dz));
+ 
+}
+//======================== setLi 終了 ==================//
+
+//======================== setCalendarCSV 開始 ==================//
+function setCalendarCSV(elem){
+ //選択したファイルをDBへ更新し表示
+ elem.upload("jsonSetCalendar.php",function(html){
+  //初期化
+  $(dz).empty();
+
+  //エラーチェック
+  if(html.match(/エラー/)){
+   $(dz).append(html);
+   return false;
+  }
+
+  //JSONへ変換
+  var json=eval("("+html+")");
+  if(! json){
+   $(dz).append("データがありません");
+   return false;
+  }
+  
+  //データ表示
+  setLi(json);
+
+ },"html");
+}
+//======================== setCalendarCSV 終了 ==================//
+
+//======================== setTirasiTitleCSV 開始 ==================//
+function setTirasiTitleCSV(elem){
+ //選択したファイルをDBへ更新し表示
+ elem.upload("jsonSetTirasiTitle.php",function(html){
+  //初期化
+  $(dz).empty();
+
+  //エラーチェック
+  if(html.match(/エラー/)){
+   $(dz).append(html);
+   return false;
+  }
+
+  //JSONへ変換
+  var json=eval("("+html+")");
+  if(! json){
+   $(dz).append("データがありません");
+   return false;
+  }
+
+  //データ表示
+  setLi(json);
+
+ },"html");
+}
+//======================== setTirasiTitleCSV 終了 ==================//
+
+//======================== setTirasiItemCSV 開始 ==================//
+function setTirasiItemCSV(elem){
+ //選択したファイルをDBへ更新し表示
+ elem.upload("jsonSetTirasiItem.php",function(html){
+  //エラーチェック
+  if(html.match(/エラー/)){
+   $(dz).append(html);
+   return false;
+  }
+
+  //JSONへ変換
+  var json=eval("("+html+")");
+  if(! json){
+   $(dz).append("データがありません");
+   return false;
+  }
+
+  //データ表示
+  setLi(json);
+
+ },"html");
+}
+//======================== setTirasiItemCSV 終了 ==================//
+
+//======================== setJanMasCSV 開始 ==================//
+function setJanMasCSV(elem){
+}
+//======================== setJanMasCSV 終了 ==================//
+
+//======================== errMsg 開始 ==================//
+function errMsg(html){
+ console.log(html);
+ f.empty()
+  .append(html);
+ return false;
+}
+//======================== errMsg 終了 ==================//
+  </script>
+ </head>
+ <body>
+  <!-- wrapper -->
+  <div id="wrapper">
+
+   <!-- header -->
+   <div id="header">
+
+    <!-- logo -->
+    <div class="logo">
+     <a href="index.html">
+      <img src="../../img/logo2.jpg" alt="スーパーキタムラ">
+     </a>
+    </div>
+    <!-- logo -->
+
+    <!-- hello -->
+    <div class="hello">
+     <p>
+     </p>
+    </div>
+    <!-- hello -->
+
+    <!-- mininavi -->
+    <div class="mininavi">
+     <ul>
+      <li><a href="../../about.html">会社概要</a></li>
+      <li><a href="../../access.html">アクセス</a></li>
+      <li>求人</li>
+      <li><a href="../../sinsotu.html"> 新卒採用</a></li>
+     </ul>
+    </div>
+    <!-- mininavi -->
+
+    <!-- timesale -->
+    <div class="timesale">
+     <ul>
+      <li>本日のおすすめ</li>
+      <li> | </li>
+      <li>今週のチラシ</li>
+      <li> | </li>
+      <li>今月のお買得品</li>
+      <li> | </li>
+      <li>ご注文承り中</li>
+      <li> | </li>
+      <li>サービス</li>
+     </ul>
+    </div>
+    <!-- timesale -->
+     
+   <div class="clr"></div>
+   </div>
+   <!-- header -->
+
+   <!-- navi -->
+   <div id="navi">
+    <!-- allcate -->
+    <div id="allcate">
+    </div>
+    <!-- allcate -->
+
+    <!-- search -->
+    <div id="search">
+    </div>
+    <!-- search -->
+   </div>
+   <!-- navi -->
+
+   <!-- leftside -->
+   <div id="leftside">
+    <ul>
+     <!-- 以下のクラス名はconfig.php内のファイル名定数と
+          合わせる必要がある -->
+     <li><a href="#" class="calendar">カレンダー更新</a></li>
+     <li><a href="#" class="tirasititle">チラシタイトル更新</a></li>
+     <li><a href="#" class="tirasiitem">チラシデータ更新</a></li>
+     <li><a href="#" class="tirasiimage">チラシ画像更新</a></li>
+     <li><a href="#" class="janmas">商品マスタ更新</a></li>
+    </ul>
+   </div>
+   <!-- leftside -->
+
+   <!-- rightside -->
+   <div id="rightside">
+   </div>
+   <!-- rightside -->
+
+   <!-- main -->
+   <div id="main">
+    <div class="btnzone"></div>
+    <div class="datazone"></div>
+   </div>
+   <!-- main -->
+
+   <div class="clr"></div>
+   <!-- footer -->
+   <div id="footer">
+    <h1>footer</h1>
+   </div>
+   <!-- footer -->
+
+  </div>
+  <!-- wrapper -->
+ </body>
+</html>
