@@ -229,6 +229,96 @@ class TIRASI extends DB{
   }//catch
  }//setDataItem
  
+ //---------------------------------------------------------//
+ // 画像選択のためのチラシ商品リストを返す
+ // 返り値:true false
+ //       :$this->items[data]   サイズ変更後の画像パス
+ //       :$this->items[local]  列名
+ //       :$this->items[status] 処理の状態を格納(true false)
+ //---------------------------------------------------------//
+ public function getImageList($tirasi_id){
+  //引数チェック
+  if(! $tirasi_id || ! is_numeric($tirasi_id)){
+   throw new exception("チラシ番号が不正です");
+  }
+
+  //表示する列名をセット
+  $col=array( "tirasi_id"
+              ,"lincode"
+              ,"jcode"
+              ,"sname"
+              ,"maker"
+              ,"tani"
+              ,"baika"
+    );
+
+  //列情報を$this->columnsへ格納
+  foreach($col as $key=>$val){
+   foreach($GLOBALS["TABLES"][TB_ITEMS] as $key1=>$val1){
+    if($val==$key1){
+     $this->columns[$val]=$val1;
+     break;
+    }//if
+   }//foreach
+  }//foreach
+
+  //表示するデータのSQL生成
+  $i=0;
+  foreach($this->columns as $key=>$val){
+   if($i) $this->select.=",";
+   $this->select.=$key;
+   $i++;
+  }//foreach
+  $this->from=TB_ITEMS;
+  $this->where="tirasi_id=".$tirasi_id;
+  $this->group=$this->select;
+  $this->order=$this->select;
+  $this->items["data"]=$this->getArray();
+
+  //表示する列名をセット
+  foreach($this->columns as $key=>$val){
+   $this->items["local"][]=$val["local"];
+  }
+
+  //status更新
+  $this->items["status"]=true;
+  
+  return true;
+ }//getImageList
+
+ //---------------------------------------------------------//
+ // 外部画像ファイルをサイズ変更してimgディレクトリへ保存
+ // 返り値:true false
+ //       :$this->items[data]   サイズ変更後の画像パス
+ //       :$this->items[status] 処理の状態を格納(true false)
+ //---------------------------------------------------------//
+ public function ConvertImage($jcode,$url){
+  if(! is_numeric($jcode)) throw new exception("JANコードが数字ではありません");
+
+  if(! $url) throw new exception("画像取得先アドレスを入力してください");
+
+  //画像取得
+  if(! $img=file_get_contents($url)){
+   throw new exception("画像を取得できませんでした");
+  }
+
+  //画像保存
+  if(! file_put_contents(IMGDIR.$jcode,$img)){
+   throw new exception("画像を保存できませんでした");
+  }
+
+  //shellでコンバート
+  $cmd=escapeshellcmd("convert -geometry 120 ".IMGDIR.$jcode." ".IMGDIR.$jcode.".jpg");
+  exec($cmd,$err);
+
+  if($err) throw new exception("画像変換に失敗しました");
+  
+  $this->items=null;
+  $this->items["data"]=$jcode.".jpg";
+  $this->items["status"]=true;
+
+  return true;
+ }//getImage()
 }//TIRASI
 
 ?>
