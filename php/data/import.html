@@ -53,9 +53,12 @@ function Init(filename){
  $(dz).empty();
 
 
- //ボタン追加
- var btn="<input type='file' name='"+filename+"' enctype='multipart/form-data'>";
- $(bz).append(btn);
+ //ボタン追加(チラシ画像更新を除く)
+ if(filename!="tirasiimage"){
+  var btn="<input type='file' name='"+filename+"' enctype='multipart/form-data'>";
+  $(bz).append(btn);
+ }
+
  if(filename==="janmas"){
   var msg ="1度に更新できるデータはおよそ15000件程度となります。";
       msg+="それ以上の場合はデータを減らして対応してください";
@@ -72,7 +75,7 @@ function Init(filename){
   if(n=="tirasiimage") setTirasiImageCSV($(this));
   if(n=="janmas")      setJanMasCSV($(this));
  });
-
+ 
 }
 //======================== Init 終了 ==================//
 

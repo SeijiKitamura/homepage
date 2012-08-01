@@ -4,9 +4,20 @@
 //  広告系クラス(db.class.phpをスーパークラス)
 //  このクラスを使用するときは必ずtry catchを使用すること
 //----------------------------------------------------------//
-//  メソッド一覧
-//  checkData()     CSVファイルのデータ整合性をチェック
-//  setData()       CSVファイルをDBへ登録
+//メソッド一覧
+//----------------------------------------------------------//
+// データ更新系
+//----------------------------------------------------------//
+//  checkDataTitle()    チラシタイトルのCSVファイルのデータ整合性をチェック
+//  setDataTitle()      チラシタイトルのCSVファイルをDBへ登録
+//  checkDataItem()     チラシアイテムのCSVファイルのデータ整合性をチェック
+//  setDataItem()       チラシアイテムのCSVファイルをDBへ登録
+//  CovertImage()       指定されたURLが画像をゲットしコンバート
+//----------------------------------------------------------//
+// データ表示系
+//----------------------------------------------------------//
+//  getTitleList()      チラシタイトル一覧
+//  getImageList()      指定した単一掲載号のチラシ商品リストを返す
 //----------------------------------------------------------//
 require_once("db.class.php");
 require_once("function.php");
@@ -230,8 +241,58 @@ class TIRASI extends DB{
  }//setDataItem
  
  //---------------------------------------------------------//
- // 画像選択のためのチラシ商品リストを返す
- // 返り値:true false
+ // チラシタイトル一覧を返す
+ // 返り値:true
+ //       :$this->items[data]   サイズ変更後の画像パス
+ //       :$this->items[local]  列名
+ //       :$this->items[status] 処理の状態を格納(true false)
+ //---------------------------------------------------------//
+ function getTitleList(){
+  //引数チェック
+  //表示する列名をセット
+  $col=array( "hiduke"
+             ,"title"
+             ,"view_start"
+             ,"view_end"
+             ,"tirasi_id"
+            );
+
+  //列情報を$this->columnsへ格納
+  foreach($col as $key=>$val){
+   foreach($GLOBALS["TABLES"][TB_TITLES] as $key1=>$val1){
+    if($val==$key1){
+     $this->columns[$val]=$val1;
+     break;
+    }//if
+   }//foreach
+  }//foreach
+  
+  //データ表示用SQL生成
+  $i=0;
+  foreach($this->columns as $key=>$val){
+   if($i) $this->select.=",";
+   $this->select.=$key;
+   $i++;
+  }//foreach
+  $this->from=TB_TITLES;
+  $this->order=$this->select;
+  $this->items["data"]=$this->getArray();
+
+  //表示する列名をセット
+  foreach($this->columns as $key=>$val){
+   $this->items["local"][]=$val["local"];
+  }
+
+  //status更新
+  $this->items["status"]=true;
+  
+  return true;
+ 
+ }//getTitleList()
+
+ //---------------------------------------------------------//
+ // 指定した単一掲載号のチラシ商品リストを返す
+ // 返り値:true
  //       :$this->items[data]   サイズ変更後の画像パス
  //       :$this->items[local]  列名
  //       :$this->items[status] 処理の状態を格納(true false)
@@ -318,7 +379,7 @@ class TIRASI extends DB{
   $this->items["status"]=true;
 
   return true;
- }//getImage()
+ }//ConvertImage()
 }//TIRASI
 
 ?>
