@@ -57,7 +57,53 @@ function Init(filename){
  if(filename!="tirasiimage"){
   var btn="<input type='file' name='"+filename+"' enctype='multipart/form-data'>";
   $(bz).append(btn);
- }
+ }//if
+
+ //SELECTタグ追加(チラシ画像更新のみ)
+ if(filename=="tirasiimage"){
+  var url="jsonGetTitleList.php";
+  var data="";
+  $.get(url,data,function(html){
+   var msg="";
+   if(html.match(/エラー/)){
+    $(bz).empty()
+         .append(html);
+    $(dz).empty();
+    return false;
+   }//if
+
+   //JSON形式に変換
+   var json=eval("("+html+")");
+   if(! json){
+    $(bz).empty()
+         .append("データがありません");
+    $(dz).empty();
+    return false;
+   }//if
+
+   if(! json["status"]){
+    $(bz).empty()
+         .append("原因不明のエラーです。");
+    $(dz).empty();
+    return false;
+   }
+
+   //OPTIONタグ生成
+   var opt="";
+   for(var i in json["data"]){
+    opt+="<option value='"+json["data"][i]["tirasi_id"]+"'>";
+    opt+=json["data"][i]["hiduke"]+" "+json["data"][i]["title"];
+    opt+="</option>\n";
+   }//for
+
+   //SELECTタグ生成
+   $(bz).empty();
+   $("<select>").append(opt)
+                .appendTo($(bz))
+                .change(function(){getImageList($(this).val());});
+   
+  });//$.get
+ }//if
 
  if(filename==="janmas"){
   var msg ="1度に更新できるデータはおよそ15000件程度となります。";
@@ -72,13 +118,94 @@ function Init(filename){
   if(n=="calendar")    setCalendarCSV($(this));
   if(n=="tirasititle") setTirasiTitleCSV($(this));
   if(n=="tirasiitem")  setTirasiItemCSV($(this));
-  if(n=="tirasiimage") setTirasiImageCSV($(this));
+  //if(n=="tirasiimage") setTirasiImageCSV($(this));
   if(n=="janmas")      setJanMasCSV($(this));
  });
  
 }
 //======================== Init 終了 ==================//
 
+//======================== getImageList 開始============//
+function getImageList(tirasi_id){
+ $(dz).empty();
+
+ //引数チェック
+ if(! tirasi_id.match(/^[0-9]+$/)){
+  $(dz).empty
+       .append("チラシ番号が不正です");
+  return false;
+ }
+
+ var url="jsonGetImageList.php";
+ var data={"tirasi_id":tirasi_id};
+ $.get(url,data,function(html){
+  //エラーチェック
+  if(html.match(/エラー/)){
+   $(dz).empty()
+        .append(html);
+   return false;
+  }//if
+  
+  //JSONへ変換
+  var json=eval("("+html+")");
+  if(! json){
+   $(dz).empty()
+        .append("データがありません");
+   return false;
+  }
+
+  var li="";
+
+  //列名セット
+  li+="<li>";
+  li+="<div class='col1 col1start'>画像</div>";
+  for( var i=0;i<json["local"].length;i++){
+   li+="<div class='col1'>";
+   li+=json["local"][i];
+   li+="</div>";
+  }
+  li+="<div class='col1'>画像URL</div>";
+  li+="<div class='clr'></div>";
+  li+="</li>\n";
+
+  //データ生成
+  for(var i in json["data"]){
+   var j=json["data"][i];
+   li+="<li>";
+   li+="<div class='col1 col1start'>";
+   li+="<img src='../../img/"+j["jcode"]+".jpg'>";
+   li+="</div>";
+   li+="<div class='col1'>"+j["lincode"]+"</div>";
+   li+="<div class='col1'>"+j["jcode"]+"</div>";
+   li+="<div class='col1'>"+j["maker"]+"</div>";
+   li+="<div class='col1'>"+j["sname"]+"</div>";
+   li+="<div class='col1'>"+j["tani"]+"</div>";
+   li+="<div class='col1'>"+j["baika"]+"</div>";
+   li+="<div class='col1'>";
+   li+="<input name='"+j["jcode"]+"' type='text'>";
+   li+="</div>";
+   li+="</li>\n";
+   li+="<div class='clr'></div>";
+  }//for
+
+  //データ表示
+  $("<ul>").append(li)
+          .appendTo($(dz));
+  
+  //イベント追加
+  $(dz +" ul li div input").change(function(){
+   setImageUrl($(this));
+  });
+
+ });//$.get
+}//getImageList
+//======================== getImageList 終了============//
+
+//======================== setImageUrl 開始============//
+function setImageUrl(elem){
+ console.log(elem.val());
+}
+//======================== setImageUrl 終了============//
 
 //======================== setLi 開始 ==================//
 function setLi(json){

@@ -13,8 +13,7 @@ try{
  $db=new TIRASI();
  $db->getTitleList();
 
- echo "<pre>";
- print_r($db->items);
+ echo json_encode($db->items);
 
 }//try
 catch(Exception $e){

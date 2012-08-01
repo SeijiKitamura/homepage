@@ -304,11 +304,10 @@ class TIRASI extends DB{
   }
 
   //表示する列名をセット
-  $col=array( "tirasi_id"
-              ,"lincode"
+  $col=array(  "lincode"
               ,"jcode"
-              ,"sname"
               ,"maker"
+              ,"sname"
               ,"tani"
               ,"baika"
     );
