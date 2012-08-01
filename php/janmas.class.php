@@ -65,7 +65,7 @@ class JANMAS extends DB{
   //CSVファイルをゲット
   $this->checkData();             
 
-  if(! $this->items["status"]) return false;
+  //if(! $this->items["status"]) return false;
 
   //エラーフラグ
   $flg=0;
@@ -89,6 +89,11 @@ class JANMAS extends DB{
   try{
    $this->BeginTran();
    for($i=0;$i<count($this->items["data"]);$i++){
+    //エラーデータチェック
+    if($this->items["data"][$i]["err"]!="OK"){
+     $this->items["errdata"][$i]=$this->items["data"][$i];
+     continue;
+    }
     //UPDATEデータ生成
     foreach($this->csvcol as $key=>$val){
      $this->updatecol[$val]=$this->items["data"][$i][$key];

@@ -360,7 +360,13 @@ function setJanMasCSV(elem){
   var msg=json["data"]+"件登録しました";
   $(dz).empty()
        .append(msg);
-  alert(msg);
+
+  //エラーデータがあった場合、表示
+  if(! json["status"]){
+   json["data"]=json["errdata"];
+   setLi(json);
+  }
+  alert("終了しました");
   
  });//elem.upload
 }
