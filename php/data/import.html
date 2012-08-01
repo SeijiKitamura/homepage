@@ -203,7 +203,37 @@ function getImageList(tirasi_id){
 
 //======================== setImageUrl 開始============//
 function setImageUrl(elem){
- console.log(elem.val());
+ //引数チェック
+ var imageurl=elem.val();
+ var jcode=elem.attr("name");
+ var data={"jcode":jcode,"imageurl":imageurl};
+
+ //画像タグゲット
+ var imgtag=elem.parent().siblings().eq(0).find("img");
+
+ //imgディレクトリ
+ var IMGDIR="../../img/";
+
+ if(! imageurl ||! jcode) return false;
+
+ //画像ゲット
+ var url="./jsonSetImageConvert.php";
+ $.get(url,data,function(html){
+  //エラーチェック
+  if(html.match(/エラー/)){
+   elem.val(html);
+   return false;
+  }
+  //JSON化
+  var json=eval("("+html+")");
+  if(! json || ! json["status"]){
+   elem.val("原因不明のエラーです");
+   return false;
+  }
+
+  //画像変更
+  imgtag.attr("src",IMGDIR+json["data"]);
+ });//$.get
 }
 //======================== setImageUrl 終了============//
 

@@ -363,12 +363,12 @@ class TIRASI extends DB{
   }
 
   //画像保存
-  if(! file_put_contents(IMGDIR.$jcode,$img)){
+  if(! file_put_contents(DATADIR.$jcode,$img)){
    throw new exception("画像を保存できませんでした");
   }
 
   //shellでコンバート
-  $cmd=escapeshellcmd("convert -geometry 120 ".IMGDIR.$jcode." ".IMGDIR.$jcode.".jpg");
+  $cmd=escapeshellcmd("convert -geometry 120 ".DATADIR.$jcode." ".IMGDIR.$jcode.".jpg");
   exec($cmd,$err);
 
   if($err) throw new exception("画像変換に失敗しました");
