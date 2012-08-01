@@ -1,12 +1,3 @@
 <?php
-define("test","tess");
-echo test;
-test="a";
-echo test;
+phpinfo();
 ?>
-<jL>
-<LI></LI>
-<li></li>
-</UL>
-
-vta

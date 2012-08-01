@@ -327,6 +327,14 @@ $CSVCOLUMNS=array( TB_CAL   =>array( "hiduke"
                                     ,"saletype"
                                     ,"specialflg"
                                    )//TB_ITEMS
+                  ,TB_JANMAS=>array(
+                                     "jcode"
+                                    ,"clscode"
+                                    ,"sname"
+                                    ,"stdprice"
+                                    ,"price"
+                                    ,"lastsale"
+                                   )//TB_JANMAS
                  );//CSVCOLUMNS
 //---------------------------------------------------//
 

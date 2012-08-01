@@ -33,7 +33,8 @@ class TIRASI extends DB{
   $this->items=null;
 
   //CSVファイルをゲット
-  $this->items["data"]=CHKDATA(TITLECSV,TB_TITLES);//function.php内参照
+  //(入力した値に不正があれば配列[err]にエラーメッセージが付加される)
+  $this->items=CHKDATA(TITLECSV,TB_TITLES);//function.php内参照
   
   return true;
  }// checkDataTitle
@@ -64,7 +65,7 @@ class TIRASI extends DB{
   $this->items=null;
 
   //CSVファイルをゲット
-  $this->items=CHKDATA(TITLECSV,TB_TITLES);//function.php内参照
+  $this->checkDataTitle();
   if(! $this->items["status"]) return false;
    
   //エラーフラグ
