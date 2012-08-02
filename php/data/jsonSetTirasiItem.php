@@ -11,7 +11,7 @@
 require_once("../tirasi.class.php");
 try{
  //アップロードされたファイルを所定ディレクトリへコピー(function.php)
- UPLOADCSV(TITLES); //(function.php)
+ UPLOADCSV(ITEMS); //(function.php)
 
  //インスタンス
  $db=new TIRASI(); //calendar.class.php参照

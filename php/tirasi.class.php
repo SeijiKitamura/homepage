@@ -96,8 +96,8 @@ class TIRASI extends DB{
    throw new exception($msg);
   }//if
 
-  //CSVのチラシ投函日をゲット
-  $hiduke=$this->items["data"][0][$i];
+  //CSVの最初のチラシ番号をゲット
+  $tirasi_id=$this->items["data"][0][$i];
 
   try{
    //トランザクション開始
@@ -105,7 +105,7 @@ class TIRASI extends DB{
 
    //既存データ削除
    $this->from=TB_TITLES;
-   $this->where="hiduke>='".$hiduke."'";
+   $this->where="tirasi_id>='".$tirasi_id."'";
    $this->delete();
    
 
@@ -367,6 +367,7 @@ class TIRASI extends DB{
    throw new exception("画像を保存できませんでした");
   }
 
+  if(! chmod(DATADIR.$jcode,0660)) throw new exception("ファイル属性変更に失敗しました");
   
   //shellでコンバート
   $cmd=escapeshellcmd("convert -geometry 120 ".DATADIR.$jcode." ".IMGDIR.$jcode.".jpg");
@@ -375,7 +376,9 @@ class TIRASI extends DB{
   if($err) throw new exception("画像変換に失敗しました");
 
   //パーミッション変更
-  if(! chmod(DATADIR.$jcode.".jpg",0666)) throw new exception("ファイル所有者変更に失敗しました");
+  if(! file_exists(IMGDIR.$jcode.".jpg")) throw new exception("ファイル変換に失敗しました");
+
+  if(! chmod(IMGDIR.$jcode.".jpg",0660)) throw new exception("ファイル属性変更に失敗しました");
   
   $this->items=null;
   $this->items["data"]=$jcode.".jpg";

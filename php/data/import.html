@@ -221,11 +221,15 @@ function getImageList(tirasi_id){
 function setImageUrl(elem){
  //引数チェック
  var imageurl=elem.val();
- var jcode=elem.attr("name");
+ var jcode=elem.attr("name").match(/[0-9]+/)[0];
  var data={"jcode":jcode,"imageurl":imageurl};
 
  //画像タグゲット
- var imgtag=elem.parent().siblings().eq(0).find("img");
+ var imgtag=elem.parent()
+                .parent()
+                .parent()
+                .find("img");
+                //.siblings().eq(0).find("img");
 
  //imgディレクトリ
  var IMGDIR="../../img/";
@@ -248,7 +252,8 @@ function setImageUrl(elem){
   }
 
   //画像変更
-  imgtag.attr("src",IMGDIR+json["data"]);
+  var tstamp=new Date().getTime();
+  imgtag.attr("src",IMGDIR+json["data"]+"?"+tstamp);
  });//$.get
 }
 //======================== setImageUrl 終了============//
