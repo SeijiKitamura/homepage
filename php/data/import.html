@@ -90,6 +90,7 @@ function Init(filename){
 
    //OPTIONタグ生成
    var opt="";
+   opt+="<option value='999999999'>チラシを選択してください</option>\n";
    for(var i in json["data"]){
     opt+="<option value='"+json["data"][i]["tirasi_id"]+"'>";
     opt+=json["data"][i]["hiduke"]+" "+json["data"][i]["title"];
@@ -136,6 +137,7 @@ function getImageList(tirasi_id){
   return false;
  }
 
+ if(! tirasi_id) return false;
  var url="jsonGetImageList.php";
  var data={"tirasi_id":tirasi_id};
  $.get(url,data,function(html){
@@ -156,45 +158,57 @@ function getImageList(tirasi_id){
 
   var li="";
 
-  //列名セット
-  li+="<li>";
-  li+="<div class='col1 col1start'>画像</div>";
-  for( var i=0;i<json["local"].length;i++){
-   li+="<div class='col1'>";
-   li+=json["local"][i];
-   li+="</div>";
-  }
-  li+="<div class='col1'>画像URL</div>";
-  li+="<div class='clr'></div>";
-  li+="</li>\n";
-
   //データ生成
   for(var i in json["data"]){
    var j=json["data"][i];
    li+="<li>";
-   li+="<div class='col1 col1start'>";
+   li+="<div class='col2block'>";
    li+="<img src='../../img/"+j["jcode"]+".jpg'>";
+   li+="</div>\n";
+
+   li+="<div class='col3block'>";
+   li+="<div class=''>"+j["maker"]+"</div>";
+   li+="<div class=''>"+j["sname"]+"</div>";
+   li+="<div class=''>JAN:"+j["jcode"]+"</div>";
+   li+="<div class=''>"+j["tani"]+" "+j["baika"]+"</div>";
+   li+="</div>\n";
+
+   li+="<div class='col3block'>";
+   li+="<div class=''>画像URL:<input type='text' name='url_"+j["jcode"]+"'></div>";
+   li+="<div class=''>";
+   li+="<input type='file' value='アップロード' name='upload_"+j["jcode"]+"' enctype='multipart/form-data'>";
    li+="</div>";
-   li+="<div class='col1'>"+j["lincode"]+"</div>";
-   li+="<div class='col1'>"+j["jcode"]+"</div>";
-   li+="<div class='col1'>"+j["maker"]+"</div>";
-   li+="<div class='col1'>"+j["sname"]+"</div>";
-   li+="<div class='col1'>"+j["tani"]+"</div>";
-   li+="<div class='col1'>"+j["baika"]+"</div>";
-   li+="<div class='col1'>";
-   li+="<input name='"+j["jcode"]+"' type='text'>";
+   li+="<div class=''>";
+   li+="<input type='button' value='この画像を削除する' name='del_"+j["jcode"]+"'>";
    li+="</div>";
-   li+="</li>\n";
+   li+="</div>\n";
+
    li+="<div class='clr'></div>";
+
+   li+="</li>\n";
   }//for
 
   //データ表示
   $("<ul>").append(li)
           .appendTo($(dz));
   
-  //イベント追加
-  $(dz +" ul li div input").change(function(){
+  //画像URL イベント追加
+  $(dz +" ul li div.col3block div input[name^='url_']").change(function(){
+   alert($(this).val());
+   return;
    setImageUrl($(this));
+  });
+
+  //ファイル選択 イベント追加
+  $(dz +" ul li div.col3block div input[name^='upload_']").change(function(){
+   alert($(this).val());
+   return;
+  });
+
+  //削除 イベント追加
+  $(dz +" ul li div.col3block div input[name^='del_']").click(function(){
+   alert($(this).val());
+   return;
   });
 
  });//$.get

@@ -453,6 +453,35 @@ div.row1end{
  border-bottom:solid 2px #F5F5F5;
 }
 
+
+div.col2block{
+ width        :120px;
+ height       :90px;
+ border-top   :solid 2px #F5F5F5;
+ border-right :solid 2px #F5F5F5;
+ overflow     :hidden;
+ float:left;
+}
+
+div.col3block{
+ width        :230px;
+ height       :90px;
+ border-top   :solid 2px #F5F5F5;
+ border-right :solid 2px #F5F5F5;
+ overflow     :hidden;
+ float:left;
+}
+
+div.col2img{
+ width        :200px;
+ height       :150px;
+ border-top   :solid 2px #F5F5F5;
+ border-right :solid 2px #F5F5F5;
+ overflow     :hidden;
+ float        :left;
+}
+
+
 div#main div.datazone ul{
  width:800px;
  height:600px;
@@ -462,3 +491,4 @@ div#main div.datazone ul{
 div#main div.datazone ul li{
  width:1500px;
 }
+
