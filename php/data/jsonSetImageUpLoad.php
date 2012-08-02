@@ -28,6 +28,9 @@ try{
 
  if($err) throw new exception("画像変換に失敗しました");
 
+ //ファイル所有者変更
+ if(! chmod(IMGDIR.$jcode.".jpg",0666)) throw new exception("ファイル所有者変更に失敗しました");
+
  echo $jcode.".jpg";
 }
 catch(Exception $e){

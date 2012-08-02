@@ -367,11 +367,15 @@ class TIRASI extends DB{
    throw new exception("画像を保存できませんでした");
   }
 
+  
   //shellでコンバート
   $cmd=escapeshellcmd("convert -geometry 120 ".DATADIR.$jcode." ".IMGDIR.$jcode.".jpg");
   exec($cmd,$err);
 
   if($err) throw new exception("画像変換に失敗しました");
+
+  //パーミッション変更
+  if(! chmod(DATADIR.$jcode.".jpg",0666)) throw new exception("ファイル所有者変更に失敗しました");
   
   $this->items=null;
   $this->items["data"]=$jcode.".jpg";

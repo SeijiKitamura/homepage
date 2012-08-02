@@ -131,7 +131,7 @@ function UPLOADCSV($file){
  if(! file_put_contents($filepath,$data)) throw new exception("ファイルの保存に失敗しました"); 
 
  //パーミッション変更確認
- if(! chmod($filepath,0644)) throw new exception("ファイル所有者変更に失敗しました");
+ if(! chmod($filepath,0666)) throw new exception("ファイル所有者変更に失敗しました");
 
 
  return true;
@@ -156,7 +156,7 @@ function UPLOADIMAGE($jcode){
  if(! $data=file_get_contents($work)) throw new exception("ファイル読み込みに失敗しました");
 
  //パーミッション変更確認
- if(! chmod($work,0644)) throw new exception("ファイル所有者変更に失敗しました");
+ if(! chmod($work,0666)) throw new exception("ファイル所有者変更に失敗しました");
 
  return $work;
 }
