@@ -176,6 +176,8 @@ function getImageList(tirasi_id){
    li+="<div class='col3block'>";
    li+="<div class=''>画像URL:<input type='text' name='url_"+j["jcode"]+"'></div>";
    li+="<div class=''>";
+   //以下のname属性を変更する場合、jsonSetImageUpLoad.phpの$_FILESも
+   //変更してください
    li+="<input type='file' value='アップロード' name='upload_"+j["jcode"]+"' enctype='multipart/form-data'>";
    li+="</div>";
    li+="<div class=''>";
@@ -194,15 +196,12 @@ function getImageList(tirasi_id){
   
   //画像URL イベント追加
   $(dz +" ul li div.col3block div input[name^='url_']").change(function(){
-   alert($(this).val());
-   return;
    setImageUrl($(this));
   });
 
   //ファイル選択 イベント追加
   $(dz +" ul li div.col3block div input[name^='upload_']").change(function(){
-   alert($(this).val());
-   return;
+   setImageUpLoad($(this));
   });
 
   //削除 イベント追加
@@ -415,6 +414,28 @@ function setJanMasCSV(elem){
  });//elem.upload
 }
 //======================== setJanMasCSV 終了 ==================//
+
+function setImageUpLoad(elem){
+ var jcode=elem.attr("name").match(/[0-9]+/)[0];
+ var data={"jcode":jcode};
+ console.log(jcode);
+ elem.upload("jsonSetImageUpLoad.php",data,function(html){
+  //エラーチェック
+  if(html.match(/エラー/)){
+   elem.after(html);
+   return false;
+  }
+
+  //ブラウザごまかすための適当な文字列をセット
+  var timestamp=new Date().getTime();
+
+  elem.parent()
+      .parent()
+      .parent()
+      .find("img")
+      .attr("src","../../img/"+html+"?"+timestamp);
+ },"html");
+}
 
 //======================== errMsg 開始 ==================//
 function errMsg(html){

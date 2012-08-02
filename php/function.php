@@ -119,7 +119,6 @@ function UPLOADCSV($file){
   throw new exception("ファイルアップロードに失敗しました");
  }
 
-
  //ファイル読み込み
  if(! $data=file_get_contents($filepath)) throw new exception("ファイル読み込みに失敗しました");
  //文字コード変換
@@ -138,7 +137,29 @@ function UPLOADCSV($file){
  return true;
 }//UPLOADCSV
 
+//-------------------------------------------//
+//        Imageアップロード                  //
+// アップロードされたファイルを
+// ファイル名$jcode 拡張子なしでとりあえず保存。
+//-------------------------------------------//
+function UPLOADIMAGE($jcode){
 
+ //作業ディレクトリ
+ $work=DATADIR.$jcode;
+
+ //アップロードされたファイルを所定ディレクトリへコピー
+ if(! move_uploaded_file($_FILES["upload_".$jcode]["tmp_name"],$work)){
+  throw new exception("ファイルアップロードに失敗しました");
+ }
+
+ //ファイル読み込み
+ if(! $data=file_get_contents($work)) throw new exception("ファイル読み込みに失敗しました");
+
+ //パーミッション変更確認
+ if(! chmod($work,0644)) throw new exception("ファイル所有者変更に失敗しました");
+
+ return $work;
+}
 
 $ary=array("test"=>1,
            "last"=>3);
