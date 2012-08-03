@@ -52,9 +52,6 @@ div#footer{
  width:980px;
 }
 
-div.clr{
- clear:both;
-}
 
 div.logo{
  float:left;
@@ -270,6 +267,7 @@ span.calrate_r{
  font-size:36px;
 }
 
+/*
 div#tirasi ul{
  list-style:none;
  width:1000px;;
@@ -283,7 +281,6 @@ div#tirasi ul li div{
  font-size:0.5em;
 }
 
-/*
 div#tirasiitem ul {
  width:100%;
 }
@@ -297,8 +294,43 @@ div#tirasiitem ul li dl dt{
  width:100px;
 }
 */
-div#tirasiitem ul {
+div#tirasiitem ul.dayslist {
  list-style:none;
+}
+
+div#tirasiitem ul.dayslist li{
+ float:left;
+}
+
+div#tirasiitem ul.dayslist li a{
+ display:block;
+ border:solid 2px #F5F5F5;
+ width :120px;
+ height:2em;
+ padding-top :0.8em;
+ text-align:center;
+}
+
+div#tirasiitem > a{
+ float:left;
+ display:block;
+ border:solid 2px #F5F5F5;
+ width :140px;
+ height:250px;
+ margin-bottom:10px;
+ padding-left:6px;
+ padding-top:6px;
+ overflow:hidden;
+}
+
+div#tirasiitem > a img{
+ width :120px;
+ height:90px;
+}
+div#tirasiitem ul li div.clr{
+ width:0;
+ height:0;
+ clear:both;
 }
 
 div#tirasiitem ul li div.image_item{
@@ -490,5 +522,9 @@ div#main div.datazone ul{
 
 div#main div.datazone ul li{
  width:1500px;
+}
+
+div.clr{
+ clear:both;
 }
 

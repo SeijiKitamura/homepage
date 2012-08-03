@@ -17,7 +17,9 @@
 // データ表示系
 //----------------------------------------------------------//
 //  getTitleList()      チラシタイトル一覧
-//  getImageList()      指定した単一掲載号のチラシ商品リストを返す
+//  getDayList()        販売日、商品数を返す
+//  getItemList()       指定した日の商品リストを返す
+//  getImageList()      指定した掲載号の商品リストを返す
 //----------------------------------------------------------//
 require_once("db.class.php");
 require_once("function.php");
@@ -247,8 +249,12 @@ class TIRASI extends DB{
  //       :$this->items[local]  列名
  //       :$this->items[status] 処理の状態を格納(true false)
  //---------------------------------------------------------//
- function getTitleList(){
+ function getTitleList($hiduke=null){
   //引数チェック
+  if($hiduke && ! CHKDATE($hiduke)){
+   throw new exception("日付を確認してください。");
+  }
+
   //表示する列名をセット
   $col=array( "hiduke"
              ,"title"
@@ -275,6 +281,9 @@ class TIRASI extends DB{
    $i++;
   }//foreach
   $this->from=TB_TITLES;
+  if($hiduke){
+   $this->where="view_end>='".$hiduke."'";
+  }
   $this->order=$this->select;
   $this->items["data"]=$this->getArray();
 
@@ -291,7 +300,132 @@ class TIRASI extends DB{
  }//getTitleList()
 
  //---------------------------------------------------------//
- // 指定した単一掲載号のチラシ商品リストを返す
+ // 指定した単一掲載号の日別商品リストを返す
+ // 返り値:true
+ //       :$this->items[data]   サイズ変更後の画像パス
+ //       :$this->items[local]  列名
+ //       :$this->items[status] 処理の状態を格納(true false)
+ //---------------------------------------------------------//
+ public function getItemList($tirasi_id=null,$hiduke =null){
+  //引数チラシ番号チェック(nullなら直近データ表示)
+  if(! $tirasi_id){
+   $this->getTitleList(date("Y-m-d"));
+   if($this->items){
+    $tirasi_id=$this->items["data"][0]["tirasi_id"];
+    $hiduke=$this->items["data"][0]["hiduke"];
+   }//if
+  }//if
+  
+  if($tirasi_id && ! is_numeric($tirasi_id)){
+   $this->items["data"]="チラシ番号は数字で入力してください";
+   $this->items["status"]=false;
+   return false;
+  }//if
+
+  if($tirasi_id && ! $hiduke){
+   //チラシ投函日をセット
+   $this->select="hiduke";
+   $this->from =TB_TITLES;
+   $this->where="tirasi_id=".$tirasi_id;
+   $this->getArray();
+   $hiduke=$this->ary[0]["hiduke"];
+  }//if
+
+  if($tirasi_id && !CHKDATE($hiduke)){
+   throw new exception("日付が無効です");
+  }
+  
+  //メンバーリセット
+  $this->items=null;
+
+  //表示する列名をセット
+  $col =" t.saletype";
+  $col.=",t.subtitle";
+  $col.=",t.jcode";
+  $col.=",t.sname";
+  $col.=",t.maker";
+  $col.=",t.tani";
+  $col.=",t.baika";
+  $col.=",t.notice";
+  $col.=",t.specialflg";
+  $col.=",t1.clscode";
+  $col.=",t.tirasi_id";
+
+  $grpcol =",min(t.hiduke) as startday";
+  $grpcol.=",max(t.hiduke) as endday";
+  $this->select=$col.$grpcol;
+  $this->from =TB_ITEMS." as t inner join ".TB_JANMAS." as t1 on ";
+  $this->from.=" t.jcode=t1.jcode";
+  $this->where ="t.tirasi_id=".$tirasi_id;
+  $this->where.=" and t.hiduke>='".$hiduke."'";
+  $this->group =$col;
+  $this->group.=" having min(t.hiduke)='".$hiduke."'";
+
+  //並び順をセット
+  $this->order =" t.tirasi_id";   //チラシ番号
+  $this->order.=",min(t.hiduke)"; //掲載開始日
+  $this->order.=",max(t.hiduke)"; //掲載終了日
+  $this->order.=",t.saletype";    //通常、イベント
+  $this->order.=",t.subtitle";    //タイトル
+  $this->order.=",t.specialflg desc";  //目玉、通常
+  $this->order.=",t.clscode";
+  $this->order.=",t.jcode";
+
+  $this->items["data"]  =$this->getArray();
+  $this->items["status"]=true;
+  $this->items["local"] =array( "セールタイプ"
+                               ,"イベント名"
+                               ,"JANコード"
+                               ,"商品名"
+                               ,"メーカー"
+                               ,"販売単位"
+                               ,"売価"
+                               ,"コメント"
+                               ,"目玉"
+                               ,"販売開始日"
+                               ,"販売終了日"
+                              );
+   
+ }//getItemList()
+
+ //---------------------------------------------------------//
+ // 販売日、商品数を返す
+ // 返り値:true
+ //       :$this->items[data]   販売日、商品数
+ //       :$this->items[local]  列名
+ //       :$this->items[status] 処理の状態を格納(true false)
+ //---------------------------------------------------------//
+ function getDayList($tirasi_id){
+  //引数チラシ番号チェック(nullなら直近データ表示)
+  if(! $tirasi_id){
+   $this->getTitleList(date("Y-m-d"));
+   if($this->items){
+    $tirasi_id=$this->items["data"][0]["tirasi_id"];
+   }//if
+  }//if
+  
+  if(! is_numeric($tirasi_id)){
+   throw new exception("チラシ番号は数字で指定してください");
+  }//if
+
+  //メンバ変数リセット
+  $this->items=null;
+
+  //データ表示
+  $this->select="hiduke,count(jcode) as items";
+  $this->from =TB_ITEMS;
+  $this->where="tirasi_id=".$tirasi_id;
+  $this->group="hiduke";
+  $this->order="hiduke";
+
+  $this->items["data"]=$this->getArray();
+  $this->items["local"]=array("日付","商品数");
+  $this->items["status"]=true;
+ }//getDayList()
+ //---------------------------------------------------------//
+
+ //---------------------------------------------------------//
+ // 指定した単一掲載号の商品リストを返す
  // 返り値:true
  //       :$this->items[data]   サイズ変更後の画像パス
  //       :$this->items[local]  列名
