@@ -368,7 +368,7 @@ class TIRASI extends DB{
   $this->order.=",t.saletype";    //通常、イベント
   $this->order.=",t.subtitle";    //タイトル
   $this->order.=",t.specialflg desc";  //目玉、通常
-  $this->order.=",t.clscode";
+  $this->order.=",t1.clscode";    //TB_JANMASのクラスコード
   $this->order.=",t.jcode";
 
   $this->items["data"]  =$this->getArray();

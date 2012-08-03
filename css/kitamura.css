@@ -305,9 +305,11 @@ div#tirasiitem ul.dayslist li{
 div#tirasiitem ul.dayslist li a{
  display:block;
  border:solid 2px #F5F5F5;
- width :120px;
+ width :130px;
  height:2em;
+ margin-right:3px;
  padding-top :0.8em;
+ padding-right:6px;
  text-align:center;
 }
 
@@ -315,18 +317,57 @@ div#tirasiitem > a{
  float:left;
  display:block;
  border:solid 2px #F5F5F5;
- width :140px;
- height:250px;
+ width :130px;
+ height:200px;
  margin-bottom:10px;
+ margin-right:3px;
  padding-left:6px;
  padding-top:6px;
  overflow:hidden;
 }
 
-div#tirasiitem > a img{
- width :120px;
+div#tirasiitem > a div.imgdiv{
+ width:120px;
  height:90px;
+ overflow:hidden;
 }
+
+div#tirasiitem > a div.makerdiv{
+ height:1.5em;
+ font-size:10px;
+ overflow:hidden;
+}
+
+div#tirasiitem > a div.snamediv{
+ width :90%;
+ height:1.5em;
+ overflow:hidden;
+}
+
+div#tirasiitem > a div.tanidiv{
+ font-size:12px;
+ width :90%;
+ height:1.5em;
+ overflow:hidden;
+}
+
+div#tirasiitem > a div.baikadiv{
+ font-size:12px;
+ width :90%;
+ height:3.5em;
+ text-align:right;
+ color:#DC143C;
+}
+
+div#tirasiitem > a div.baikadiv span{
+ font-size:36px;
+}
+
+div#tirasiitem > a div.jcodediv{
+ font-size:8px;
+ text-align:right;
+}
+
 div#tirasiitem ul li div.clr{
  width:0;
  height:0;

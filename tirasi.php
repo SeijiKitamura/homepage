@@ -149,7 +149,8 @@ try{
   $title.=$val["title"];
 
   echo "<li>"; 
-  echo "<a>"; //ここにリンクを作成
+  $url="tirasi.php?tirasi_id=".$val["tirasi_id"];
+  echo "<a href='".$url."'>"; //ここにリンクを作成
   echo $title;
   echo "</a></li>\n";
  }//foreach
@@ -224,11 +225,13 @@ if($err){
 $li="";
 foreach($data["days"]["data"] as $key => $val){
  $li.="<li>";
- $li.="<a>";
+ $url ="tirasi.php?tirasi_id=".$data["title"]["data"][0]["tirasi_id"];
+ $url.="&hiduke=".$val["hiduke"];
+ $li.="<a href='".$url."'>"; //同一ページ該当日付へリンク
  $li.=date("n月j日 ",strtotime($val["hiduke"]));
  $li.="(".$val["items"].")";
  $li.="</a>";
- $li.="</li>";
+ $li.="</li>\n";
 }
 //$div.="<div class='clr'></div>";
 echo "<ul class='dayslist'>\n".$li."</ul>\n";
@@ -257,21 +260,25 @@ foreach($data["items"]["data"] as $key=>$col){
  }//if
  
  //商品表示(目玉なら特別表示)
- $html.="<a>";
- $html.="<div><img src='./img/".$col["jcode"].".jpg' alt='".$col["sname"]."'></div>";
- $html.="<div>".$col["maker"]." ".$col["sname"]."</div>";
- $html.="<div><span>".$col["tani"]."</span><span>".$col["baika"]."円</span></div>";
- $html.="<div>".$col["notice"]."</div>";
- $html.="</a>";
+ $html.="<a>\n"; //単品画面へリンク
+ $html.="<div class='imgdiv'><img src='./img/".$col["jcode"].".jpg' alt='".$col["sname"]."'></div>\n";
+ $html.="<div class='makerdiv'>".$col["maker"]."</div>\n";
+ $html.="<div class='snamediv'>".$col["sname"]."</div>\n";
+ $html.="<div class='tanidiv'>".$col["tani"]."</div>\n";
+ $html.="<div class='baikadiv'><span>".$col["baika"]."</span>円</div>\n";
+ $html.="<div class='jcodediv'>JAN:".$col["jcode"]."</div>\n";
+ $html.="</a>\n";
 
  //現在の値をセット
  $endday=$col["endday"];
  $subtitle=$col["subtitle"];
 }//foreach
 
+$html.="<div class='clr'></div>";
+
 echo $html;
 echo "<pre>";
-print_r($data["items"]);
+print_r($data);
 echo "</pre>";
 ?>
     </div>
