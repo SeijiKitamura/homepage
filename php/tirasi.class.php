@@ -331,7 +331,7 @@ class TIRASI extends DB{
    $hiduke=$this->ary[0]["hiduke"];
   }//if
 
-  if($tirasi_id && !CHKDATE($hiduke)){
+  if($tirasi_id && $hiduke!=="all" && !CHKDATE($hiduke)){
    throw new exception("日付が無効です");
   }
   
@@ -357,9 +357,13 @@ class TIRASI extends DB{
   $this->from =TB_ITEMS." as t inner join ".TB_JANMAS." as t1 on ";
   $this->from.=" t.jcode=t1.jcode";
   $this->where ="t.tirasi_id=".$tirasi_id;
-  $this->where.=" and t.hiduke>='".$hiduke."'";
+  if($hiduke!=="all"){
+   $this->where.=" and t.hiduke>='".$hiduke."'";
+  }
   $this->group =$col;
-  $this->group.=" having min(t.hiduke)='".$hiduke."'";
+  if($hiduke!=="all"){
+   $this->group.=" having min(t.hiduke)='".$hiduke."'";
+  }
 
   //並び順をセット
   $this->order =" t.tirasi_id";   //チラシ番号

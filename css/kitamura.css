@@ -324,6 +324,12 @@ div#tirasiitem > a{
  padding-left:6px;
  padding-top:6px;
  overflow:hidden;
+ text-decoration:none;
+ color:black;
+}
+
+div#tirasiitem > a div.kikandiv{
+ width:120px;
 }
 
 div#tirasiitem > a div.imgdiv{
@@ -368,6 +374,53 @@ div#tirasiitem > a div.jcodediv{
  text-align:right;
 }
 
+div#tanpin > a{
+ display:block;
+ width:95%;
+ height:250px;
+ border:solid 2px #F5F5F5;
+}
+
+div#tanpin > a> div.imgdiv{
+ width:240px;
+ height:100%;
+ overflow:hidden;
+ float:left;
+ margin-right:10px;
+}
+div#tanpin > a > div.imgdiv > img{
+ width:240px;
+
+}
+div#tanpin > a > div.makerdiv{
+ font-size:14px;
+ margin:10px 0;
+ width: 300px
+ height:1.2em;
+ overflow:hidden;
+}
+
+div#tanpin > a > div.snamediv{
+ font-size:18px;
+ margin:10px 0;
+ width: 300px
+ height:2.2em;
+ overflow:hidden;
+}
+
+div#tanpin > a > div.baikadiv{
+ float:left;
+ font-size:32px;
+ width:260px;
+ margin:10px;
+ color:#DC143C;
+}
+
+div#tanpin > a > div.baikadiv span{
+ font-size:56px;
+}
+
+/*
 div#tirasiitem ul li div.clr{
  width:0;
  height:0;
@@ -385,10 +438,6 @@ div#tirasiitem ul li div.image_item{
 }
 
 div#tirasiitem ul li img{
- /*
- width :120px;
- height:120px;
- */
  float:left;
  margin:2px;
 }
@@ -457,7 +506,7 @@ div.tanpin{
  height:250px;
  border:2px solid #F5F5F5;
 }
-
+*/
 div.tanpin img.tanpin_img{
  /*
  width:280px;
