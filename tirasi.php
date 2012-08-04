@@ -97,6 +97,19 @@ require_once("./php/tirasi.class.php");
 try{
 //------------------------------------------------------------//
 // データゲット
+// $data["titles"]["data"]    チラシ投函日日程一覧
+//                ["status"]  true false
+//                ["local"]   日本語列名
+//      ["days"]  ["data"]    単一チラシ日程
+//                ["status"]  true false
+//                ["local"]   日本語列名
+//      ["items"] ["data"]    指定日の商品一覧
+//                ["status"]  true false
+//                ["local"]   日本語列名
+//      ["title"] ["data"]    指定チラシのタイトル、日程
+//                ["status"]  true false
+//                ["local"]   日本語列名
+
 //------------------------------------------------------------//
  $db=new TIRASI();
 

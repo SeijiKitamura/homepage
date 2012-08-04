@@ -123,6 +123,7 @@ function Init(filename){
   if(n=="tirasiitem")  setTirasiItemCSV($(this));
   //if(n=="tirasiimage") setTirasiImageCSV($(this));
   if(n=="janmas")      setJanMasCSV($(this));
+  if(n=="clsmas")      setClsMasCSV($(this));
  });
  
 }
@@ -311,6 +312,14 @@ function setLi(json){
  
 }
 //======================== setLi 終了 ==================//
+
+//======================== setClsMasCSV 開始 ==================//
+function setClsMasCSV(elem){
+ elem.upload("jsonSetClsMas.php",function(html){
+  console.log(html);
+ },"html");//elem
+}//function
+//======================== setClsMasCSV 終了 ==================//
 
 //======================== setCalendarCSV 開始 ==================//
 function setCalendarCSV(elem){
@@ -569,6 +578,7 @@ function errMsg(html){
      <li><a href="#" class="tirasiitem">チラシデータ更新</a></li>
      <li><a href="#" class="tirasiimage">チラシ画像更新</a></li>
      <li><a href="#" class="janmas">商品マスタ更新</a></li>
+     <li><a href="#" class="clsmas">部門マスタ更新</a></li>
     </ul>
    </div>
    <!-- leftside -->

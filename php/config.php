@@ -24,6 +24,8 @@ define("CAL"     ,"calendar");          //カレンダー
 define("TITLES"  ,"tirasititle");       //チラシタイトル
 define("ITEMS"   ,"tirasiitem");        //チラシデータ
 define("JANMAS"  ,"janmas");            //単品マスタ
+define("CLSMAS"  ,"clsmas");            //クラスマスタ
+define("LINMAS"  ,"linmas");            //部門マスタ
 //---------------------------------------------------//
 
 //---------------------------------------------------//
@@ -34,6 +36,8 @@ define("CALCSV"  ,DATADIR.CAL.".csv");      //カレンダー
 define("TITLECSV",DATADIR.TITLES.".csv");   //チラシタイトル
 define("ITEMCSV" ,DATADIR.ITEMS.".csv");    //チラシデータ
 define("JANCSV"  ,DATADIR.JANMAS.".csv");   //単品マスタ
+define("CLSCSV"  ,DATADIR.CLSMAS.".csv");   //クラスマスタ
+define("LINCSV"  ,DATADIR.LINMAS.".csv");   //部門マスタ
 //---------------------------------------------------//
 
 
@@ -53,6 +57,8 @@ define("TB_CAL"         ,TABLE_PREFIX.CAL);       //カレンダー
 define("TB_TITLES"      ,TABLE_PREFIX.TITLES);    //チラシタイトル
 define("TB_ITEMS"       ,TABLE_PREFIX.ITEMS);     //チラシデータ
 define("TB_JANMAS"      ,TABLE_PREFIX.JANMAS);    //単品マスタ
+define("TB_CLSMAS"      ,TABLE_PREFIX.CLSMAS);    //クラスマスタ
+define("TB_LINMAS"      ,TABLE_PREFIX.LINMAS);    //部門マスタ
 
 //---------------------------------------------------//
 // DB テーブル列系定数
@@ -294,6 +300,52 @@ $TABLES=array(TB_TITLES=>array(
                                                ,"local"  =>"最終販売日"
                                               )//price
                             )//TB_JANMAS
+              ,TB_CLSMAS=>array(
+                              "clscode"=>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>0
+                                               ,"primary"=>""
+                                               ,"local"  =>"クラスコード"
+                                              )//clscode
+                             ,"clsname"=>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"クラス名"
+                                              )//clsname
+                             ,"lincode"=>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"0"
+                                               ,"primary"=>""
+                                               ,"local"  =>"部門番号"
+                                              )//lincode
+                            )//TB_CLSMAS
+              ,TB_LINMAS=>array(
+                              "lincode"=>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>0
+                                               ,"primary"=>""
+                                               ,"local"  =>"部門番号"
+                                              )//lincode
+                             ,"linname"=>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"部門名"
+                                              )//linname
+                             ,"dpscode"=>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"0"
+                                               ,"primary"=>""
+                                               ,"local"  =>"メジャー番号"
+                                              )//dpscode
+                            )//TB_LINMAS
             );//TABLES
 
 //---------------------------------------------------//
@@ -335,6 +387,16 @@ $CSVCOLUMNS=array( TB_CAL   =>array( "hiduke"
                                     ,"price"
                                     ,"lastsale"
                                    )//TB_JANMAS
+                  ,TB_CLSMAS=>array(
+                                     "clscode"
+                                    ,"clsname"
+                                    ,"lincode"
+                                   )//TB_CLSMAS
+                  ,TB_LINMAS=>array(
+                                     "lincode"
+                                    ,"linname"
+                                    ,"dpscode"
+                                   )//TB_LINMAS
                  );//CSVCOLUMNS
 //---------------------------------------------------//
 
