@@ -20,6 +20,7 @@
 //  getDayList()        販売日、商品数を返す
 //  getItemList()       指定した日の商品リストを返す
 //  getImageList()      指定した掲載号の商品リストを返す
+//  getLinList()        指定した日のラインリストを返す
 //----------------------------------------------------------//
 require_once("db.class.php");
 require_once("function.php");
@@ -306,7 +307,7 @@ class TIRASI extends DB{
  //       :$this->items[local]  列名
  //       :$this->items[status] 処理の状態を格納(true false)
  //---------------------------------------------------------//
- public function getItemList($tirasi_id=null,$hiduke =null){
+ public function getItemList($tirasi_id=null,$hiduke =null,$lincode=null){
   //引数チラシ番号チェック(nullなら直近データ表示)
   if(! $tirasi_id){
    $this->getTitleList(date("Y-m-d"));
@@ -356,14 +357,24 @@ class TIRASI extends DB{
   $this->select=$col.$grpcol;
   $this->from =TB_ITEMS." as t inner join ".TB_JANMAS." as t1 on ";
   $this->from.=" t.jcode=t1.jcode";
+  $this->from.=" inner join ".TB_CLSMAS." as t2 on";
+  $this->from.=" t1.clscode=t2.clscode";
+  $this->from.=" inner join ".TB_LINMAS." as t3 on";
+  $this->from.=" t2.lincode=t3.lincode";
+
   $this->where ="t.tirasi_id=".$tirasi_id;
   if($hiduke!=="all"){
    $this->where.=" and t.hiduke>='".$hiduke."'";
-  }
+  }//if
+
+  if($lincode){
+   $this->where.=" and t3.lincode=".$lincode;
+  }//if
+
   $this->group =$col;
   if($hiduke!=="all"){
    $this->group.=" having min(t.hiduke)='".$hiduke."'";
-  }
+  }//if
 
   //並び順をセット
   $this->order =" t.tirasi_id";   //チラシ番号
@@ -524,6 +535,53 @@ class TIRASI extends DB{
 
   return true;
  }//ConvertImage()
+
+ //---------------------------------------------------------//
+ // 指定した日のラインリストを返す
+ // 返り値:true
+ //       :$this->items[data]   サイズ変更後の画像パス
+ //       :$this->items[local]  列名
+ //       :$this->items[status] 処理の状態を格納(true false)
+ //---------------------------------------------------------//
+ public function getLinList($tirasi_id,$hiduke){
+  //引数チェック
+  if(! $tirasi_id || ! is_numeric($tirasi_id)){
+   throw new exception("チラシ番号が不正です");
+  }
+
+  if(! $hiduke || ! CHKDATE($hiduke)){
+   throw new exception("日付が不正です");
+  }
+
+
+  //メンバリセット
+  $this->items=null;
+  $this->columns=null;
+
+  $this->select =" t.hiduke";
+  $this->select.=",t3.lincode";
+  $this->select.=",t3.linname";
+  $this->select.=",count(t.hiduke) as cnt";
+  $this->from =TB_ITEMS." as t ";
+  $this->from.=" inner join ".TB_JANMAS." as t1 on";
+  $this->from.=" t.jcode=t1.jcode";
+  $this->from.=" inner join ".TB_CLSMAS." as t2 on";
+  $this->from.=" t1.clscode=t2.clscode";
+  $this->from.=" inner join ".TB_LINMAS." as t3 on";
+  $this->from.=" t2.lincode =t3.lincode";
+  $this->where =" t.tirasi_id=".$tirasi_id;
+  $this->where.=" and t.hiduke='".$hiduke."'";
+  $this->group ="t.hiduke,t3.lincode,t3.linname";
+  $this->order =$this->group;
+
+  //データセット
+  $this->items["data"]=$this->getArray();
+  $this->items["status"]=true;
+  $this->items["local"][]=$GLOBALS["TABLES"][TB_ITEMS]["hiduke"]["local"];
+  $this->items["local"][]=$GLOBALS["TABLES"][TB_LINMAS]["lincode"]["local"];
+  $this->items["local"][]=$GLOBALS["TABLES"][TB_LINMAS]["linname"]["local"];
+  $this->items["local"][]="データ数";
+ }//getLinList()
 }//TIRASI
 
 ?>
