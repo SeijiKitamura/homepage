@@ -269,7 +269,7 @@ catch(Exception $e){
    <div id="main">
    
     <!-- tirasiitem -->
-    <div id="tirasiitem">
+    <div class="tirasiitem">
 <?php
 //エラーがあれば処理終了
 if($err){

@@ -237,7 +237,7 @@ catch(Exception $e){
    <!-- rightside -->
    <div id="rightside">
     <!-- nextday -->
-    <div id="nextday">
+    <div class="tirasiitem">
 <?php
 //商品表示
 $html="";
@@ -271,7 +271,9 @@ foreach($data["nextday"]["data"] as $key=>$col){
  $html.="<div class='snamediv'>".$col["sname"]."</div>\n";
  $html.="<div class='tanidiv'>".$col["tani"]."</div>\n";
  $html.="<div class='baikadiv'><span>".$col["baika"]."</span>円</div>\n";
- $html.="<div class='jcodediv'>JAN:".$col["jcode"]."</div>\n";
+ //$html.="<div class='tanidiv'>".$col["notice"]."</div>\n";
+ //$html.="<div class='jcodediv'>JAN:".$col["jcode"]."</div>\n";
+ $html.="<div class='makerdiv'>".$msg.$col["notice"]."</div>\n";
  $html.="</a>\n";
 
  //現在の値をセット
@@ -293,7 +295,7 @@ echo $html;
    <div id="main">
    
     <!-- tirasiitem -->
-    <div id="tirasiitem">
+    <div class="tirasiitem">
 <?php
 //エラーがあれば処理終了
 if($err){
@@ -302,23 +304,6 @@ if($err){
  echo "</pre>";
  return false;
 }
-/*
-//販売日リスト作成
-$li="";
-foreach($data["days"]["data"] as $key => $val){
- $li.="<li>";
- $url ="tirasi.php?tirasi_id=".$data["title"]["data"][0]["tirasi_id"];
- $url.="&hiduke=".$val["hiduke"];
- $li.="<a href='".$url."'>"; //同一ページ該当日付へリンク
- $li.=date("n月j日 ",strtotime($val["hiduke"]));
- $li.="(".$val["items"].")";
- $li.="</a>";
- $li.="</li>\n";
-}
-//$div.="<div class='clr'></div>";
-echo "<ul class='dayslist'>\n".$li."</ul>\n";
-echo "<div class='clr'></div>";
-*/
 //商品表示
 $html="";
 foreach($data["items"]["data"] as $key=>$col){
@@ -351,7 +336,8 @@ foreach($data["items"]["data"] as $key=>$col){
  $html.="<div class='snamediv'>".$col["sname"]."</div>\n";
  $html.="<div class='tanidiv'>".$col["tani"]."</div>\n";
  $html.="<div class='baikadiv'><span>".$col["baika"]."</span>円</div>\n";
- $html.="<div class='jcodediv'>JAN:".$col["jcode"]."</div>\n";
+ $html.="<div class='tanidiv'>".$col["notice"]."</div>\n";
+ //$html.="<div class='jcodediv'>JAN:".$col["jcode"]."</div>\n";
  $html.="</a>\n";
 
  //現在の値をセット
@@ -362,9 +348,6 @@ foreach($data["items"]["data"] as $key=>$col){
 $html.="<div class='clr'></div>";
 
 echo $html;
-echo "<pre>";
-print_r($data);
-echo "</pre>";
 ?>
     </div>
     <!-- tirasiitem -->

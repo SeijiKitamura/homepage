@@ -29,16 +29,20 @@ div#navi{
 
 /*leftside*/
 div#leftside{
- width:180px;
+ width:160px;
+ margin-right:20px;
  float:left;
  padding-left:10px;
+ border:solid 1px #F5F5F5;
 }
 
 /*rightside*/
 div#rightside{
- width:180px;
+ width:160px;
+ margin-left:20px;
+ border:solid 1px #F5F5F5;
  float:right;
- padding-right:10px;
+ padding-left:10px;
 }
 
 /*main*/
@@ -175,7 +179,8 @@ div#main dl.dtgroup dd{
  float:left;
 }
 
-div#main h3{
+ div#main h3
+,div#rightside h3{
  margin:10px;
 }
 
@@ -285,15 +290,15 @@ span.calrate_r{
  font-size:36px;
 }
 
-div#tirasiitem ul.dayslist {
+div.tirasiitem ul.dayslist {
  list-style:none;
 }
 
-div#tirasiitem ul.dayslist li{
+div.tirasiitem ul.dayslist li{
  float:left;
 }
 
-div#tirasiitem ul.dayslist li a{
+div.tirasiitem ul.dayslist li a{
  display:block;
  border:solid 2px #F5F5F5;
  width :130px;
@@ -304,7 +309,7 @@ div#tirasiitem ul.dayslist li a{
  text-align:center;
 }
 
-div#tirasiitem > a{
+div.tirasiitem > a{
  float:left;
  display:block;
  border:solid 2px #F5F5F5;
@@ -319,36 +324,36 @@ div#tirasiitem > a{
  color:black;
 }
 
-div#tirasiitem > a div.kikandiv{
+div.tirasiitem > a div.kikandiv{
  width:120px;
 }
 
-div#tirasiitem > a div.imgdiv{
+div.tirasiitem > a div.imgdiv{
  width:120px;
  height:90px;
  overflow:hidden;
 }
 
-div#tirasiitem > a div.makerdiv{
+div.tirasiitem > a div.makerdiv{
  height:1.5em;
  font-size:10px;
  overflow:hidden;
 }
 
-div#tirasiitem > a div.snamediv{
+div.tirasiitem > a div.snamediv{
  width :90%;
  height:1.5em;
  overflow:hidden;
 }
 
-div#tirasiitem > a div.tanidiv{
+div.tirasiitem > a div.tanidiv{
  font-size:12px;
  width :90%;
  height:1.5em;
  overflow:hidden;
 }
 
-div#tirasiitem > a div.baikadiv{
+div.tirasiitem > a div.baikadiv{
  font-size:12px;
  width :90%;
  height:3.5em;
@@ -356,11 +361,11 @@ div#tirasiitem > a div.baikadiv{
  color:#DC143C;
 }
 
-div#tirasiitem > a div.baikadiv span{
+div.tirasiitem > a div.baikadiv span{
  font-size:36px;
 }
 
-div#tirasiitem > a div.jcodediv{
+div.tirasiitem > a div.jcodediv{
  font-size:8px;
  text-align:right;
 }
