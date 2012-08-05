@@ -350,6 +350,7 @@ class TIRASI extends DB{
   $col.=",t.notice";
   $col.=",t.specialflg";
   $col.=",t1.clscode";
+  $col.=",t3.lincode";
   $col.=",t.tirasi_id";
 
   $grpcol =",min(t.hiduke) as startday";

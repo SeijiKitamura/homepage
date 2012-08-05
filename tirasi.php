@@ -26,6 +26,15 @@ try{
  $hiduke=$_GET["hiduke"];
  $lincode=$_GET["lincode"];
 
+ //引数チェック
+ if(! $tirasi_id ||! is_numeric($tirasi_id)){
+  throw new exception("チラシ番号は数字で入力してください");
+ }
+
+ if(! $hiduke ||! CHKDATE($hiduke)){
+  throw new exception("日付が不正です");
+ }
+
  //タイトル一覧(今日以降のもの)
  $db->getTitleList(date("Y-m-d"));
  $data["titles"]=$db->items;
@@ -34,10 +43,14 @@ try{
  $db->getDayList($tirasi_id);
  $data["days"]=$db->items;
 
- //商品一覧(引数が有効ならそのチラシアイテムを表示)
+ //指定日の商品一覧
  $db->getItemList($tirasi_id,$hiduke,$lincode);
  $data["items"]=$db->items;
  
+ //チラシ全体の商品一覧(使い道あるのか?)
+ $db->getItemList($tirasi_id,"all");
+ $data["allitems"]=$db->items;
+
  //タイトル確定
  foreach($data["titles"]["data"] as $key => $val){
   if($val["tirasi_id"]==$data["items"]["data"][0]["tirasi_id"]){
@@ -61,7 +74,7 @@ try{
  $db->getLinList($tirasi_id,$hiduke);
  $data["linlist"]=$db->items;
 
- //次の日の商品一覧
+ //翌日の同一商品一覧
  $nextday=date("Y-m-d",strtotime("+1 days",strtotime($hiduke)));
  $db->getItemList($tirasi_id,$nextday,$lincode);
  $data["nextday"]=$db->items;
@@ -168,10 +181,14 @@ foreach($data["days"]["data"] as $key => $val){
  $li.="<li>";
  $url ="tirasi.php?tirasi_id=".$data["title"]["data"][0]["tirasi_id"];
  $url.="&hiduke=".$val["hiduke"]."&lincode=".$lincode;
- $li.="<a href='".$url."'>"; //同一ページ該当日付へリンク
+ if($hiduke!=$val["hiduke"]){
+  $li.="<a href='".$url."'>"; //同一ページ該当日付へリンク
+ }
  $li.=date("n月j日 ",strtotime($val["hiduke"]));
  $li.="(".$val["items"].")";
- $li.="</a>";
+ if($hiduke!=$val["hiduke"]){
+  $li.="</a>";
+ }
  $li.="</li>\n";
 }
 //$div.="<div class='clr'></div>";
@@ -187,16 +204,20 @@ echo "<div class='clr'></div>";
     <ul>
 <?PHP
 try{
- $li="";
  $url ="./tirasi.php?tirasi_id=".$tirasi_id."&hiduke=".$hiduke;
- $li="<li><a href='".$url."'>すべての商品</a></li>\n";
+ $li ="";
+ $li ="<li>";
+ if($lincode) $li.="<a href='".$url."'>";
+ $li.="すべての商品";
+ if($lincode) $li.="</a>";
+ $li.="</li>\n";
  foreach($data["linlist"]["data"] as $key =>$col){
   $url ="./tirasi.php?tirasi_id=".$tirasi_id."&hiduke=".$hiduke;
   $url.="&lincode=".$col["lincode"];
   $li.="<li>";
-  $li.="<a href='".$url."'>";
+  if($col["lincode"]!=$lincode) $li.="<a href='".$url."'>";
   $li.=$col["linname"]."(".$col["cnt"].")";
-  $li.="</a>";
+  if($col["lincode"]!=$lincode) $li.="</a>";
   $li.="</li>\n";
  }//foreach
  echo $li;
@@ -204,31 +225,6 @@ try{
 catch(Exception $e){
  $err[]=$e->getMessage();
 }//catch
-/*
-try{
- //表示終了日が今より先のチラシタイトルを表示
- foreach($data["titles"]["data"] as $key=>$val){
-  //リセット
-  $title="";
-
-  //表示開始日が今より先なら「仮」をセット
-  if(strtotime($val["view_start"])>time()) $title="[仮] ";
-
-  //日付表示変換
-  $title.=date("n月j日",strtotime($val["hiduke"]))."<br /> ";
-  $title.=$val["title"];
-
-  echo "<li>"; 
-  $url="tirasi.php?tirasi_id=".$val["tirasi_id"];
-  echo "<a href='".$url."'>"; //ここにリンクを作成
-  echo $title;
-  echo "</a></li>\n";
- }//foreach
-}//try
-catch(Exception $e){
- echo "エラー:".$e->getMessage();
-}
-*/
 ?>
     </ul>
    </div>
@@ -241,6 +237,7 @@ catch(Exception $e){
 <?php
 //商品表示
 $html="";
+$endday=null;
 foreach($data["nextday"]["data"] as $key=>$col){
  //終了日が変われば期間を表示
  if($col["endday"]!==$endday){
@@ -306,6 +303,7 @@ if($err){
 }
 //商品表示
 $html="";
+$endday=null;
 foreach($data["items"]["data"] as $key=>$col){
  //終了日が変われば期間を表示
  if($col["endday"]!==$endday){
