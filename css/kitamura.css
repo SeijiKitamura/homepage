@@ -311,7 +311,8 @@ div.tirasiitem ul.dayslist li a{
 
 /* tiras.php、tirasiitem.phpで表示するアイテム */
  div.tirasiitem > a
-,div#tanpin     > a{
+,div#tanpin     > a
+,div.janmas     > a{
  float:left;
  display:block;
  border:solid 2px #F5F5F5;
@@ -440,6 +441,21 @@ div#tanpin > a > div.jcodediv{
  height:1.4em;
  font-size:0.8em;
  text-align:left;
+}
+
+div.janmas >a{
+ width:100px;
+ height:140px;
+ font-size:8px;
+}
+
+div.janmas > a > div.baikadiv{
+ height:2em;
+}
+
+div.janmas > a > div.kikandiv{
+ height:1.2em;
+ margin-top:4%;
 }
 /*
 div#tanpin > a{

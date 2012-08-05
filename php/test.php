@@ -1,6 +1,12 @@
 <?php
-require_once("./db.class.php");
-$db=new DB();
+require_once("./janmas.class.php");
+try{
+$db=new JANMAS();
 echo "<pre>";
-print_r($db->CreateTable(TB_LINMAS));
+$db->getLinItems(4969503009643);
+print_r($db->items);
+}
+catch(Exception $e){
+ echo "エラー:".$e->getMessage();
+}
 ?>

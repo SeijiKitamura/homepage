@@ -1,5 +1,6 @@
 <?php
 require_once("./php/tirasi.class.php");
+require_once("./php/janmas.class.php");
 try{
 //------------------------------------------------------------//
 // データゲット
@@ -28,7 +29,6 @@ try{
 //                ["status"]  true false
 //                ["local"]   日本語列名
 //------------------------------------------------------------//
- $db=new TIRASI();
 
  //引数セット
  $tirasi_id=$_GET["tirasi_id"];
@@ -47,8 +47,16 @@ try{
  if($lincode && ! is_numeric($lincode)){
   throw new exception("部門番号が不正です");
  }
- //データゲット
+ //チラシ系データゲット
+ $db=new TIRASI();
  $data=($db->getData($tirasi_id,$hiduke,$lincode));
+
+ if($lincode){
+  //単品マスタ系データゲット
+  $db2=new JANMAS();
+  $db2->getLinItems($data["items"]["data"][0]["jcode"]);
+  $data["jlinitems"]=$db2->items;
+ }
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
@@ -191,7 +199,18 @@ if($err && DEBUG){
 }
 $html=$db->getHtmlItem($data["items"],"tirasiitem.php");
 echo $html;
-
+?>
+     <!-- janmas -->
+     <div class='janmas'>
+<?php
+if($data["jlinitems"]){
+ $html=$db2->getHtmlJanMas($data["jlinitems"]);
+ echo $html;
+}
+?>
+     </div>
+     <!-- janmas -->
+<?php
 if(DEBUG){
  echo "<pre>";
  print_r($data);

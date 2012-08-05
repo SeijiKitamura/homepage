@@ -1,10 +1,11 @@
 <?php
 require_once("./php/tirasi.class.php");
+require_once("./php/janmas.class.php");
 try{
 //------------------------------------------------------------//
 // データゲット
 //------------------------------------------------------------//
- $db=new TIRASI();
+
 
  //引数セット
  $tirasi_id=$_GET["tirasi_id"];
@@ -25,7 +26,15 @@ try{
   throw new exception("JANコードが不正です");
  }
 
+//チラシ系データ
+ $db=new TIRASI();
  $data=$db->getData($tirasi_id,$hiduke,$lincode,$jcode);
+
+//単品マスタ系データ
+ $db2=new JANMAS();
+ $db2->getClsItems($jcode);
+ $data["jlinitems"]=$db2->items;
+
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
@@ -196,6 +205,13 @@ try{
  $html=$db->getHtmlItem($data["linitems"],"tirasiitem.php");
  echo $html;
  
+ //その他アイテム
+ echo "<div class='janmas'>\n";
+ $html=$db2->getHtmlJanMas($data["jlinitems"]);
+ echo $html;
+ echo "</div>\n";
+
+ //デバック用データ
  if(DBBUG){
   echo "<pre>";
   print_r($data);
