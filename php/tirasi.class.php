@@ -307,7 +307,7 @@ class TIRASI extends DB{
  //       :$this->items[local]  列名
  //       :$this->items[status] 処理の状態を格納(true false)
  //---------------------------------------------------------//
- public function getItemList($tirasi_id=null,$hiduke =null,$lincode=null){
+ public function getItemList($tirasi_id=null,$hiduke =null,$lincode=null,$jcode=null){
   //引数チラシ番号チェック(nullなら直近データ表示)
   if(! $tirasi_id){
    $this->getTitleList(date("Y-m-d"));
@@ -336,6 +336,14 @@ class TIRASI extends DB{
    throw new exception("日付が無効です");
   }
   
+  if($lincode && ! is_numeric($lincode)){
+   throw new exception("部門番号が無効です");
+  }
+
+  if($jcode && ! is_numeric($jcode)){
+   throw new exception("JANコードが無効です");
+  }
+
   //メンバーリセット
   $this->items=null;
 
@@ -370,6 +378,10 @@ class TIRASI extends DB{
 
   if($lincode){
    $this->where.=" and t3.lincode=".$lincode;
+  }//if
+
+  if($jcode){
+   $this->where.=" and t.jcode=".$jcode;
   }//if
 
   $this->group =$col;

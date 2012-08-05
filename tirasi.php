@@ -35,15 +35,15 @@ try{
   throw new exception("日付が不正です");
  }
 
- //タイトル一覧(今日以降のもの)
+ //タイトル一覧    (共通)
  $db->getTitleList(date("Y-m-d"));
  $data["titles"]=$db->items;
  
- //販売日覧
+ //販売日覧        (共通)
  $db->getDayList($tirasi_id);
  $data["days"]=$db->items;
 
- //指定日の商品一覧
+ //指定日の商品一覧  (共通)
  $db->getItemList($tirasi_id,$hiduke,$lincode);
  $data["items"]=$db->items;
  
@@ -51,7 +51,7 @@ try{
  $db->getItemList($tirasi_id,"all");
  $data["allitems"]=$db->items;
 
- //タイトル確定
+ //タイトル確定      (共通)
  foreach($data["titles"]["data"] as $key => $val){
   if($val["tirasi_id"]==$data["items"]["data"][0]["tirasi_id"]){
    $data["title"]["data"][]=$data["titles"]["data"][$key];
@@ -60,24 +60,35 @@ try{
   }//if
  }//for
 
- //チラシ番号確定
+ //チラシ番号確定 (tirasi.php 固有)
  if(! $tirasi_id){
   $tirasi_id=$data["title"]["data"][0]["tirasi_id"];
  }
 
- //日付確定
+ //日付確定       (tirasi.php 固有)
  if(! $hiduke){
   $hiduke=$data["items"]["data"][0]["startday"];
  }
 
- //ラインリスト作成
+ //ラインリスト作成 (共通)
  $db->getLinList($tirasi_id,$hiduke);
  $data["linlist"]=$db->items;
 
- //翌日の同一商品一覧
+ //翌日の同一linのチラシ商品(表示している単品を除く) (共通)
  $nextday=date("Y-m-d",strtotime("+1 days",strtotime($hiduke)));
  $db->getItemList($tirasi_id,$nextday,$lincode);
- $data["nextday"]=$db->items;
+ $d=$db->items["data"];
+ foreach($d as $key=>$val){
+  $flg=1;
+  foreach($data["items"]["data"] as $key1=>$val1){
+   if($val["jcode"]==$val1["jcode"] || $val["jcode"]==$data["item"]["data"][0]["jcode"]){
+    $flg=0;
+    break;
+   }//if
+  }//foreach
+  if($flg) $data["nextitems"]["data"][]=$val;
+ }//foreach
+
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
@@ -238,7 +249,7 @@ catch(Exception $e){
 //商品表示
 $html="";
 $endday=null;
-foreach($data["nextday"]["data"] as $key=>$col){
+foreach($data["nextitems"]["data"] as $key=>$col){
  //終了日が変われば期間を表示
  if($col["endday"]!==$endday){
   if($col["startday"]===$col["endday"]){
@@ -261,6 +272,7 @@ foreach($data["nextday"]["data"] as $key=>$col){
  //商品表示(目玉なら特別表示)
  $url ="tirasiitem.php?tirasi_id=".$col["tirasi_id"];
  $url.="&hiduke=".$col["startday"];
+ $url.="&lincode=".$col["lincode"];
  $url.="&jcode=".$col["jcode"];
  $html.="<a href='".$url."'>\n"; //単品画面へリンク
  $html.="<div class='imgdiv'><img src='./img/".$col["jcode"].".jpg' alt='".$col["sname"]."'></div>\n";
@@ -279,7 +291,6 @@ foreach($data["nextday"]["data"] as $key=>$col){
 }//foreach
 
 $html.="<div class='clr'></div>";
-
 echo $html;
 
 ?>
@@ -327,6 +338,7 @@ foreach($data["items"]["data"] as $key=>$col){
  //商品表示(目玉なら特別表示)
  $url ="tirasiitem.php?tirasi_id=".$col["tirasi_id"];
  $url.="&hiduke=".$col["startday"];
+ $url.="&lincode=".$col["lincode"];
  $url.="&jcode=".$col["jcode"];
  $html.="<a href='".$url."'>\n"; //単品画面へリンク
  $html.="<div class='imgdiv'><img src='./img/".$col["jcode"].".jpg' alt='".$col["sname"]."'></div>\n";
