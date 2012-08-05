@@ -410,10 +410,13 @@ class TIRASI extends DB{
                                ,"売価"
                                ,"コメント"
                                ,"目玉"
+                               ,"クラスコード"
+                               ,"部門番号"
+                               ,"チラシ番号"
                                ,"販売開始日"
                                ,"販売終了日"
                               );
-   
+   //本当はconfig.php内の$TABLES[テーブル名]["local"]をセットしたい
  }//getItemList()
 
  //---------------------------------------------------------//
@@ -423,7 +426,7 @@ class TIRASI extends DB{
  //       :$this->items[local]  列名
  //       :$this->items[status] 処理の状態を格納(true false)
  //---------------------------------------------------------//
- function getDayList($tirasi_id){
+ function getDayList($tirasi_id,$lincode=null){
   //引数チラシ番号チェック(nullなら直近データ表示)
   if(! $tirasi_id){
    $this->getTitleList(date("Y-m-d"));
@@ -440,9 +443,14 @@ class TIRASI extends DB{
   $this->items=null;
 
   //データ表示
-  $this->select="hiduke,count(jcode) as items";
-  $this->from =TB_ITEMS;
+  $this->select="t.hiduke,count(t.jcode) as items";
+  $this->from =TB_ITEMS." as t";
+  $this->from.=" inner join ".TB_JANMAS." as t1 on";
+  $this->from.=" t.jcode=t1.jcode";
+  $this->from.=" inner join ".TB_CLSMAS." as t2 on";
+  $this->from.=" t1.clscode=t2.clscode";
   $this->where="tirasi_id=".$tirasi_id;
+  if($lincode) $this->where.=" and t2.lincode=".$lincode;
   $this->group="hiduke";
   $this->order="hiduke";
 
@@ -595,6 +603,195 @@ class TIRASI extends DB{
   $this->items["local"][]=$GLOBALS["TABLES"][TB_LINMAS]["linname"]["local"];
   $this->items["local"][]="データ数";
  }//getLinList()
+
+ //---------------------------------------------------------//
+ // チラシを表示するのに必要なデータを一括で用意
+ // 返り値:配列
+ //---------------------------------------------------------//
+ public function getData($tirasi_id=null,$hiduke=null,$lincode=null,$jcode=null){
+  $data=null;
+
+  //タイトル一覧
+  $this->getTitleList(date("Y-m-d"));
+  $data["titles"]=$this->items;
+
+  //販売日一覧
+  $this->getDayList($tirasi_id,$lincode);
+  $data["days"]=$this->items;
+
+  //指定日の商品一覧
+  $this->getItemList($tirasi_id,$hiduke,$lincode);
+  $data["items"]=$this->items;
+
+  //チラシ全体の商品一覧
+  $this->getItemList($tirasi_id,"all");
+  $data["allitems"]=$this->items;
+
+  //タイトル確定
+  foreach($data["titles"]["data"] as $key=>$val){
+   if($val["tirasi_id"]==$data["items"]["data"][0]["tirasi_id"]){
+    $data["title"]["data"]=$val;
+    $data["title"]["status"]=true;
+    $data["title"]["local"]=$data["titles"]["local"];
+    break;
+   }//if
+  }//foreach
+  
+  //ラインリスト
+  $this->getLinList($tirasi_id,$hiduke);
+  $data["linlist"]=$this->items;
+
+  //翌日の同一linのチラシ商品(表示している単品を除く) 
+  $nextday=date("Y-m-d",strtotime("+1 day",strtotime($hiduke)));
+  $this->getItemList($tirasi_id,$nextday,$lincode);
+  $d=$this->items["data"];
+ 
+  foreach($d as $key=>$val){
+   $flg=1;
+   foreach($data["items"]["data"] as $key1=>$val1){
+    if($val["jcode"]==$val1["jcode"] || $val["jcode"]==$jcode){
+     $flg=0;
+     break;
+    }//if
+   }//foreach
+   if($flg) $data["nextitems"]["data"][]=$val;
+  }//foreach
+  if($data["nextitems"]){
+   $data["nextitems"]["status"]=true;
+   $data["nextitems"]["local"]=$data["items"]["local"];
+  }
+
+  //単品確定    
+  if($jcode){
+   $this->getItemList($tirasi_id,$hiduke,$lincode,$jcode);
+   $data["item"]=$this->items;
+   
+   //同日の同一linのチラシ商品(表示している単品を除く) 
+   foreach($data["items"]["data"] as $key=>$val){
+    $flg=1;
+    if($val["jcode"]==$jcode){
+     $flg=0;
+    }//if
+    if($flg) $data["linitems"]["data"][]=$val;
+   }//foreach
+   if($data["linitems"]){
+    $data["linitems"]["status"]=true;
+    $data["linitems"]["local"]=$data["items"]["local"];
+   }
+ 
+  }//if($jan)
+
+  return $data;
+ }//getData()
+
+ //---------------------------------------------------------//
+ // 販売日リストのHTMLを返すクラス
+ // 返り値:<ul>
+ //---------------------------------------------------------//
+ public function getHtmlDaysList($data,$tirasi_id,$hiduke,$lincode=null){
+  //リンク先URLをセット
+  $url="tirasi.php?tirasi_id=".$tirasi_id."&lincode=".$lincode;
+
+  //リスト作成開始
+  $li="";
+  foreach($data["data"] as $key=>$val){
+   $li.="<li>";
+   if($hiduke!=$val["hiduke"]){
+    $li.="<a href='".$url."&hiduke=".$val["hiduke"]."'>";
+   }//if
+   $li.=date("n月j日 ",strtotime($val["hiduke"]));
+   $li.="(".$val["items"].")";
+   if($hiduke!=$val["hiduke"]) $li.="</a>";
+   $li.="</li>\n";
+  }//foreach
+  $ul="<ul class='dayslist'>\n".$li."</ul>\n";
+  $ul.="<div class='clr'></div>\n";
+  return $ul;
+ }//getHtmlDaysList()
+
+ //---------------------------------------------------------//
+ // ラインリストのHTMLを返すクラス
+ // 返り値:<ul>
+ //---------------------------------------------------------//
+ public function getHtmlLinList($data,$tirasi_id,$hiduke,$lincode=null){
+  //ulのクラス名をセット
+  $ulcls="";
+
+  //リンク先URLをセット
+  $url ="./tirasi.php?tirasi_id=".$tirasi_id."&hiduke=".$hiduke."&lincode=";
+
+  $li="";
+  $li ="<li>";
+  if($lincode) $li.="<a href='".$url."'>";
+  $li.="すべての商品";
+  if($lincode) $li.="</a>";
+  $li.="<li>\n";
+
+  foreach($data["data"] as $key=>$val){
+   $li.="<li>";
+   if($val["lincode"]!=$lincode) $li.="<a href='".$url.$val["lincode"]."'>";
+   $li.=$val["linname"]."(".$val["cnt"].")";
+   if($val["lincode"]!=$lincode) $li.="</a>";
+   $li.="</li>\n";
+  }//foreach
+
+  $ul="<ul class='".$ulcls."'>\n".$li."</ul>\n";
+  return $ul;
+ }//getHtmlLinList
+
+ //---------------------------------------------------------//
+ // 商品のHTMLを返すクラス
+ // 返り値:<a>
+ //---------------------------------------------------------//
+ public function getHtmlItem($data,$path){
+  //リセット
+  $endday=null;
+  $html="";
+
+  foreach($data["data"] as $key=>$val){
+    //終了日が変われば期間を表示
+    if($val["endday"]!==$endday){
+     if($val["startday"]===$val["endday"]){
+      $msg=date("n月j日",strtotime($val["endday"]))."限り";
+     }
+     else{
+     $msg =date("n月j日",strtotime($val["startday"]))."から";
+     $msg.=date("n月j日",strtotime($val["endday"]))."まで";
+     }
+     $html.="<div class='clr'></div>\n";
+     $html.="<h3>".$msg."</h3>\n";
+    }//if
+
+    //subtitleが変更すればタイトル表示
+    if($val["subtitle"] && $val["subtitle"]!==$subtitle){
+     $html.="<div class='clr'></div>\n";
+     $html.="<h4>".$val["subtitle"]."</h4>\n";
+    }//if
+
+    //商品表示(目玉なら特別表示)
+    $url =$path."?tirasi_id=".$val["tirasi_id"];
+    $url.="&hiduke=".$val["startday"];
+    $url.="&lincode=".$val["lincode"];
+    $url.="&jcode=".$val["jcode"];
+    $html.="<a href='".$url."'>\n"; //単品画面へリンク
+    $html.="<div class='imgdiv'><img src='./img/".$val["jcode"].".jpg' alt='".$val["sname"]."'></div>\n";
+    $html.="<div class='makerdiv'>".$val["maker"]."</div>\n";
+    $html.="<div class='snamediv'>".$val["sname"]."</div>\n";
+    $html.="<div class='tanidiv'>".$val["tani"]."</div>\n";
+    $html.="<div class='baikadiv'><span>".$val["baika"]."</span>円</div>\n";
+    $html.="<div class='noticediv'>".$val["notice"]."</div>\n";
+    $html.="<div class='jcodediv'>JAN:".$val["jcode"]."</div>\n";
+    $html.="<div class='kikandiv'>".$msg."</div>\n";
+    $html.="</a>\n";
+
+    //現在の値をセット
+    $endday=$val["endday"];
+    $subtitle=$val["subtitle"];
+  }//foreach
+
+  $html.="<div class='clr'></div>\n";
+  return $html;
+ }//getHtmlItem
 }//TIRASI
 
 ?>

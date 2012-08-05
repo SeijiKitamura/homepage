@@ -309,7 +309,9 @@ div.tirasiitem ul.dayslist li a{
  text-align:center;
 }
 
-div.tirasiitem > a{
+/* tiras.php、tirasiitem.phpで表示するアイテム */
+ div.tirasiitem > a
+,div#tanpin     > a{
  float:left;
  display:block;
  border:solid 2px #F5F5F5;
@@ -322,54 +324,123 @@ div.tirasiitem > a{
  overflow:hidden;
  text-decoration:none;
  color:black;
+ font-size:12px;
 }
 
-div.tirasiitem > a div.kikandiv{
- width:120px;
-}
-
-div.tirasiitem > a div.imgdiv{
+div.imgdiv{
  width:120px;
  height:90px;
  overflow:hidden;
 }
 
-div.tirasiitem > a div.makerdiv{
+div.makerdiv{
+ width:100%;
  height:1.5em;
- font-size:10px;
+ font-size:0.8em;
  overflow:hidden;
 }
 
-div.tirasiitem > a div.snamediv{
- width :90%;
- height:1.5em;
+
+div.snamediv{
+ width :100%;
+ height:1.2em;
+ font-size:1.5em;
  overflow:hidden;
 }
 
-div.tirasiitem > a div.tanidiv{
- font-size:12px;
- width :90%;
- height:1.5em;
+div.tanidiv{
+ width :100%;
+ height:1em;
+ font-size:1.2em;
  overflow:hidden;
 }
 
-div.tirasiitem > a div.baikadiv{
- font-size:12px;
- width :90%;
+div.baikadiv{
+ font-size:1em;
+ width :95%;
  height:3.5em;
+ font-size:0.8em;
  text-align:right;
  color:#DC143C;
 }
 
-div.tirasiitem > a div.baikadiv span{
- font-size:36px;
+div.baikadiv span{
+ font-size:3.5em;
 }
 
-div.tirasiitem > a div.jcodediv{
- font-size:8px;
+div.noticediv{
+ width:100%;
+ height:1.2em;
+ font-size:0.8em;
+}
+
+div.jcodediv{
+ width:100%;
+ height:0;
+ font-size:0.8em;
+ overflow:hidden;
  text-align:right;
 }
 
+div.kikandiv{
+ width:100%;
+ height:0;
+ font-size:0.8em;
+ overflow:hidden;
+ text-align:left;
+}
+div#rightside > div.tirasiitem > a >div.kikandiv{
+ height:1.2em;
+}
+div#tanpin > a{
+ width:580px;
+ font-size:16px;
+}
+
+div#tanpin > a >div.imgdiv{
+ width:42%;
+ height:100%;
+ overflow:hidden;
+ float:left;
+ margin-right:10px;
+}
+
+div#tanpin > a >div.imgdiv>img{
+ width:100%;
+}
+
+div#tanpin > a > div.makerdiv{
+ width:50%;
+ height:1.4em;
+ font-size:1.2em;
+}
+
+div#tanpin > a > div.snamediv{
+ width:50%;
+ height:2.4em;
+ font-size:1.5em;
+}
+
+div#tanpin > a > div.tanidiv{
+ width:50%;
+ height:1.4em;
+ font-size:1.2em;
+}
+div#tanpin > a > div.baikadiv{
+ width:50%;
+ height:1.2em;
+ float:right;
+}
+div#tanpin > a > div.baikadiv>span{
+ font-size:6em;
+}
+div#tanpin > a > div.jcodediv{
+ width:50%;
+ height:1.4em;
+ font-size:0.8em;
+ text-align:left;
+}
+/*
 div#tanpin > a{
  display:block;
  width:95%;
@@ -415,7 +486,7 @@ div#tanpin > a > div.baikadiv{
 div#tanpin > a > div.baikadiv span{
  font-size:56px;
 }
-
+*/
 div.tanpin img.tanpin_img{
  /*
  width:280px;
