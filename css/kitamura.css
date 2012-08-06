@@ -130,17 +130,34 @@ div#search > ul.dayslist > li > a{
  padding-top:2px;
  text-align:center;
 }
-div#leftside ul {
+
+ul.itemnavi{
  list-style-type:none;
 }
 
-div#leftside ul li{
+ul.itemnavi > li{
+ float:left;
+ margin:0 10px;
+}
+
+ul.itemnavi > li >a{
+ display:block;
+ text-decoration:none;
+}
+div#leftside ul,
+div#rightside ul{
+ list-style-type:none;
+}
+
+div#leftside ul li,
+div#rightside ul li{
  margin:0 0 2px 0;
  padding:3px 5px;
  font-size:15px;
 }
 
-div#leftside ul li a{
+div#leftside ul li a ,
+div#rightside ul li a{
  display:block;
  text-decoration:none;
  color:#000000;

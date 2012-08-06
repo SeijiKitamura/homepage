@@ -403,5 +403,7 @@ $CSVCOLUMNS=array( TB_CAL   =>array( "hiduke"
 //---------------------------------------------------//
 // データ表示系定数                                  //
 //---------------------------------------------------//
-define("JANMASLIMIT",10);//tirasiitem.php 「こんな商品･･」表示数 
+define("JANMASLIMIT",30);//tirasiitem.php,item.php 「こんな商品･･」表示数 
+define("NAVISTART",5);   //item.php 「こんな商品･･」表示数 
+define("NAVISPAN",10);     //item.php 「こんな商品･･」表示数 
 ?>
