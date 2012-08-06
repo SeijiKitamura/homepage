@@ -289,7 +289,7 @@ echo $ul;
    </div>
    <!-- main -->
 
-   <div class="clr"></div>
+   <!--div class="clr"></div-->
    <!-- footer -->
    <div id="footer">
     <h1>footer</h1>

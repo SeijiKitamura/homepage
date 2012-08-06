@@ -54,7 +54,8 @@ try{
  if($lincode){
   //単品マスタ系データゲット
   $db2=new JANMAS();
-  $db2->getLinItems($data["items"]["data"][0]["jcode"]);
+  //$db2->getLinItems($data["items"]["data"][0]["jcode"]);
+  $db2->getJanMas($lincode,0,0,0);
   $data["jlinitems"]=$db2->items;
  }
 }//try
@@ -204,6 +205,7 @@ echo $html;
      <div class='janmas'>
 <?php
 if($data["jlinitems"]){
+ echo "<h4>こんな商品も売れています</h4>\n";
  $html=$db2->getHtmlJanMas($data["jlinitems"]);
  echo $html;
 }

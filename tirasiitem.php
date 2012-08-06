@@ -32,7 +32,7 @@ try{
 
 //単品マスタ系データ
  $db2=new JANMAS();
- $db2->getClsItems($jcode);
+ $db2->getJanMas($lincode,$clscode,0,0);
  $data["jlinitems"]=$db2->items;
 
 }//try
@@ -207,6 +207,7 @@ try{
  
  //その他アイテム
  echo "<div class='janmas'>\n";
+ echo "<h4>こんな商品も売れています</h4>\n";
  $html=$db2->getHtmlJanMas($data["jlinitems"]);
  echo $html;
  echo "</div>\n";

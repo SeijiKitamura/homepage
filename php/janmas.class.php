@@ -333,8 +333,8 @@ class JANMAS extends DB{
   $end=$start+JANMASLIMIT;
   if($end>count($d)) $end=count($d);
 
+  //付番
   for($i=$start;$i<$end;$i++){
-   //付番
    $d[$i]["datanum"]=$i;
    $this->items["data"][]=$d[$i];
   }
@@ -350,6 +350,32 @@ class JANMAS extends DB{
                               ,$table[TB_LINMAS]["lincode"]["local"]
                               ,$table[TB_LINMAS]["linname"]["local"]
                              );
+  //広告売価を反映
+  $this->select ="t.jcode,t.tani,t.baika";
+  $this->select.=",t1.clscode,t1.clsname";
+  $this->from =TB_ITEMS." as t ";
+  $this->from.=" inner join ".TB_CLSMAS." as t1 on";
+  $this->from.=" t.clscode=t1.clscode";
+  $this->where ="t.hiduke='".date("Y-m-d")."'";
+  if($lincode) $this->where.=" and t1.lincode=".$lincode;
+  if($clscode) $this->where.=" and t1.clscode=".$clscode;
+  if($jcode)   $this->where.=" and t.jcode=".$jcode;
+  $this->order ="t1.lincode,t1.clscode,t.jcode";
+  $tirasi=$this->getArray();
+  
+  foreach($this->items["data"] as $key=>$val){
+   foreach($this->ary as $key1=>$val1){
+    if($val["jcode"]===$val1["jcode"]){
+     $val["maker"]=$val1["maker"];
+     $val["tani"]=$val1["tani"];
+     $val["price"]=$val1["baika"];
+     $val["notice"]=$val1["notice"];
+     $val["lastsale"]="広告の品";
+     break;
+    }//if
+   }//foreach
+  }//foreach
+
  }//getJanMas
 
  //---------------------------------------------------------//
