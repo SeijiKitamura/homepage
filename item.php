@@ -50,14 +50,20 @@ try{
  $db->getClsMas($lincode);
  $data["clslist"]=$db->items;
 
- $db->getJanMas($lincode,$clscode,$jcode,$datanum);
+ $db->getJanMas($lincode,$clscode,0,$datanum);
  $data["linitems"]=$db->items;
 
- $db->getJanMas($lincode,$clscode,$jcode,$datanum);
- $data["clsitems"]=$db->items;
+ //クラス内アイテムゲット
+ if($clscode){
+  $db->getJanMas($lincode,$clscode,0,$datanum);
+  $data["clsitems"]=$db->items;
+ }
 
- $db->getJanMas($lincode,$clscode,$jcode,$datanum);
- $data["item"]=$db->items;
+ //単品データゲット
+ if($jcode){
+  $db->getJanMas($lincode,$clscode,$jcode,$datanum);
+  $data["item"]=$db->items;
+ }
 
  //ナビ表示
  $ulcls="itemnavi";
@@ -228,10 +234,6 @@ echo $html;
 
    <!-- main -->
    <div id="main">
-   
-    <!-- tirasiitem -->
-    <div class="tirasiitem">
-     <h3>商品一覧</h3>
 <?php
 //エラーがあれば処理終了
 if($err && DEBUG){
@@ -241,6 +243,23 @@ if($err && DEBUG){
  return false;
 }
 ?>
+
+    <!-- tirasiitem -->
+    <div class="tirasiitem">
+     <!-- tanpin -->
+     <div id="tanpin">
+<?php
+//単品表示
+if($data["item"]["data"]){
+ $html=$db->getHtmlJanMas($data["item"]);
+ echo $html;
+}
+?>
+     </div>
+     <!-- tanpin -->
+
+     <h3>商品一覧</h3>
+
      <!-- janmas -->
      <div class='janmas'>
 <?php
@@ -250,19 +269,23 @@ echo $html;
 
 echo $ul;
 ?>
-     <div class='clr'></div>
+      <div class='clr'></div>
      </div>
      <!-- janmas -->
-<?php
-if(DEBUG){
- echo "<pre>";
- print_r($data);
- echo "</pre>";
-}
-?>
+
     </div>
     <!-- tirasiitem -->
-
+    <p>
+    <h4>表示されている商品について：</h4>
+    こちらに表示されている商品は品揃えを保証するものではございません。
+    こちらに表示されている商品でも、メーカーによる終売、品切、取扱中止、
+    等の理由により販売できない場合もございます。誠に恐れいりますが、
+    何卒ご了承くださいませ。<br />
+    <h4>表示されている価格について：</h4>
+    こちらに表示されている価格は、前日までの販売実績を元に表示しております。
+    表示されている価格と店頭での価格に差異があった場合、誠に
+    恐れ入りますが店頭での価格にて販売させていただきます。<br/>
+    </p>
    </div>
    <!-- main -->
 
@@ -270,6 +293,13 @@ if(DEBUG){
    <!-- footer -->
    <div id="footer">
     <h1>footer</h1>
+<?php
+if(DEBUG){
+ echo "<pre>";
+ print_r($data);
+ echo "</pre>";
+}
+?>
    </div>
    <!-- footer -->
 

@@ -302,13 +302,16 @@ class JANMAS extends DB{
 
   if($datanum && ! is_numeric($datanum)) throw new exception("データ番号は数字で入力してください");
 
-  $table=$GLOBALS["TABLES"][TB_JANMAS];
+  //$table=$GLOBALS["TABLES"][TB_JANMAS];
+  $table=$GLOBALS["TABLES"];
 
   //データリセット
   $this->items=null;
 
   //データゲット
-  $this->select="t.jcode,t.sname,t.stdprice,t.price,t.lastsale";
+  $this->select =" t.jcode,t.sname,t.stdprice,t.price,t.lastsale";
+  $this->select.=",t1.clscode,t1.clsname";
+  $this->select.=",t2.lincode,t2.linname";
   $this->from =TB_JANMAS." as t ";
   $this->from.="inner join ".TB_CLSMAS." as t1 on";
   $this->from.=" t.clscode=t1.clscode";
@@ -337,11 +340,15 @@ class JANMAS extends DB{
   }
   $this->items["total"]=count($d);
   $this->items["status"]=true;
-  $this->items["local"]=array( $table["jcode"]["local"]
-                              ,$table["sname"]["local"]
-                              ,$table["stdprice"]["local"]
-                              ,$table["price"]["local"]
-                              ,$table["lastsale"]["local"]
+  $this->items["local"]=array( $table[TB_JANMAS]["jcode"]["local"]
+                              ,$table[TB_JANMAS]["sname"]["local"]
+                              ,$table[TB_JANMAS]["stdprice"]["local"]
+                              ,$table[TB_JANMAS]["price"]["local"]
+                              ,$table[TB_JANMAS]["lastsale"]["local"]
+                              ,$table[TB_CLSMAS]["clscode"]["local"]
+                              ,$table[TB_CLSMAS]["clsname"]["local"]
+                              ,$table[TB_LINMAS]["lincode"]["local"]
+                              ,$table[TB_LINMAS]["linname"]["local"]
                              );
  }//getJanMas
 
@@ -350,18 +357,23 @@ class JANMAS extends DB{
  // 返り値:<a>
  //---------------------------------------------------------//
  public function getHtmlJanMas($data){
-  $html="";
   //if($data["data"]) $html.="<h3>こんな商品も売れています</h3>\n";
-
+  $html="";
   $i=0;
   foreach($data["data"] as $key=>$val){
-   $html.="<a>";
+   $url ="item.php?lincode=".$val["lincode"];
+   $url.="&clscode=".$val["clscode"];
+   $url.="&jcode=".$val["jcode"];
+   $url.="&datanum=0";
+
+   $html.="<a href='".$url."'>";
    $html.="<div class='imgdiv'><img src='./img/".$val["jcode"].".jpg' alt='".$val["sname"]."'></div>\n";
    $html.="<div class='snamediv'>".$val["sname"]."</div>\n";
    $html.="<div class='baikadiv'>";
    if($val["price"]) $html.="<span>".$val["price"]."</span>";
    if(preg_match("/^[0-9]+$/",$val["price"]) && $val["price"]) $html.="円";
    $html.="</div>\n";
+   $html.="<div class='jcodediv'>JAN:".$val["jcode"]."</div>\n";
    $html.="<div class='kikandiv'>最終販売日:".date("n月j日",strtotime($val["lastsale"]))."</div>\n";
    $html.="</a>";
    $i++;
