@@ -95,16 +95,30 @@ class JANMAS extends DB{
      $this->items["errdata"][$i]=$this->items["data"][$i];
      continue;
     }
+
+    //JANコード変換
+    $jcode=GETJAN($this->items["data"][$i][$jancol]);
+    if($jcode===FALSE){
+     $this->items["status"]=false;
+     $this->items["data"][$i]["err"]="JANコードが不正です";
+     $this->items["errdata"][$i]=$this->items["data"][$i];
+     continue;
+    }
     //UPDATEデータ生成
     foreach($this->csvcol as $key=>$val){
-     $this->updatecol[$val]=$this->items["data"][$i][$key];
+     if($key==$jancol){
+      $this->updatecol[$val]=$jcode;
+     }//if
+     else{
+      $this->updatecol[$val]=$this->items["data"][$i][$key];
+     }//else
     }//foreach
     $this->from=TB_JANMAS;
-    $this->where="jcode=".$this->items["data"][$i][$jancol];
+    //$this->where="jcode='".$this->items["data"][$i][$jancol]."'";
+    $this->where="jcode='".$jcode."'";
     $this->update();
    }//for
    $this->Commit();
-
    return true;
   }//try
   catch(Exception $e){

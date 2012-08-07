@@ -11,7 +11,7 @@
 require_once("../janmas.class.php");
 try{
  //アップロードされたファイルを所定ディレクトリへコピー(function.php)
- //UPLOADCSV(JANMAS); //(function.php)
+ UPLOADCSV(JANMAS); //(function.php)
 
  //インスタンス
  $db=new JANMAS(); //janmas.class.php参照

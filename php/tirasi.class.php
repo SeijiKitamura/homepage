@@ -206,6 +206,20 @@ class TIRASI extends DB{
     $t=$this->items["data"][$i][$colnum];
    }//if
   }//for
+  
+  for($i=0;$i<count($this->csvcol);$i++){
+   if($this->csvcol[$i]==="jcode"){
+    $jancol=$i;
+    break;
+   }//if
+  }//for
+
+  //CSVのJANコード列をゲット
+  if(! $jancol){
+   $this->items["status"]=false;
+   $msg="JANコード列がありません。設定を見なおしてください。config CSVCOLUMNS";
+   throw new exception($msg);
+  }
 
   try{
    //トランザクション開始
@@ -221,9 +235,23 @@ class TIRASI extends DB{
 
    //CSVデータ登録
    for($i=0;$i<count($this->items["data"]);$i++){
+    //JANコード変換
+    $jcode=GETJAN($this->items["data"][$i][$jancol]);
+    if($jcode===FALSE){
+     $this->items["status"]="false";
+     $this->items["data"][$i]["err"]="JANコードが不正です";
+     $this->items["errdata"][$i]=$this->items["data"][$i];
+     continue;
+    }
+
     //UPDATEデータ生成
     foreach($this->csvcol as $key=>$val){
-     $this->updatecol[$val]=$this->items["data"][$i][$key];
+     if($key==$jancol){
+      $this->updatecol[$val]=$jcode;
+     }//if
+     else{
+      $this->updatecol[$val]=$this->items["data"][$i][$key];
+     }//else
     }//foreach
     $this->from=TB_ITEMS;
     $this->where="tirasi_id=0";//無条件追加

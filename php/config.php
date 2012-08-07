@@ -161,7 +161,7 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"primary"=>""
                                                  ,"local"  =>"クラスコード"
                                                 )//clscode 
-                             ,"jcode"    =>array( "type"   =>"bigint"
+                             ,"jcode"    =>array( "type"   =>"varchar(14)"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"0"
@@ -257,7 +257,7 @@ $TABLES=array(TB_TITLES=>array(
                             )//calendar  
    
               ,TB_JANMAS=>array(
-                                "jcode"=>array( "type"   =>"bigint"
+                                "jcode"=>array( "type"   =>"varchar(14)"
                                                ,"null"   =>"not null"
                                                ,"extra"  =>""
                                                ,"default"=>0

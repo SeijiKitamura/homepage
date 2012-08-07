@@ -1,11 +1,15 @@
 <?php
 require_once("./janmas.class.php");
 try{
-$db=new JANMAS();
-echo "<pre>";
-$db->getLinItems(4969503009643);
-print_r($db->items);
-}
+ //インスタンス
+ $db=new JANMAS(); //janmas.class.php参照
+ 
+ //DB登録
+ $db->setData();
+ echo "<pre>";
+ print_r($db->items["errdata"]);
+ echo "</pre>";
+} 
 catch(Exception $e){
  echo "エラー:".$e->getMessage();
 }
