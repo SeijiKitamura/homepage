@@ -306,7 +306,7 @@ class JANMAS extends DB{
  //       :$this->items[local]  列名を格納
  //       :$this->items[status] データの状態を格納(true false)
  //---------------------------------------------------------//
- public function getJanMas($lincode=null,$clscode=null,$jcode=null,$datanum=null){
+ public function getJanMas($lincode=null,$clscode=null,$jcode=null,$datanum=null,$word=null){
   //引数チェック
   if($lincode && ! is_numeric($lincode)) throw new exception("ラインコードは数字で入力してください");
 
@@ -335,6 +335,24 @@ class JANMAS extends DB{
   if($lincode) $this->where.=" and t1.lincode=".$lincode;
   if($clscode) $this->where.=" and t.clscode=".$clscode;
   if($jcode)   $this->where.=" and t.jcode=".$jcode;
+  if($word){
+   //検索条件をリセット
+   $this->where=null;
+
+   //検索ワード生成
+   $w =SEARCHWORD($word);
+   $this->items["search"]=$w;
+   //検索条件生成($where)
+   $wh =" t.lastsale>='".date("Y-m-d",strtotime("-60days"))."'"; 
+   for($i=0;$i<count($w);$i++){
+    if($w[$i] && strlen($w[$i])>3){ //3文字以上
+     if($where) $where.=" or ";
+     $where.=$wh." and t.jcode like '%".$w[$i]."%'";
+     $where.=" or ".$wh." and t.sname like '%".$w[$i]."%'";
+    }//if
+   }//for
+   $this->where=$where;
+  }//if
   $this->order ="t.lastsale desc,t2.lincode,t.clscode,t.jcode";
   //$this->items["data"]=$this->getArray();
   $d=$this->getArray();
@@ -391,6 +409,36 @@ class JANMAS extends DB{
   }//foreach
 
  }//getJanMas
+
+ public function getSearchItem($word){
+  $this->items=null;
+
+  //データゲット
+  $this->select =" t.jcode,t.sname,t.stdprice,t.price,t.lastsale";
+  $this->select.=",t1.clscode,t1.clsname";
+  $this->select.=",t2.lincode,t2.linname";
+  $this->from =TB_JANMAS." as t ";
+  $this->from.="inner join ".TB_CLSMAS." as t1 on";
+  $this->from.=" t.clscode=t1.clscode";
+  $this->from.=" inner join ".TB_LINMAS." as t2 on";
+  $this->from.=" t1.lincode=t2.lincode";
+  $this->where =" t.lastsale>='".date("Y-m-d",strtotime("-60days"))."'"; 
+  $this->where.=" and t.jcode like '%".$word."%'";
+  $this->where.=" or ";
+  $this->where.=" t.lastsale>='".date("Y-m-d",strtotime("-60days"))."'"; 
+  $this->where.=" and t.sname like '%".$word."%'";
+  //$this->where.=" or ";
+  //$this->where.=" t.lastsale>='".date("Y-m-d",strtotime("-60days"))."'"; 
+  //$this->where.=" and t.price like '%".$word."%'";
+  //$this->where.=" or ";
+  //$this->where.=" t.lastsale>='".date("Y-m-d",strtotime("-60days"))."'"; 
+  //$this->where.=" and t.lastsale like '%".$word."%'";
+  $this->order ="t.lastsale desc,t2.lincode,t.clscode,t.jcode";
+  //$this->items["data"]=$this->getArray();
+  $this->items["data"]=$this->getArray();
+
+
+ }//getSearchItem
 
  //---------------------------------------------------------//
  // アイテムを表示するHTMLを作成
@@ -472,4 +520,23 @@ class JANMAS extends DB{
   return $ul;
  }//getHtmlLinList
 }//JANMAS
+
+function SEARCHWORD($word){
+ //右側にある余白を削除
+ $w=rtrim($word);
+
+ //クオートは削除
+ $w=str_replace("'","",$w);
+
+ //半角を全角へ変換
+ $w=mb_convert_kana($w,"KS","UTF-8");
+ 
+ //危険な文字を削除
+ $patterns="/select|from|where|and|or|between|group|order|having|update|delete|truncate|drop|;/i";
+ $w=preg_replace($patterns,"",$w);
+
+ //空白で分割
+ $w=explode("　",$w);
+ return $w;
+}
 ?>

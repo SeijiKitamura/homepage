@@ -13,6 +13,9 @@ try{
 //   ["linitems"] ["data"]    同じラインの商品一覧
 //                ["status"]  true false
 //                ["local"]   日本語列名
+//["searchitems"] ["data"]    検索商品一覧
+//                ["status"]  true false
+//                ["local"]   日本語列名
 //     ["clslist"]["data"]    クラス一覧
 //                ["status"]  true false
 //                ["local"]   日本語列名
@@ -26,6 +29,7 @@ try{
  $clscode=$_GET["clscode"];
  $jcode=$_GET["jcode"];
  $datanum=$_GET["datanum"];
+ $word=$_GET["word"];
 
  //引数チェック
  if($lincode && ! is_numeric($lincode)){
@@ -43,6 +47,7 @@ try{
 
  //単品マスタ系データゲット
  $db=new JANMAS();
+
 
  $db->getLinMas();
  $data["linlist"]=$db->items;
@@ -65,6 +70,18 @@ try{
   $data["item"]=$db->items;
  }
 
+ //検索データゲット
+ if($word){
+  $db->getJanMas(null,null,null,$datanum,$word);
+  $data["searchitems"]=$db->items;
+  $data["linlist"]=null;
+  $data["clslist"]=null;
+  $data["linitems"]=null;
+  if($data["searchitems"]["data"]){
+   $data["linitems"]=$db->items;
+  }//if
+ }
+
  //ナビ表示
  $ulcls="itemnavi";
 
@@ -82,6 +99,9 @@ try{
  
  $url ="item.php?lincode=".$lincode."&clscode=".$clscode;
  $url.="&jcode=".$jcode."&datanum=";
+ if($word){
+  $url ="item.php?word=".$word."&datanum=";
+ }
  
  $j=0;
  //リスト作成
@@ -92,7 +112,7 @@ try{
   $p=$i+1;//表示ページ数
  
   if($j>NAVISPAN && $pages>$j){
-   $li.="<li><a href='".$seturl."'>まだまだありますよ！</a></li>\n";
+   $li.="<li><a href='".$seturl."'>more！</a></li>\n";
    break;
   }
  
@@ -105,7 +125,9 @@ try{
   //echo "ページ数:".$p."URL:".$seturl."<br />";
  }//for
  $ul="<ul class='".$ulcls."'>".$li."</ul>\n";
- $ul.="<div class='clr'></div>\n";
+ //$ul.="<div class='clr'></div>\n";
+
+
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
@@ -205,6 +227,7 @@ catch(Exception $e){
 <?php
 echo $ul;
 ?>
+     検索:<input name='searchitem' type="text" value='<?php echo $word; ?>'>
     </div>
     <!-- search -->
    </div>
@@ -258,14 +281,29 @@ if($data["item"]["data"]){
      </div>
      <!-- tanpin -->
 
-     <h3>商品一覧</h3>
 
      <!-- janmas -->
      <div class='janmas'>
 <?php
+if($word){
+ echo "<h3>検索結果</h3>\n";
+
+ //ここにinputタグを配置して検索できるようにしたい
+
+ if( $data["searchitems"]["data"]){
+  $html=$db->getHtmlJanMas($data["searchitems"]);
+  echo $html;
+ }//if
+ else{
+  echo "検索ワード:".$word." 見つかりませんでした。";
+ }
+}//if
+
 //アイテム一覧表示
+if(! $word &&! $data["searchitems"]["data"]){
 $html=$db->getHtmlJanMas($data["linitems"]);
 echo $html;
+}
 
 echo $ul;
 ?>

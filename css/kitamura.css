@@ -132,7 +132,9 @@ div#search > ul.dayslist > li > a{
 }
 
 ul.itemnavi{
+ width:600px;
  list-style-type:none;
+ float:left;
 }
 
 ul.itemnavi > li{
@@ -143,6 +145,11 @@ ul.itemnavi > li{
 ul.itemnavi > li >a{
  display:block;
  text-decoration:none;
+}
+
+input[name='searchitem']{
+ border:0;
+ width:100px;
 }
 div#leftside ul,
 div#rightside ul{
