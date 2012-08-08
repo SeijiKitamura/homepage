@@ -238,15 +238,6 @@ div#main ul li{
  float:left;
 }
 */
-div.youbi{
- width:80px;
- border-top:solid 1px #000000;
- border-bottom:solid 1px #000000;
- border-left:solid 1px #000000;
- float:left;
- text-align:center;
-}
-
 div.endcolumn{
  border-right:solid 1px #000000;
 }
@@ -635,6 +626,63 @@ div#main div.datazone ul li{
  width:1500px;
 }
 
+div.calendaritem{
+ width:750px;
+ margin-top:10px;
+}
+
+div.youbi{
+ width        :13%;
+ border-top   :solid 1px #F5F5F5;
+ border-left  :solid 1px #F5F5F5;
+ float        :left;
+ text-align   :center;
+ font-size    :0.5em;
+}
+
+div.colend{
+ border-right :solid 1px #F5F5F5;
+}
+
+div.rowend{
+ border-bottom:solid 1px #F5F5F5;
+}
+
+div.dayitem{
+ width        :13%;
+ height       :130px;
+ text-align   :left;
+ border-top   :solid 1px #F5F5F5;
+ border-left  :solid 1px #F5F5F5;
+ float        :left;
+ text-decoration:none;
+}
+
+div.dayitem > a{
+ text-decoration:none;
+ color:black;
+}
+
+div.calimg{
+ height:3em;
+ overflow:hidden;
+}
+
+div.caltitle{
+ height:2.6em;
+ font-size:0.8em;
+ overflow:hidden;
+}
+
+div.calrate{
+ color:#DC143C;
+ font-size:2em;
+ text-align:right;
+}
+
+div.calrate > span{
+ font-size:0.6em;
+}
 div.clr{
  clear:both;
 }
