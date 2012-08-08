@@ -1,5 +1,7 @@
 <?php
 require_once("./php/janmas.class.php");
+require_once("./php/calendar.class.php");
+
 try{
 //------------------------------------------------------------//
 // データゲット
@@ -22,6 +24,9 @@ try{
 //     ["linlist"]["data"]    分類一覧数
 //                ["status"]  true false
 //                ["local"]   日本語列名
+//    ["calendar"]["data"]    カレンダー
+//                ["status"]  true false
+//                ["local"]   日本語列名
 //------------------------------------------------------------//
 
  //引数セット
@@ -30,6 +35,7 @@ try{
  $jcode=$_GET["jcode"];
  $datanum=$_GET["datanum"];
  $word=$_GET["word"];
+ $hiduke=$_GET["hiduke"];
 
  //引数チェック
  if($lincode && ! is_numeric($lincode)){
@@ -44,10 +50,18 @@ try{
  if($datanum && ! is_numeric($datanum)){
   throw new exception("表示番号は数字で入力してください");
  }
+ if($hiduke && !CHKDATE($hiduke)){
+  throw new exception("日付が不正です");
+ }
+ if(! $hiduke) $hiduke=date("Y-m-d");
+
+ //calendarをゲット
+ $cal=new CL();
+ $cal->getItem($hiduke);
+ $data["calendar"]=$cal->item;
 
  //単品マスタ系データゲット
  $db=new JANMAS();
-
 
  $db->getLinMas();
  $data["linlist"]=$db->items;
@@ -87,9 +101,6 @@ try{
 
  //現在位置把握
  $start=$data["linitems"]["data"][0]["datanum"];
- $last=count($data["linitems"]["data"])-1;
- $end=$data["linitems"]["data"][$last]["datanum"];
- $total=$data["linitems"]["total"];
  $page=floor($start/JANMASLIMIT);
  $pages=ceil($data["linitems"]["total"]/JANMASLIMIT);
  
@@ -98,7 +109,7 @@ try{
  if($startpage<0) $startpage=0;
  
  $url ="item.php?lincode=".$lincode."&clscode=".$clscode;
- $url.="&datanum=";
+ $url.="&hiduke=".$hiduke."&datanum=";
  if($word){
   $url ="item.php?word=".$word."&datanum=";
  }
@@ -235,7 +246,7 @@ echo $ul;
    <!-- leftside -->
    <div id="leftside" style="margin:0px !important;">
 <?PHP
-$html=$db->getHtmlLinList($data["linlist"],$lincode);
+$html=$db->getHtmlLinList($data["linlist"],$lincode,$hiduke);
 echo $html;
 ?>
    </div>
@@ -244,7 +255,7 @@ echo $html;
    <!-- rightside -->
    <div id="rightside" style="float:left !important;margin:0 2px !important;">
 <?php
-$html=$db->getHtmlClsList($data["clslist"],$lincode,$clscode);
+$html=$db->getHtmlClsList($data["clslist"],$lincode,$clscode,$hiduke);
 echo $html;
 ?>
     <!-- tirasiitem-->
@@ -267,6 +278,25 @@ if($err && DEBUG){
 }
 ?>
 
+    <!-- calendar -->
+    <div class="calendaritem">
+<?php
+if($data["calendar"]["data"]){
+ $cal=$data["calendar"]["data"];
+ $nen=date("Y",strtotime($cal["hiduke"]));
+ $tuki=date("m",strtotime($cal["hiduke"]));
+ $url="calendar.php?nen=".$nen."&tuki=".$tuki;
+ $html ="<a href='".$url."'>\n";
+ $html.="カレンダー情報：";
+ $html.=date("n月j日",strtotime($cal["hiduke"]))."限り";
+ $html.=$cal["title"]."全品".$cal["rate"];
+ $html.="</a>\n";
+ echo "<h4>".$html."</h4>\n";
+}
+?>
+    </div>
+    <!-- calendar -->
+
     <!-- tirasiitem -->
     <div class="tirasiitem">
      <!-- tanpin -->
@@ -274,7 +304,7 @@ if($err && DEBUG){
 <?php
 //単品表示
 if($data["item"]["data"]){
- $html=$db->getHtmlJanMas($data["item"],0);
+ $html=$db->getHtmlJanMas($data["item"],0,$hiduke);
  echo $html;
 }
 ?>
@@ -291,7 +321,7 @@ if($word){
  //ここにinputタグを配置して検索できるようにしたい
 
  if( $data["searchitems"]["data"]){
-  $html=$db->getHtmlJanMas($data["searchitems"],$datanum);
+  $html=$db->getHtmlJanMas($data["searchitems"],$datanum,$hiduke);
   echo $html;
  }//if
  else{
@@ -301,7 +331,7 @@ if($word){
 
 //アイテム一覧表示
 if(! $word &&! $data["searchitems"]["data"]){
-$html=$db->getHtmlJanMas($data["linitems"],$datanum);
+$html=$db->getHtmlJanMas($data["linitems"],$datanum,$hiduke);
 echo $html;
 }
 

@@ -10,17 +10,24 @@ try{
 //------------------------------------------------------------//
 
  //引数セット
+ $nen=$_GET["nen"];
+ $tuki=$_GET["tuki"];
 
  //引数チェック
+ if($nen  && ! is_numeric($nen))  throw new exception("年が無効です");
+ if($tuki && ! is_numeric($tuki)) throw new exception("月が無効です");
+
+ //引数していなければ当月を表示
+ if(! $nen)  $nen=date("Y");
+ if(! $tuki) $tuki=date("n");
 
  //単品マスタ系データゲット
  $db=new CL();
  $db->getCalendarList();
  $data["lists"]=$db->items;
 
- $db->getCalendarItem(2012,7);
+ $db->getCalendarItem($nen,$tuki);
  $data["items"]=$db->items;
- 
  
  //ナビ表示
 
@@ -45,7 +52,7 @@ catch(Exception $e){
   <meta name="keywords" content="キタムラ,スーパーキタムラ,スーパーきたむら,スーパー北村,シェノール,惣菜,パン,お酒,日本酒,焼酎,ワイン,配達">
 
   <!-- タイトル(ページごとに変更) -->
-  <title>商品のご案内:食品スーパーマーケット　</title>
+  <title><?php echo $nen; ?>年<?php echo $tuki;?>月 お買得カレンダー:食品スーパーマーケット　</title>
 
   <!-- link(ページごとに変更) -->
   <link rel="icon" href="./img/kitamura.ico" type="type/ico" sizes="16x16" /> 
@@ -75,7 +82,7 @@ catch(Exception $e){
 
     <!-- hello -->
     <div class="hello">
-     <h1>カレンダー</h1>
+     <h2>お買得カレンダー</h2>
     </div>
     <!-- hello -->
 
@@ -162,6 +169,7 @@ if($err && DEBUG){
 
     <!-- calendaritem -->
     <div class="calendaritem">
+    <h2><?php echo $tuki*1; ?>月</h2>
 <?php
 $html=$db->getHtmlCalItem($data["items"],2012,7);
 echo $html;
@@ -188,7 +196,10 @@ echo $html;
 
     </div>
     <!-- tirasiitem -->
-
+   <p>
+   ご注意:<br />
+   表示しているセールにつきましては予告なく変更、中止となる場合がございます。表示されておりますセールが当日実施されなかった場合、誠に恐れ入りますが店頭で販売しております価格を優先とさせていただきます。
+   </p>
    </div>
    <!-- main -->
 

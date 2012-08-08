@@ -447,7 +447,7 @@ class JANMAS extends DB{
  // アイテムを表示するHTMLを作成
  // 返り値:<a>
  //---------------------------------------------------------//
- public function getHtmlJanMas($data,$datanum=null){
+ public function getHtmlJanMas($data,$datanum=null,$hiduke=null){
   //if($data["data"]) $html.="<h3>こんな商品も売れています</h3>\n";
   $html="";
   $i=0;
@@ -456,6 +456,7 @@ class JANMAS extends DB{
    $url.="&clscode=".$val["clscode"];
    $url.="&jcode=".$val["jcode"];
    $url.="&datanum=".$datanum;
+   $url.="&hiduke=".$hiduke;
    //$url.="&datanum=0";
 
    $html.="<a href='".$url."'>";
@@ -480,12 +481,12 @@ class JANMAS extends DB{
  // ラインリストのHTMLを返す
  // 返り値:<ul>
  //---------------------------------------------------------//
- public function getHtmlLinList($data,$lincode){
+ public function getHtmlLinList($data,$lincode,$hiduke=null){
   //ulのクラス名をセット
   $ulcls="";
 
   //リンク先URLをセット
-  $url="item.php?datanum=0&lincode=";
+  $url="item.php?hiduke=".$hiduke."&datanum=0&lincode=";
 
   //リスト作成
   foreach($data["data"] as $key=>$val){
@@ -504,12 +505,12 @@ class JANMAS extends DB{
  // クラスリストのHTMLを返す
  // 返り値:<ul>
  //---------------------------------------------------------//
- public function getHtmlClsList($data,$lincode,$clscode){
+ public function getHtmlClsList($data,$lincode,$clscode,$hiduke=null){
   //ulのクラス名をセット
   $ulcls="";
 
   //リンク先URLをセット
-  $url="item.php?datanum=0&lincode=".$lincode."&clscode=";
+  $url="item.php?hiduke=".$hiduke."&datanum=0&lincode=".$lincode."&clscode=";
 
   //リスト作成
   foreach($data["data"] as $key=>$val){

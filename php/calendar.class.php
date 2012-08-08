@@ -14,6 +14,7 @@ require_once("function.php");
 
 class CL extends DB{
  public  $items;   //データを格納
+ public  $item;   //データを格納
  private $columns;//テーブル情報
  private $csvcol; //CSV列情報
 
@@ -154,29 +155,69 @@ class CL extends DB{
  //---------------------------------------------------------//
  public function getCalendarItem($nen,$tuki){
   //引数チェック
-  
+  if(! CHKDATE($nen."-".$tuki."-01")) throw new exception("日付が不正です");
+
+  //開始日,終了日セット
   $s=date("Y-m-d",mktime(0,0,0,$tuki  ,1,$nen));
   $e=date("Y-m-d",mktime(0,0,0,$tuki+1,0,$nen));
   
   //テーブル配列ゲット
-  $table=$GLOBALS["TABLES"][TB_CAL];
+  $table=$GLOBALS["TABLES"];
+
+  //メンバーリセット
+  $this->items=null;
 
   //データゲット
-  $this->select="t.hiduke,t.title,t.rate,count(t1.jcode) as cnt";
+  $this->select="t.hiduke,t.title,t.rate";
+  $this->select.=",count(t1.jcode) as cnt";
+  $this->select.=",min(t2.lincode) as lincode";
+  $this->select.=",min(t1.clscode) as clscode";
   $this->from =TB_CAL." as t";
   $this->from.=" inner join ".TB_JANMAS." as t1 on";
   $this->from.=" t.clscode=t1.clscode";
+  $this->from.=" inner join ".TB_CLSMAS." as t2 on";
+  $this->from.=" t1.clscode=t2.clscode";
   $this->where=" t.hiduke between '".$s."' and '".$e."'";
   $this->where.=" and t1.lastsale>'".date("Y-m-d",strtotime("-60days"))."'";
   $this->group="t.hiduke,t.title,t.rate";
   $this->order=$this->group;
   $this->items["data"]=$this->getArray();
   $this->items["status"]=true;
-  $this->items["local"]=array( $table["hiduke"]["local"]
-                              ,$table["title"] ["local"]
-                              ,$table["rate"]  ["local"]
+  $this->items["local"]=array( $table[TB_CAL]["hiduke"]["local"]
+                              ,$table[TB_CAL]["title"] ["local"]
+                              ,$table[TB_CAL]["rate"]  ["local"]
+                              ,$table[TB_LINMAS]["lincode"]["local"]
+                              ,$table[TB_CAL]["clscode"]["local"]
                               ,"データ数");
- }
+ }//getCalendarItem
+
+ //---------------------------------------------------------//
+ // 単日カレンダーアイテムをゲット
+ // 返り値:true false
+ //       :$this->items[data]   選択月のカレンダーアイテム
+ //       :$this->items[local]  列名を格納
+ //       :$this->items[status] データの状態を格納(true false)
+ //---------------------------------------------------------//
+ public function getItem($hiduke){
+  //引数チェック
+  if(! CHKDATE($hiduke)) throw new exception("日付が不正です");
+
+  //メンバーリセット
+  $this->items=null;
+  
+  //月データをゲット
+  $this->getCalendarItem(date("Y",strtotime($hiduke)),date("m",strtotime($hiduke)));
+
+  //該当データゲット
+  foreach($this->items["data"] as $key=>$val){
+   if(strtotime($val["hiduke"])===strtotime($hiduke)){
+    $this->item["data"]  =$this->items["data"][$key];
+    $this->item["status"]=true;
+    $this->item["local"] =$this->items["local"];
+    break;
+   }//if
+  }//foreach
+ }//getItem
  
  //---------------------------------------------------------//
  // ラインリストのHTMLを返す
@@ -253,7 +294,10 @@ class CL extends DB{
    $html.="<h6>".date("j",$i)."</h6>";
    foreach($data["data"] as $key=>$val){
     if($i==strtotime($val["hiduke"])){
-     $url="item.php?hiduke=".date("Y-m-d",$i);
+     //item.phpへのリンク生成
+     $url ="item.php?lincode=".$val["lincode"]."&clscode=".$val["clscode"];
+     $url.="&hiduke=".$val["hiduke"];
+
      $html.="<a href='".$url."'>";
      $html.="<div class='calimg'><img src=''></div>";
      $html.="<div class='caltitle'>".$val["title"]."(".$val["cnt"].")"."</div>";
