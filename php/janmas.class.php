@@ -335,6 +335,8 @@ class JANMAS extends DB{
   if($lincode) $this->where.=" and t1.lincode=".$lincode;
   if($clscode) $this->where.=" and t.clscode=".$clscode;
   if($jcode)   $this->where.=" and t.jcode=".$jcode;
+
+  //検索ワード指定
   if($word){
    //検索条件をリセット
    $this->where=null;
@@ -410,6 +412,7 @@ class JANMAS extends DB{
 
  }//getJanMas
 
+/*
  public function getSearchItem($word){
   $this->items=null;
 
@@ -439,12 +442,12 @@ class JANMAS extends DB{
 
 
  }//getSearchItem
-
+*/
  //---------------------------------------------------------//
  // アイテムを表示するHTMLを作成
  // 返り値:<a>
  //---------------------------------------------------------//
- public function getHtmlJanMas($data){
+ public function getHtmlJanMas($data,$datanum=null){
   //if($data["data"]) $html.="<h3>こんな商品も売れています</h3>\n";
   $html="";
   $i=0;
@@ -452,7 +455,8 @@ class JANMAS extends DB{
    $url ="item.php?lincode=".$val["lincode"];
    $url.="&clscode=".$val["clscode"];
    $url.="&jcode=".$val["jcode"];
-   $url.="&datanum=0";
+   $url.="&datanum=".$datanum;
+   //$url.="&datanum=0";
 
    $html.="<a href='".$url."'>";
    $html.="<div class='imgdiv'><img src='./img/".$val["jcode"].".jpg' alt='".$val["sname"]."'></div>\n";

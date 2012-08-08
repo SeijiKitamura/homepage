@@ -66,7 +66,7 @@ try{
 
  //単品データゲット
  if($jcode){
-  $db->getJanMas($lincode,$clscode,$jcode,$datanum);
+  $db->getJanMas($lincode,$clscode,$jcode,0);
   $data["item"]=$db->items;
  }
 
@@ -98,7 +98,7 @@ try{
  if($startpage<0) $startpage=0;
  
  $url ="item.php?lincode=".$lincode."&clscode=".$clscode;
- $url.="&jcode=".$jcode."&datanum=";
+ $url.="&datanum=";
  if($word){
   $url ="item.php?word=".$word."&datanum=";
  }
@@ -274,7 +274,7 @@ if($err && DEBUG){
 <?php
 //単品表示
 if($data["item"]["data"]){
- $html=$db->getHtmlJanMas($data["item"]);
+ $html=$db->getHtmlJanMas($data["item"],0);
  echo $html;
 }
 ?>
@@ -291,7 +291,7 @@ if($word){
  //ここにinputタグを配置して検索できるようにしたい
 
  if( $data["searchitems"]["data"]){
-  $html=$db->getHtmlJanMas($data["searchitems"]);
+  $html=$db->getHtmlJanMas($data["searchitems"],$datanum);
   echo $html;
  }//if
  else{
@@ -301,7 +301,7 @@ if($word){
 
 //アイテム一覧表示
 if(! $word &&! $data["searchitems"]["data"]){
-$html=$db->getHtmlJanMas($data["linitems"]);
+$html=$db->getHtmlJanMas($data["linitems"],$datanum);
 echo $html;
 }
 
