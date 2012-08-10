@@ -334,6 +334,7 @@ class DB{
     $this->sql.=")";
    }//if
    $this->sql.=") engine=innodb;";
+   echo $this->sql;
    //テーブル作成
    if($flg){
     $this->__QUERY($this->sql);

@@ -4,8 +4,7 @@ try{
  echo "success";
  $db=new DB();
  echo "<pre>";
- print_r($db->CreateTable(TB_JANMAS));
- print_r($db->CreateTable(TB_ITEMS));
+ print_r($db->CreateTable(TB_SPECIAL));
  echo "</pre>";
 }
 catch(Exception $e){

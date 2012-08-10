@@ -208,11 +208,13 @@ catch(Exception $e){
     <!-- timesale -->
     <div class="timesale">
      <ul>
-      <li>本日のおすすめ</li>
+      <li><a href="index.html">ホーム</a></li>
       <li> | </li>
-      <li>今週のチラシ</li>
+      <li><a href='tirasi.php'>今週のチラシ</a></li>
       <li> | </li>
-      <li>今月のお買得品</li>
+      <li><a href="calendar.php">カレンダー</a></li>
+      <li> | </li>
+      <li>商品のご案内</li>
       <li> | </li>
       <li>ご注文承り中</li>
       <li> | </li>

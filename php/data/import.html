@@ -124,6 +124,7 @@ function Init(filename){
   //if(n=="tirasiimage") setTirasiImageCSV($(this));
   if(n=="janmas")      setJanMasCSV($(this));
   if(n=="clsmas")      setClsMasCSV($(this));
+  if(n=="special")     setSpecialCSV($(this));
  });
  
 }
@@ -259,7 +260,62 @@ function setImageUrl(elem){
 }
 //======================== setImageUrl 終了============//
 
-//======================== setLi 開始 ==================//
+//======================== setList 開始 ==========//
+function setList(json){
+ //初期化
+ $(dz).empty();
+
+ var li="";
+ var msg;
+ //更新結果をセット
+ if(json["status"]) msg="更新しました";
+ else msg="エラーがあります";
+ li+="<li>"+msg+"</li>\n";
+
+ //列名セット
+ li+="<li>";
+ var calcnt=0;
+ for( var i in json["local"]){
+  li+="<div class='col1";
+  if(calcnt==0) li+=" col1start'";
+  li+="'>";
+
+  li+=json["local"][i];
+  li+="</div>";
+  calcnt++;
+ }
+ li+="<div class='clr'></div>";
+ li+="</li>\n";
+
+ //データセット
+ var flg=1;
+
+ for(var i in json["data"]){
+  li+="<li>";
+  var calcnt=0;
+  for(var j in json["local"]){
+   var divcls="";
+   divcls+="<div class='col1";
+   if(calcnt==0) divcls+=" col1start";
+   if(i==json["data"].length-1) divcls+=" row1end";
+   divcls+="'>";
+   li+=divcls;
+
+   li+=json["data"][i][j];
+   li+="</div>";
+   calcnt++;
+  }//for var j
+  li+="<div class='clr'></div>";
+  li+="</li>\n";
+ }//for var i
+ //データ表示
+ $("<ul>").append(li)
+          .appendTo($(dz));
+
+}//setList
+//======================== setList 終了 ==========//
+
+//======================== setLi 開始 以下削除予定==========//
 function setLi(json){
  //初期化
  $(dz).empty();
@@ -320,6 +376,34 @@ function setClsMasCSV(elem){
  },"html");//elem
 }//function
 //======================== setClsMasCSV 終了 ==================//
+
+//======================== setSpecialCSV 開始 ==================//
+function setSpecialCSV(elem){
+ //選択したファイルをDBへ更新し表示
+ elem.upload("jsonSetSpecial.php",function(html){
+  //console.log(html);
+  //エラーチェック
+  if(html.match(/エラー/)){
+   $(dz).append(html);
+   return false;
+  }
+
+  //JSONへ変換
+  var json=eval("("+html+")");
+  if(! json){
+   $(dz).append("データがありません");
+   return false;
+  }
+  
+  //データ表示
+  setList(json);
+
+
+  }//function
+  ,"html"
+ )//elem.upload
+}
+//======================== setSpecialCSV 終了 ==================//
 
 //======================== setCalendarCSV 開始 ==================//
 function setCalendarCSV(elem){
@@ -577,6 +661,7 @@ function errMsg(html){
      <li><a href="#" class="tirasititle">チラシタイトル更新</a></li>
      <li><a href="#" class="tirasiitem">チラシデータ更新</a></li>
      <li><a href="#" class="tirasiimage">チラシ画像更新</a></li>
+     <li><a href="#" class="special">ご予約商品更新</a></li>
      <li><a href="#" class="janmas">商品マスタ更新</a></li>
      <li><a href="#" class="clsmas">部門マスタ更新</a></li>
     </ul>

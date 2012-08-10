@@ -26,6 +26,7 @@ define("ITEMS"   ,"tirasiitem");        //チラシデータ
 define("JANMAS"  ,"janmas");            //単品マスタ
 define("CLSMAS"  ,"clsmas");            //クラスマスタ
 define("LINMAS"  ,"linmas");            //部門マスタ
+define("SPECIAL" ,"special");           //ご予約商品マスタ
 //---------------------------------------------------//
 
 //---------------------------------------------------//
@@ -38,6 +39,7 @@ define("ITEMCSV" ,DATADIR.ITEMS.".csv");    //チラシデータ
 define("JANCSV"  ,DATADIR.JANMAS.".csv");   //単品マスタ
 define("CLSCSV"  ,DATADIR.CLSMAS.".csv");   //クラスマスタ
 define("LINCSV"  ,DATADIR.LINMAS.".csv");   //部門マスタ
+define("SPECIALCSV",DATADIR.SPECIAL.".csv");   //ご予約商品マスタ
 //---------------------------------------------------//
 
 
@@ -59,6 +61,7 @@ define("TB_ITEMS"       ,TABLE_PREFIX.ITEMS);     //チラシデータ
 define("TB_JANMAS"      ,TABLE_PREFIX.JANMAS);    //単品マスタ
 define("TB_CLSMAS"      ,TABLE_PREFIX.CLSMAS);    //クラスマスタ
 define("TB_LINMAS"      ,TABLE_PREFIX.LINMAS);    //部門マスタ
+define("TB_SPECIAL"     ,TABLE_PREFIX.SPECIAL);   //ご予約商品マスタ
 
 //---------------------------------------------------//
 // DB テーブル列系定数
@@ -346,6 +349,127 @@ $TABLES=array(TB_TITLES=>array(
                                                ,"local"  =>"メジャー番号"
                                               )//dpscode
                             )//TB_LINMAS
+              ,TB_SPECIAL=>array(
+                               "id"    =>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>"auto"
+                                               ,"default"=>"0"
+                                               ,"primary"=>1
+                                               ,"local"  =>"番号"
+                                              )//id
+                              ,"grp1"  =>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"0"
+                                               ,"primary"=>""
+                                               ,"local"  =>"Grp1"
+                                              )//grp1
+                            ,"grp1name"=>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"Grp1名"
+                                              )//grp1name
+                              ,"grp2"  =>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"0"
+                                               ,"primary"=>""
+                                               ,"local"  =>"Grp2"
+                                              )//grp2
+                            ,"grp2name"=>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"Grp2名"
+                                              )//grp2name
+                              ,"grp3"  =>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"0"
+                                               ,"primary"=>""
+                                               ,"local"  =>"Grp3"
+                                              )//grp3
+                            ,"grp3name"=>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"Grp3名"
+                                              )//grp3name
+                             ,"clscode"=>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>0
+                                               ,"primary"=>""
+                                               ,"local"  =>"クラスコード"
+                                              )//jcode
+                               ,"jcode"=>array( "type"   =>"varchar(14)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>'0'
+                                               ,"primary"=>""
+                                               ,"local"  =>"JANコード"
+                                              )//jcode
+                               ,"sname"=>array(   "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"商品名"
+                                                 )//sname   
+                               ,"maker"=>array(   "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"メーカー"
+                                                )//maker   
+                               ,"tani" =>array(   "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"販売単位"
+                                                )//tani    
+                               ,"baika"  =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"売価"
+                                                )//baika   
+                               ,"notice" =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"コメント"
+                                                )//notice  
+                            ,"view_start"=>array( "type"   =>"date"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"'0000-00-00'"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"開始日"
+                                                )//view_start
+                            ,"view_end"  =>array( "type"   =>"date"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"'0000-00-00'"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"終了日"
+                                                )//view_end  
+                            ,"flg"       =>array( "type"   =>"int"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"0"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"表示"
+                                                )//flg
+                            )//TB_SPECIAL
             );//TABLES
 
 //---------------------------------------------------//
@@ -397,6 +521,22 @@ $CSVCOLUMNS=array( TB_CAL   =>array( "hiduke"
                                     ,"linname"
                                     ,"dpscode"
                                    )//TB_LINMAS
+                 ,TB_SPECIAL=>array(
+                                     "grp1"
+                                    ,"grp1name"
+                                    ,"grp2"
+                                    ,"grp2name"
+                                    ,"clscode"
+                                    ,"jcode"
+                                    ,"sname"
+                                    ,"maker"
+                                    ,"tani"
+                                    ,"baika"
+                                    ,"notice"
+                                    ,"view_start"
+                                    ,"view_end"
+                                    ,"flg"
+                                    )//TB_SPECIAL
                  );//CSVCOLUMNS
 //---------------------------------------------------//
 

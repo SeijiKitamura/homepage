@@ -1,5 +1,65 @@
 <?php
 //-------------------------------------------//
+// CSVの値を配列へセット                     //
+// CSVファイルを読み込んで配列を返す         //
+// 注意:元データに[err]が付きます。          //
+//-------------------------------------------//
+function GETARRAYCSV($csvfilepath,$tablename){
+ global $TABLES;
+ global $CSVCOLUMNS;
+ 
+ //テーブル列情報をセット
+ $table=$TABLES[$tablename];
+ if(! $table) throw new exception("テーブル列情報がありません");
+
+ //CSV列情報をセット
+ $csv=$CSVCOLUMNS[$tablename];
+ if(! $csv) throw new exception("CSV列情報がありません");
+
+ //ファイル読み込み
+ if(($fl=fopen($csvfilepath,"r"))===FALSE) throw new exception("元データがありません");
+
+ //配列へCSVデータを追加
+ while($line=fgets($fl)){
+  $line=str_replace("\n","",$line);
+  $csvdata[]=explode(",",$line);
+ }//while
+ if(! $csvdata) throw new exception("CSVデータがありません");
+
+ //列数を確認
+ if(count($csvdata[0])!==count($csv)) throw new exception("CSVの列数が違います");
+
+ //データをセット
+ $flg=true;
+ foreach($csvdata as $row =>$cols){
+  foreach($csv as $colnum => $colname){
+   //データセット
+   $data[$row][$colname]=$cols[$colnum];
+
+   //値チェック
+   if(! CHKTYPE($table[$colname]["type"],$cols[$colnum])){
+    $data[$row]["err"]=$table[$colname]["local"]."の値が不正です";
+    $flg=false;
+   }//if
+   else{
+    $data[$row]["err"]="OK";
+   }//else
+  }//foreach
+ }//foreach
+
+ //列名をセット
+ foreach($csv as $colnum=>$colname){
+  $local[$colname]=$table[$colname]["local"];
+ }//foreach
+ $local["err"]="エラー内容";
+
+ $items["data"]=$data;
+ $items["status"]=$flg;
+ $items["local"]=$local;
+
+ return $items;
+}
+//-------------------------------------------//
 // CSV 値チェック                            //
 // CSVファイルを読み込んで配列を返す         //
 // 注意:元データに[err]が付きます。          //
