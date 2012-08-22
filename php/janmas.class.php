@@ -32,20 +32,6 @@ class JANMAS extends DB{
   //データ初期化
   $this->items=null;
 
-  //CSVファイルをゲット
-  //(入力した値に不正があれば配列[err]にエラーメッセージが付加される)
-  $this->items=CHKDATA(JANCSV,TB_JANMAS);//function.php内参照
-  return true;
- }//checkData
-
- //---------------------------------------------------------//
- // CSVファイルをDBへ登録
- // 返り値:true false
- //       :$this->items[data]   CSVデータを格納
- //       :$this->items[local]  列名を格納
- //       :$this->items[status] データの状態を格納(true false)
- //---------------------------------------------------------//
- public function setData(){
   //テーブル列情報ゲット
   $this->columns=$GLOBALS["TABLES"][TB_JANMAS];
   if(! $this->columns){
@@ -60,66 +46,67 @@ class JANMAS extends DB{
    throw new exception($msg);
   }
 
+
+  //CSVファイルをゲット
+  //(入力した値に不正があれば配列[err]にエラーメッセージが付加される)
+  //$this->items=CHKDATA(JANCSV,TB_JANMAS);//function.php内参照
+  $this->items=GETARRAYCSV(JANCSV,TB_JANMAS);//function.php内参照
+  return true;
+ }//checkData
+
+ //---------------------------------------------------------//
+ // CSVファイルをDBへ登録
+ // 返り値:true false
+ //       :$this->items[data]   CSVデータを格納
+ //       :$this->items[local]  列名を格納
+ //       :$this->items[status] データの状態を格納(true false)
+ //---------------------------------------------------------//
+ public function setData(){
   //データ初期化
   $this->items=null;
 
   //CSVファイルをゲット
   $this->checkData();             
 
-  //if(! $this->items["status"]) return false;
+  //データ存在チェック
+  if(! $this->items["data"]) throw new exception("データがありません");
 
-  //エラーフラグ
-  $flg=0;
-
-  //CSVのJANコード列をゲット
-  for($i=0;$i<count($this->csvcol);$i++){
-   if($this->csvcol[$i]==="jcode"){
-    $jancol=$i;
-    $flg=1;
-    break;
-   }
-  }//for
-
-  if(! $flg){
-   $this->items["status"]=false;
-   $msg="JANコード列がありません。設定を見なおしてください config CSVCOLUMNS";
-   throw new exception($msg);
-  }//if
-  
   //データ登録
   try{
    $this->BeginTran();
-   for($i=0;$i<count($this->items["data"]);$i++){
-    //エラーデータチェック
-    if($this->items["data"][$i]["err"]!="OK"){
-     $this->items["errdata"][$i]=$this->items["data"][$i];
+   //SQL生成
+   foreach($this->items["data"] as $rownum =>$row){
+    //エラーチェック
+    if($row["err"]!=="OK"){
+     $row["rownum"]=$rownum;
+     $this->items["errdata"][]=$row;
      continue;
-    }
+    }//if
 
     //JANコード変換
-    $jcode=GETJAN($this->items["data"][$i][$jancol]);
+    $jcode=GETJAN($row["jcode"]);
     if($jcode===FALSE){
      $this->items["status"]=false;
-     $this->items["data"][$i]["err"]="JANコードが不正です";
-     $this->items["errdata"][$i]=$this->items["data"][$i];
+     $this->items["data"][$rownum]["err"]="JANコードが不正です";
+     $row["err"]="JANコードが不正です";
+     $row["rownum"]=$rownum;
+     $this->items["errdata"][]=$row;
      continue;
-    }
-    //UPDATEデータ生成
-    foreach($this->csvcol as $key=>$val){
-     if($key==$jancol){
-      $this->updatecol[$val]=$jcode;
-     }//if
-     else{
-      $this->updatecol[$val]=$this->items["data"][$i][$key];
-     }//else
+    }//if
+    $this->items["data"][$rownum]["jcode"]=$jcode;
+
+    //SQL生成(err列を除く)
+    foreach($this->csvcol as $colnum =>$colname){
+     $this->updatecol[$colname]=$this->items["data"][$rownum][$colname];
     }//foreach
     $this->from=TB_JANMAS;
-    //$this->where="jcode='".$this->items["data"][$i][$jancol]."'";
     $this->where="jcode='".$jcode."'";
+    
+    //SQL実行
     $this->update();
-   }//for
+   }//foreach
+  
    $this->Commit();
-   return true;
   }//try
   catch(Exception $e){
    $this->RollBack();

@@ -372,7 +372,15 @@ function setLi(json){
 //======================== setClsMasCSV 開始 ==================//
 function setClsMasCSV(elem){
  elem.upload("jsonSetClsMas.php",function(html){
-  console.log(html);
+  if(html.match(/エラー/)){
+   $(dz).append(html);
+  }
+  
+  var json=eval("("+html+")");
+  var clsdata=json["clsmas"];
+  var lindata=json["linmas"];
+  $(dz).empty()
+       .append(clsdata.data.length+"件追加しました");
  },"html");//elem
 }//function
 //======================== setClsMasCSV 終了 ==================//
@@ -426,7 +434,7 @@ function setCalendarCSV(elem){
   }
   
   //データ表示
-  setLi(json);
+  setList(json);
 
  },"html");
 }
@@ -453,7 +461,7 @@ function setTirasiTitleCSV(elem){
   }
 
   //データ表示
-  setLi(json);
+  setList(json);
 
  },"html");
 }
@@ -477,7 +485,7 @@ function setTirasiItemCSV(elem){
   }
 
   //データ表示
-  setLi(json);
+  setList(json);
 
  },"html");
 }
@@ -508,7 +516,7 @@ function setJanMasCSV(elem){
   //エラーデータがあった場合、表示
   if(! json["status"]){
    json["data"]=json["errdata"];
-   setLi(json);
+   setList(json);
   }
   alert("終了しました");
   

@@ -43,7 +43,8 @@ class CL extends DB{
   $this->items=null;
 
   //CSVファイルを配列へ格納
-  $this->items=CHKDATA(CALCSV,TB_CAL);//function.php内参照
+  //$this->items=CHKDATA(CALCSV,TB_CAL);//function.php内参照
+  $this->items=GETARRAYCSV(CALCSV,TB_CAL);//function.php内参照
 
   return true;
  }//checkData
@@ -62,61 +63,47 @@ class CL extends DB{
   //CSVファイルを配列へ格納
   $this->checkData();
   
-  //エラーチェック
-  if(! $this->items["status"]) return false;
-
-  //エラーフラグ
-  $flg=0;
-
-  //CSVの日付列をゲット
-  for($i=0;$i<count($this->csvcol);$i++){
-   if($this->csvcol[$i]==="hiduke"){
-    $flg=1;
-    break;
-   }
-  }//for
-
-  if(! $flg){
-   $this->items["status"]=false;
-   $msg="日付列がありません。設定を見なおしてください。config CSVCOLUMNS";
-   throw new exception($msg);
-  }//if
-
-  //CSV最初のデータの日付をゲット
-  $hiduke=$this->items["data"][0][$i];
+  //データ存在チェック
+  if(! $this->items["data"]) throw new exception("データがありません。");
 
   //データ登録
   try{
-   //トランザクション開始
    $this->BeginTran();
-
-   //hiduke以降の既存データを削除
-   $this->from=TB_CAL;
-   $this->where="hiduke >='".$hiduke."'";
-   $this->delete();
-
-   //CSVデータ登録
-   for($i=0;$i<count($this->items["data"]);$i++){
-    //UPDATEデータ生成
-    foreach($this->csvcol as $key=>$val){
-     $this->updatecol[$val]=$this->items["data"][$i][$key];
+   foreach($this->items["data"] as $rownum=>$row){
+    //エラーチェック
+    if($row["err"]!=="OK"){
+     $row["rownum"]=$rownum;
+     $this->items["errdata"][]=$row;
+     continue;
     }
+
+    //既存月を削除
+    if($tuki!==date("m",strtotime($row["hiduke"]))){
+     $ut=strtotime($row["hiduke"]);
+     $s=date("Y-m-d",mktime(0,0,0,date("m",$ut),1,date("Y",$ut)));
+     $e=date("Y-m-d",mktime(0,0,0,date("m",$ut)+1,0,date("Y",$ut)));
+     $this->from=TB_CAL;
+     $this->where="hiduke between '".$s."' and '".$e."'";
+     $this->delete();
+    }
+
+    //SQL生成(err列を除く)
+    foreach($this->csvcol as $colnum=>$colname){
+     $this->updatecol[$colname]=$row[$colname];
+    }//foreach
     $this->from=TB_CAL;
-    $this->where="id=0"; //無条件追加
+    $this->where =" hiduke='".$row["hiduke"]."'";
+    $this->where.=" and clscode=".$row["clscode"];
     $this->update();
-   }//for i
 
-   //コミット
+    //カレンダー月を更新
+    $tuki=date("m",strtotime($row["hiduke"]));
+   }//foreach
    $this->Commit();
-
-   return true;
   }//try
   catch(Exception $e){
-   $this->items["status"]=false;
-
-   //ロールバック
    $this->RollBack();
-
+   $this->items["status"]=false;
    throw $e;
   }//catch
  }// setData

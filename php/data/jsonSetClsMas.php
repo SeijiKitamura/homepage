@@ -10,29 +10,15 @@
 require_once("../clsmas.class.php");
 try{
  $db=new CLSMAS();
-
  $db->splitCsv();
-
  $db->setDataCLS();
- echo "<pre>";
- print_r($db->items);
- echo "</pre>";
-
+ $data["clsmas"]=$db->items;
+ //$db=new CLSMAS();
  $db=new CLSMAS();
  $db->setDataLIN();
- echo "<pre>";
- print_r($db->items);
- echo "</pre>";
-/*
- //インスタンス
- $db=new CL(); //calendar.class.php参照
-
- //DB登録
- $db->setData();
-
+ $data["linmas"]=$db->items;
  //JSONで返す
- echo json_encode($db->items);
-*/
+ echo json_encode($data);
 }
 catch(Exception $e){
  echo "エラー:".$e->getMessage();

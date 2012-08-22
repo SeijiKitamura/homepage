@@ -7,7 +7,7 @@
 function GETARRAYCSV($csvfilepath,$tablename){
  global $TABLES;
  global $CSVCOLUMNS;
- 
+
  //テーブル列情報をセット
  $table=$TABLES[$tablename];
  if(! $table) throw new exception("テーブル列情報がありません");
@@ -40,6 +40,7 @@ function GETARRAYCSV($csvfilepath,$tablename){
    if(! CHKTYPE($table[$colname]["type"],$cols[$colnum])){
     $data[$row]["err"]=$table[$colname]["local"]."の値が不正です";
     $flg=false;
+    continue 2;
    }//if
    else{
     $data[$row]["err"]="OK";

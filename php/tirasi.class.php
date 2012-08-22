@@ -32,6 +32,21 @@ class TIRASI extends DB{
 
  function __construct(){
   parent::__construct();
+
+  //テーブル列情報ゲット
+  $this->columns=$GLOBALS["TABLES"][TB_TITLES];
+  if(! $this->columns){
+   $msg="テーブル情報がありません。設定を見直してください。";
+   throw new exception($msg);
+  }
+
+  //CSV列情報ゲット
+  $this->csvcol =$GLOBALS["CSVCOLUMNS"][TB_TITLES];
+  if(! $this->csvcol){
+   $msg="CSV列情報がありません。設定を見直してください。";
+   throw new exception($msg);
+  }
+
  }//__construct
 
 
@@ -48,7 +63,8 @@ class TIRASI extends DB{
 
   //CSVファイルをゲット
   //(入力した値に不正があれば配列[err]にエラーメッセージが付加される)
-  $this->items=CHKDATA(TITLECSV,TB_TITLES);//function.php内参照
+  //$this->items=CHKDATA(TITLECSV,TB_TITLES);//function.php内参照
+  $this->items=GETARRAYCSV(TITLECSV,TB_TITLES);//function.php内参照
   
   return true;
  }// checkDataTitle
@@ -61,72 +77,41 @@ class TIRASI extends DB{
  //       :$this->items[status] データの状態を格納(true false)
  //---------------------------------------------------------//
  public function setDataTitle(){
-  //テーブル列情報ゲット
-  $this->columns=$GLOBALS["TABLES"][TB_TITLES];
-  if(! $this->columns){
-   $msg="テーブル情報がありません。設定を見直してください。";
-   throw new exception($msg);
-  }
-
-  //CSV列情報ゲット
-  $this->csvcol =$GLOBALS["CSVCOLUMNS"][TB_TITLES];
-  if(! $this->csvcol){
-   $msg="CSV列情報がありません。設定を見直してください。";
-   throw new exception($msg);
-  }
-
   //データ初期化
   $this->items=null;
 
   //CSVファイルをゲット
   $this->checkDataTitle();
-  if(! $this->items["status"]) return false;
+
+  //データ存在チェック
+  if(! $this->items["data"]) throw new exception("データがありません");
+  //if(! $this->items["status"]) return false;
    
-  //エラーフラグ
-  $flg=0;
-
-  //CSVのチラシ番号列をゲット
-  for($i=0;$i<count($this->csvcol);$i++){
-   if($this->csvcol[$i]==="tirasi_id"){
-    $flg=1;
-    break;
-   }
-  }//for
-
-  if(! $flg){
-   $this->items["status"]=false;
-   $msg="チラシ番号列がありません。設定を見なおしてください config CSVCOLUMNS";
-   throw new exception($msg);
-  }//if
-
-  //CSVの最初のチラシ番号をゲット
-  $tirasi_id=$this->items["data"][0][$i];
-
   try{
-   //トランザクション開始
    $this->BeginTran();
-
-   //既存データ削除
+   //CSV最初のチラシ番号以降のデータを削除
    $this->from=TB_TITLES;
-   $this->where="tirasi_id>='".$tirasi_id."'";
+   $this->where="tirasi_id>=".$this->items["data"][0]["tirasi_id"];
    $this->delete();
-   
 
-   //CSVデータ登録
-   for($i=0;$i<count($this->items["data"]);$i++){
-    //UPDATEデータ生成
-    foreach($this->csvcol as $key=>$val){
-     $this->updatecol[$val]=$this->items["data"][$i][$key];
-    }//foreach
+   //CSV登録
+   foreach ($this->items["data"] as $rownum =>$row){
+    //エラーチェック
+    if($row["err"]!=="OK"){
+     $row["rownum"]=$rownum;
+     $this->items["errdata"][]=$row;
+     continue;
+    }//if
+
+    //SQL生成(err列を除く)
+    foreach($this->csvcol as $colnum=>$colname){
+     $this->updatecol[$colname]=$this->items["data"][$rownum][$colname];
+    }
     $this->from=TB_TITLES;
-    $this->where="tirasi_id=0";//無条件追加
+    $this->where="tirasi_id=".$row["tirasi_id"];
     $this->update();
-   }//for
-
-   //コミット
+   }//foreach
    $this->Commit();
-
-   return true;
 
   }//try
   catch(Exception $e){
@@ -147,21 +132,7 @@ class TIRASI extends DB{
   //データ初期化
   $this->items=null;
 
-  //CSVファイルをゲット
-  $this->items["data"]=CHKDATA(ITEMCSV,TB_ITEMS);//function.php内参照
-  
-  return true;
- }// checkDataITEM
-
- //---------------------------------------------------------//
- // CSVファイルをDBへ登録
- // 返り値:true false
- //       :$this->items[data]   CSVデータを格納
- //       :$this->items[local]  列名を格納
- //       :$this->items[status] データの状態を格納(true false)
- //---------------------------------------------------------//
- public function setDataItem(){
- //テーブル列情報ゲット
+  //テーブル列情報ゲット
   $this->columns=$GLOBALS["TABLES"][TB_ITEMS];
   if(! $this->columns){
    $msg="テーブル情報がありません。設定を見直してください。";
@@ -174,99 +145,69 @@ class TIRASI extends DB{
    $msg="CSV列情報がありません。設定を見直してください。";
    throw new exception($msg);
   }
-  //データ初期化
-  $this->items=null;
 
   //CSVファイルをゲット
-  $this->items=CHKDATA(ITEMCSV,TB_ITEMS);//function.php内参照
-  if(! $this->items["status"]) return false;
-
-  //エラーフラグ
-  $flg=0;
-
-  //CSVのチラシ番号列をゲット
-  for($i=0;$i<count($this->csvcol);$i++){
-   if($this->csvcol[$i]==="tirasi_id"){
-    $flg=1;
-    break;
-   }
-  }//for
-
-  if(! $flg){
-   $this->items["status"]=false;
-   $msg="チラシ番号列がありません。設定を見なおしてください config CSVCOLUMNS";
-   throw new exception($msg);
-  }//if
-
-  //CSVのチラシ番号リストを作成
-  $colnum=$i;
-  for($i=0;$i<count($this->items["data"]);$i++){
-   if($t!=$this->items["data"][$i][$colnum]){
-    $tirasi_id[]=$this->items["data"][$i][$colnum];
-    $t=$this->items["data"][$i][$colnum];
-   }//if
-  }//for
+  //$this->items["data"]=CHKDATA(ITEMCSV,TB_ITEMS);//function.php内参照
+  $this->items=GETARRAYCSV(ITEMCSV,TB_ITEMS);//function.php内参照
   
-  for($i=0;$i<count($this->csvcol);$i++){
-   if($this->csvcol[$i]==="jcode"){
-    $jancol=$i;
-    break;
-   }//if
-  }//for
+  return true;
+ }// checkDataITEM
 
-  //CSVのJANコード列をゲット
-  if(! $jancol){
-   $this->items["status"]=false;
-   $msg="JANコード列がありません。設定を見なおしてください。config CSVCOLUMNS";
-   throw new exception($msg);
-  }
+ //---------------------------------------------------------//
+ // チラシアイテムのCSVファイルをDBへ登録
+ // (商品はチラシ番号順に並んでいることを前提にしています）
+ // 返り値:true false
+ //       :$this->items[data]   CSVデータを格納
+ //       :$this->items[local]  列名を格納
+ //       :$this->items[status] データの状態を格納(true false)
+ //---------------------------------------------------------//
+ public function setDataItem(){
+  //CSVファイルを配列へ格納
+  $this->checkDataItem();
 
+  //データ存在チェック
+  if(! $this->items["data"]) throw new exception("データがありません");
+  
+  //データ登録
   try{
-   //トランザクション開始
    $this->BeginTran();
+   foreach($this->items["data"] as $rownum=>$row){
+    //既存チラシを一括削除
+    if($tirasi_id!==$row["tirasi_id"]){
+     $this->from=TB_ITEMS;
+     $this->where="tirasi_id=".$row["tirasi_id"];
+     $this->delete();
+    }//if
 
-   //既存データ削除
-   for($i=0;$i<count($tirasi_id);$i++){
-    $this->from=TB_ITEMS;
-    $this->where="tirasi_id=".$tirasi_id[$i];
-    $this->delete();
-   }
-   
-
-   //CSVデータ登録
-   for($i=0;$i<count($this->items["data"]);$i++){
     //JANコード変換
-    $jcode=GETJAN($this->items["data"][$i][$jancol]);
+    $jcode=GETJAN($row["jcode"]);
     if($jcode===FALSE){
-     $this->items["status"]="false";
-     $this->items["data"][$i]["err"]="JANコードが不正です";
-     $this->items["errdata"][$i]=$this->items["data"][$i];
+     $this->items["data"][$rownum]["err"]="JANコードが不正です";
+     $this->items["status"]=false;
+     $row["rownum"]=$rownum;
+     $this->items["errdata"][]=$row;
      continue;
     }
+    $this->items["data"][$rownum]["jcode"]=$jcode;
 
-    //UPDATEデータ生成
-    foreach($this->csvcol as $key=>$val){
-     if($key==$jancol){
-      $this->updatecol[$val]=$jcode;
-     }//if
-     else{
-      $this->updatecol[$val]=$this->items["data"][$i][$key];
-     }//else
-    }//foreach
+    //SQL生成(err列を除く)
+    foreach($this->csvcol as $colnum=>$colname){
+     $this->updatecol[$colname]=$this->items["data"][$rownum][$colname];
+    }
     $this->from=TB_ITEMS;
-    $this->where="tirasi_id=0";//無条件追加
+    $this->where ="     tirasi_id=".$row["tirasi_id"];
+    $this->where.=" and hiduke   ='".$row["hiduke"]."'";
+    $this->where.=" and jcode    =".$row["jcode"];
     $this->update();
-   }//for
 
-   //コミット
+    //チラシ番号更新
+    $tirasi_id=$row["tirasi_id"];
+   }//foreach
    $this->Commit();
-
-   return true;
-
   }//try
   catch(Exception $e){
-   $this->items["status"]=false;
    $this->RollBack();
+   $this->items["status"]=false;
    throw $e;
   }//catch
  }//setDataItem

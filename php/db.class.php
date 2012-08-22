@@ -176,6 +176,7 @@ class DB{
 
    //SQLリセット
    $this->SQLRESET();
+   $this->updatecol=null;
    $this->ary=null;
 
    //正常終了(処理件数を返す)
@@ -191,6 +192,7 @@ class DB{
    }
    //SQLリセット
    $this->SQLRESET();
+   $this->updatecol=null;
    //メッセージスロー
    throw new exception($msg);
   }//catch

@@ -66,13 +66,13 @@ class CLSMAS extends DB{
   foreach($this->linmas as $key=>$col){
    $line.=$col[0].",".$col[1].",".$col[2]."\n";
   }//foreach
-  if(! file_put_contents(DATADIR.LINMAS.".csv",$line)) throw new exception(LINMAS.".csvファイルの保存に失敗しました");
+  if(! file_put_contents(LINCSV,$line)) throw new exception(LINCSV."ファイルの保存に失敗しました");
 
   $line="";
   foreach($this->clsmas as $key=>$col){
    $line.=$col[0].",".$col[1].",".$col[2]."\n";
   }//foreach
-  if(! file_put_contents(DATADIR.CLSMAS.".csv",$line)) throw new exception(CLSMAS.".csvファイルの保存に失敗しました");
+  if(! file_put_contents(CLSCSV,$line)) throw new exception(CLSCSV.".csvファイルの保存に失敗しました");
 
   return true;
  }
@@ -90,7 +90,8 @@ class CLSMAS extends DB{
 
   //CSVファイルをゲット
   //(入力した値に不正があれば配列[err]にエラーメッセージが付加される)
-  $this->items=CHKDATA($csvpath,$csvcol);//function.php内参照
+  //$this->items=CHKDATA($csvpath,$csvcol);//function.php内参照
+  $this->items=GETARRAYCSV($csvpath,$csvcol);//function.php内参照
   return true;
  }//checkData
 
@@ -123,59 +124,32 @@ class CLSMAS extends DB{
 
   //CSVファイルをゲット
   $this->checkData(CLSCSV,TB_CLSMAS);
-
-  //if(! $this->items["status"]) return false;
-  //エラーフラグ
-  $flg=0;
-
-  //CSVのclscode列をゲット
-  for($i=0;$i<count($this->csvcol);$i++){
-   if($this->csvcol[$i]==="clscode"){
-    $clscol=$i;
-    $flg=1;
-    break;
-   }
-  }//for
-
-  if(! $flg){
-   $this->items["status"]=false;
-   $msg="クラスコード列がありません。設定を見なおしてください config CSVCOLUMNS";
-   throw new exception($msg);
-  }//if
   
+  //データ登録
   try{
    $this->BeginTran();
-   //全データ削除
+   //全クラス削除
    $this->from=TB_CLSMAS;
    $this->where="clscode>0";
    $this->delete();
-
-   //データ登録
-   for($i=0;$i<count($this->items["data"]);$i++){
-    //エラーデータチェック
-    if($this->items["data"][$i]["err"]!="OK"){
-     $this->items["errdata"][$i]=$this->items["data"][$i];
-     continue;
-    }
-    //UPDATEデータ生成
-    foreach($this->csvcol as $key=>$val){
-     $this->updatecol[$val]=$this->items["data"][$i][$key];
+   
+   foreach($this->items["data"] as $rownum=>$row){
+    //SQL生成
+    foreach($this->csvcol as $colnum=>$colname){
+     $this->updatecol[$colname]=$row[$colname];
     }//foreach
     $this->from=TB_CLSMAS;
-    $this->where="clscode=".$this->items["data"][$i][$clscol];
+    $this->where="clscode=".$row["clscode"];
     $this->update();
-   }//for
+   }//foreach
 
-   //
    $this->Commit();
-
-   return true;
   }//try
   catch(Exception $e){
    $this->RollBack();
    $this->items["status"]=false;
    throw $e;
-  }//catch
+  }
  }//setDataCLS
 
  //---------------------------------------------------------//
@@ -208,6 +182,41 @@ class CLSMAS extends DB{
   //CSVファイルをゲット
   $this->checkData(LINCSV,TB_LINMAS);
 
+  //データ存在チェック
+  if(! $this->items["data"]) throw new exception("データがありません");
+
+  //データ登録
+  try{
+   $this->BeginTran();
+   //全データ削除
+   $this->from=TB_LINMAS;
+   $this->where="lincode>0";
+   $this->delete();
+
+   foreach($this->items["data"] as $rownum=>$row){
+    if($row["err"]!=="OK"){
+     $row["rownum"]=$rownum;
+     $this->items["errdata"][]=$row;
+     continue;
+    }
+    if($lincode!==$row["lincode"]){
+     foreach($this->csvcol as $colnum=>$colname){
+      $this->updatecol[$colname]=$row[$colname];
+     }//foreach
+     $this->from=TB_LINMAS;
+     $this->where="lincode=".$row["lincode"];
+     $this->update();
+    }//if
+    $lincode=$row["lincode"];
+   }//foreach
+   $this->Commit();
+  }//try
+  catch(Exception $e){
+   $this->RollBack();
+   $this->items["status"]=false;
+   throw $e;
+  }//catch
+/*
   //if(! $this->items["status"]) return false;
   //エラーフラグ
   $flg=0;
@@ -260,6 +269,7 @@ class CLSMAS extends DB{
    $this->items["status"]=false;
    throw $e;
   }//catch
+*/
  }//setDataLIN
-}//JANMAS
+}//CLSMAS
 ?>

@@ -78,7 +78,7 @@ class SP extends DB{
      $this->items["data"][$rownum]["err"]="JANコードが不正です";
      $this->items["status"]=false;
      $row["rownum"]=$rownum;
-     $this->items["errdata"]=$row;
+     $this->items["errdata"][]=$row;
      continue;
     }
     $this->items["data"][$rownum]["jcode"]=$jcode;
