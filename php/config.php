@@ -18,7 +18,7 @@ define("DATADIR",PHPDIR."data/"); //更新データ
 //---------------------------------------------------//
 
 //----------------------------------------------------------//
-// ファイル名定数(ここを変更した場合jQuery側でも変更すること)
+// ファイル名定数(これがそのままテーブル名となる)
 //----------------------------------------------------------//
 define("CAL"     ,"calendar");          //カレンダー
 define("TITLES"  ,"tirasititle");       //チラシタイトル
@@ -26,28 +26,28 @@ define("ITEMS"   ,"tirasiitem");        //チラシデータ
 define("JANMAS"  ,"janmas");            //単品マスタ
 define("CLSMAS"  ,"clsmas");            //クラスマスタ
 define("LINMAS"  ,"linmas");            //部門マスタ
-define("SPECIAL" ,"special");           //ご予約商品マスタ
+define("RESERVE" ,"reserve");           //ご予約商品マスタ
 //---------------------------------------------------//
 
 //---------------------------------------------------//
 // ファイルパス系定数
 //---------------------------------------------------//
-define("JQUERY"  ,JSDIR."jquery.js");
-define("CALCSV"  ,DATADIR.CAL.".csv");      //カレンダー
-define("TITLECSV",DATADIR.TITLES.".csv");   //チラシタイトル
-define("ITEMCSV" ,DATADIR.ITEMS.".csv");    //チラシデータ
-define("JANCSV"  ,DATADIR.JANMAS.".csv");   //単品マスタ
-define("CLSCSV"  ,DATADIR.CLSMAS.".csv");   //クラスマスタ
-define("LINCSV"  ,DATADIR.LINMAS.".csv");   //部門マスタ
-define("SPECIALCSV",DATADIR.SPECIAL.".csv");   //ご予約商品マスタ
+define("JQUERY"     ,JSDIR."jquery.js");
+define("CALCSV"     ,DATADIR.CAL.".csv");      //カレンダー
+define("TITLECSV"   ,DATADIR.TITLES.".csv");   //チラシタイトル
+define("ITEMCSV"    ,DATADIR.ITEMS.".csv");    //チラシデータ
+define("JANCSV"     ,DATADIR.JANMAS.".csv");   //単品マスタ
+define("CLSCSV"     ,DATADIR.CLSMAS.".csv");   //クラスマスタ
+define("LINCSV"     ,DATADIR.LINMAS.".csv");   //部門マスタ
+define("RESERVECSV" ,DATADIR.RESERVE.".csv");   //ご予約商品マスタ
 //---------------------------------------------------//
 
 
 //---------------------------------------------------//
 // DB 接続系定数
 //---------------------------------------------------//
- define("DBHOST"  ,"localhost");
- define("DBNAME"  ,"html2");
+ define("DBHOST"  ,"172.16.0.13");
+ define("DBNAME"  ,"homepage");
  define("DBUSER"  ,"kennpin1");
  define("DBPASS"  ,"1");
 
@@ -61,7 +61,7 @@ define("TB_ITEMS"       ,TABLE_PREFIX.ITEMS);     //チラシデータ
 define("TB_JANMAS"      ,TABLE_PREFIX.JANMAS);    //単品マスタ
 define("TB_CLSMAS"      ,TABLE_PREFIX.CLSMAS);    //クラスマスタ
 define("TB_LINMAS"      ,TABLE_PREFIX.LINMAS);    //部門マスタ
-define("TB_SPECIAL"     ,TABLE_PREFIX.SPECIAL);   //ご予約商品マスタ
+define("TB_RESERVE"     ,TABLE_PREFIX.RESERVE);   //ご予約商品マスタ
 
 //---------------------------------------------------//
 // DB テーブル列系定数
@@ -349,7 +349,7 @@ $TABLES=array(TB_TITLES=>array(
                                                ,"local"  =>"メジャー番号"
                                               )//dpscode
                             )//TB_LINMAS
-              ,TB_SPECIAL=>array(
+              ,TB_RESERVE=>array(
                                "id"    =>array( "type"   =>"int"
                                                ,"null"   =>"not null"
                                                ,"extra"  =>"auto"
@@ -469,7 +469,7 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"primary"=>""
                                                  ,"local"  =>"表示"
                                                 )//flg
-                            )//TB_SPECIAL
+                            )//TB_RESERVE
             );//TABLES
 
 //---------------------------------------------------//
@@ -521,7 +521,7 @@ $CSVCOLUMNS=array( TB_CAL   =>array( "hiduke"
                                     ,"linname"
                                     ,"dpscode"
                                    )//TB_LINMAS
-                 ,TB_SPECIAL=>array(
+                 ,TB_RESERVE=>array(
                                      "grp1"
                                     ,"grp1name"
                                     ,"grp2"
@@ -536,7 +536,7 @@ $CSVCOLUMNS=array( TB_CAL   =>array( "hiduke"
                                     ,"view_start"
                                     ,"view_end"
                                     ,"flg"
-                                    )//TB_SPECIAL
+                                    )//TB_RESERVE
                  );//CSVCOLUMNS
 //---------------------------------------------------//
 

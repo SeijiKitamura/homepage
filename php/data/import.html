@@ -124,7 +124,7 @@ function Init(filename){
   //if(n=="tirasiimage") setTirasiImageCSV($(this));
   if(n=="janmas")      setJanMasCSV($(this));
   if(n=="clsmas")      setClsMasCSV($(this));
-  if(n=="special")     setSpecialCSV($(this));
+  if(n=="reserve")     setReserveCSV($(this));
  });
  
 }
@@ -385,10 +385,10 @@ function setClsMasCSV(elem){
 }//function
 //======================== setClsMasCSV 終了 ==================//
 
-//======================== setSpecialCSV 開始 ==================//
-function setSpecialCSV(elem){
+//======================== setReserveCSV 開始 ==================//
+function setReserveCSV(elem){
  //選択したファイルをDBへ更新し表示
- elem.upload("jsonSetSpecial.php",function(html){
+ elem.upload("jsonSetReserve.php",function(html){
   //console.log(html);
   //エラーチェック
   if(html.match(/エラー/)){
@@ -411,7 +411,7 @@ function setSpecialCSV(elem){
   ,"html"
  )//elem.upload
 }
-//======================== setSpecialCSV 終了 ==================//
+//======================== setReserveCSV 終了 ==================//
 
 //======================== setCalendarCSV 開始 ==================//
 function setCalendarCSV(elem){
@@ -669,7 +669,7 @@ function errMsg(html){
      <li><a href="#" class="tirasititle">チラシタイトル更新</a></li>
      <li><a href="#" class="tirasiitem">チラシデータ更新</a></li>
      <li><a href="#" class="tirasiimage">チラシ画像更新</a></li>
-     <li><a href="#" class="special">ご予約商品更新</a></li>
+     <li><a href="#" class="reserve">ご予約商品更新</a></li>
      <li><a href="#" class="janmas">商品マスタ更新</a></li>
      <li><a href="#" class="clsmas">部門マスタ更新</a></li>
     </ul>
