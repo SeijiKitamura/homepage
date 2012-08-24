@@ -103,7 +103,117 @@ class RS extends DB{
 
  }//setData
 
+ //-----------------------------------------------------------//
+ // グループ1リストをゲット
+ // 返り値:true false
+ //       :$this->items[data]   CSVデータを格納
+ //       :$this->items[local]  列名を格納
+ //       :$this->items[status] データ状態を格納
+ //-----------------------------------------------------------//
+ public function getGrp1(){
+  $this->items=null;
 
-}//SP
+  $this->columns=$GLOBALS["TABLES"][TB_RESERVE];
+
+  $this->select="grp1,grp1name";
+  $this->from =TB_RESERVE;
+  $this->group=$this->select;
+  $this->order=$this->select;
+  $this->items["data"]=$this->getArray();
+  if($this->items["data"]){
+   $this->items["status"]=true;
+  }//if
+  else{
+   $this->items["status"]=false;
+  }//else
+  $this->items["local"]["grp1"]=$this->columns["grp1"]["local"];
+  $this->items["local"]["grp1name"]=$this->columns["grp1name"]["local"];
+ }//getGrp1
+
+ //-----------------------------------------------------------//
+ // グループ2リストをゲット
+ // 返り値:true false
+ //       :$this->items[data]   CSVデータを格納
+ //       :$this->items[local]  列名を格納
+ //       :$this->items[status] データ状態を格納
+ //-----------------------------------------------------------//
+ public function getGrp2($grp1=null){
+  $this->items=null;
+  $this->columns=$GLOBALS["TABLES"][TB_RESERVE];
+
+  $this->select="grp2,grp2name";
+  $this->from =TB_RESERVE;
+  if($grp1) $this->where="grp1=".$grp1;
+  $this->group=$this->select;
+  $this->order=$this->select;
+  $this->items["data"]=$this->getArray();
+  if($this->items["data"]){
+   $this->items["status"]=true;
+  }//if
+  else{
+   $this->items["status"]=false;
+  }//else
+  $this->items["local"]["grp2"]=$this->columns["grp2"]["local"];
+  $this->items["local"]["grp2name"]=$this->columns["grp2name"]["local"];
+ }//getGrp2
+
+ //-----------------------------------------------------------//
+ // グループ3リストをゲット
+ // 返り値:true false
+ //       :$this->items[data]   CSVデータを格納
+ //       :$this->items[local]  列名を格納
+ //       :$this->items[status] データ状態を格納
+ //-----------------------------------------------------------//
+ public function getGrp3($grp2=null){
+  $this->items=null;
+  $this->columns=$GLOBALS["TABLES"][TB_RESERVE];
+
+  $this->select="grp3,grp3name";
+  $this->from =TB_RESERVE;
+  if($grp1) $this->where="grp2=".$grp2;
+  $this->group=$this->select;
+  $this->order=$this->select;
+  $this->items["data"]=$this->getArray();
+  if($this->items["data"]){
+   $this->items["status"]=true;
+  }//if
+  else{
+   $this->items["status"]=false;
+  }//else
+  $this->items["local"]["grp3"]=$this->columns["grp3"]["local"];
+  $this->items["local"]["grp3name"]=$this->columns["grp3name"]["local"];
+ }//getGrp3
+
+ //-----------------------------------------------------------//
+ // 商品リストをゲット
+ // 返り値:true false
+ //       :$this->items[data]   CSVデータを格納
+ //       :$this->items[local]  列名を格納
+ //       :$this->items[status] データ状態を格納
+ //-----------------------------------------------------------//
+ public function getItemsList($grp1=null,$grp2=null,$grp3=null,$jcode=null){
+  $this->items=null;
+  $this->columns=$GLOBALS["TABLES"][TB_RESERVE];
+
+  $this->select ="grp1,grp1name,grp2,grp2name,grp3,grp3name,clscode,jcode";
+  $this->select.=",sname,maker,tani,baika,notice,view_start,view_end,flg";
+  $col=explode(",",$this->select);
+  $this->from=TB_RESERVE;
+  $this->where ="flg=0"; 
+  $this->where.=" and view_start <='".date("Y-m-d")."'";
+  $this->where.=" and view_end >='".date("Y-m-d")."'";
+  if($grp1) $this->where.=" and grp1=".$grp1;
+  if($grp2) $this->where.=" and grp2=".$grp2;
+  if($grp3) $this->where.=" and grp3=".$grp3;
+  if($jcode)$this->where.=" and jcode=".$jcode;
+  $this->items["data"]=$this->getArray();
+  if($this->items["data"]) $this->items["status"]=true;
+  else                     $this->items["status"]=false;
+
+  foreach($col as $colnum=>$colname){
+   $this->items["local"][$colname]=$this->columns[$colname]["local"];
+  }//foreach
+ }//getItemList
+}//RS
 
 ?>
