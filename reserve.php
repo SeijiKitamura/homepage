@@ -96,7 +96,113 @@ catch(Exception $e){
 
   <!-- スクリプト(全ページ共通) -->
   <script type="text/javascript" src="./js/jquery.js"></script>
+  <script type="text/javascript" src="./js/jquery.cookie.js"></script>
   <script>
+var cookiename="reserve";
+
+$(function(){
+ $("input[name='order']").click(function(){
+  setItem();
+ });//$("input[name='order']").click(function(){
+
+ getItem();
+});
+
+//-------------------------------------------------------------------//
+// 発注数をセット
+//-------------------------------------------------------------------//
+function setItem(){
+ //単品情報を変数へセット
+ var item=$("input[name='orderitem']").val();
+ var jcode=$("div#tanpin div.jcodediv").text().match(/[0-9]+/)[0];
+ var price=$("div#tanpin div.baikadiv span").text();
+ var d=new Date();
+ var hiduke=d.getFullYear()*10000;
+     hiduke+=(d.getMonth()+1)*100;
+     hiduke+=d.getDate();
+
+ //単品情報をcookie用に加工
+ //var items="items:"+jcode+"__"+price+"__"+item;
+
+ //既存cookieをゲット
+ var cookie=$.cookie(cookiename);
+
+ var ary=[];
+ var data={};
+ var hit="false";
+ if(cookie){
+  //カンマごとに配列へセット
+  var rows=cookie.split(",");
+  for(var i=0;i<rows.length;i++){
+   //__ごとに配列へセット
+   var row=rows[i].split("__");
+   for(var j=0;j<row.length;j++){
+    //:で区切る
+    var keyval=row[j].split(":");
+    var key=keyval[0];
+    var val=keyval[1];
+    //連想配列へ値をセット
+    if(key && val) data[key]=val;
+
+    //同一商品なら配列番号をhitへ格納
+    if(key=="jcode" && val==jcode) hit=i;
+   }//for j
+   ary.push(data);
+   var data={};
+  }//for i
+ }//if
+ 
+ if(hit!="false") ary[hit]={"jcode":jcode,"price":price,"item":item};
+ else    ary.push({"jcode":jcode,"price":price,"item":item});
+
+ //配列を文字列に変換
+ var rows="";
+ for(var i=0;i<ary.length;i++){
+  if(rows) rows+=",";
+  for(var j in ary[i]){
+   rows+=j+":"+ary[i][j]+"__";
+  }// for j
+ }//for i
+
+ //cookieにセット
+ $.cookie(cookiename,rows,{expires:7,path:"/"});
+ console.log(rows);
+}//setItem
+
+function getItem(){
+ var jcode=$("div#tanpin div.jcodediv").text().match(/[0-9]+/)[0];
+ var price=$("div#tanpin div.baikadiv span").text();
+
+ //既存cookieをゲット
+ var cookie=$.cookie(cookiename);
+ var ary=[];
+ var data={};
+ var hit="false";
+ if(cookie){
+  //カンマごとに配列へセット
+  var rows=cookie.split(",");
+  for(var i=0;i<rows.length;i++){
+   //__ごとに配列へセット
+   var row=rows[i].split("__");
+   for(var j=0;j<row.length;j++){
+    //:で区切る
+    var keyval=row[j].split(":");
+    var key=keyval[0];
+    var val=keyval[1];
+    //連想配列へ値をセット
+    if(key && val) data[key]=val;
+
+    //同一商品なら配列番号をhitへ格納
+    if(key=="jcode" && val==jcode) hit=i;
+   }//for j
+   ary.push(data);
+   var data={};
+  }//for i
+ }//if
+ if(hit!="false"){
+  $("input[name='orderitem']").val(ary[hit]["item"]);
+ }
+}//getItem
   </script>
  </head>
  <body>
@@ -250,6 +356,10 @@ if($data["item"]["data"]){
  $html.="<div class=''>".$val["notice"]."</div>\n";
  $html.="<div class='jcodediv'>JAN:".$val["jcode"]."</div>\n";
  $html.="</a>";
+ $html.="<div class=''>";
+ $html.="<input name='orderitem' type='text' value= >";
+ $html.="<input name='order' type='button' value='注文する' >";
+ $html.="</div>\n";
  echo $html;
 }
 ?>
