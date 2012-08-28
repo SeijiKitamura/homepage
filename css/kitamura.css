@@ -683,6 +683,67 @@ div.calrate{
 div.calrate > span{
  font-size:0.6em;
 }
+
+div.reservelist ul{
+ list-style:none;
+}
+
+div.reservelist li{
+ height:90px;
+ border-top:solid 1px #F5F5F5;
+ border-left:solid 1px #F5F5F5;
+ border-right:solid 1px #F5F5F5;
+}
+
+div.reservelist li div.imgdiv{
+ display:block;
+ border-right:solid 1px #F5F5F5;
+ width:120px;
+ height:100%;
+ float:left;
+
+}
+
+div.reservelist li div.snamediv{
+ display:block;
+ border-right:solid 1px #F5F5F5;
+ width:140px;
+ padding-top:35px;
+ height:55px;
+ font-size:1em;
+ float:left;
+ overflow:hidden;
+}
+
+div.reservelist li div.pricediv{
+ display:block;
+ border-right:solid 1px #F5F5F5;
+ width:60px;
+ padding-top:35px;
+ height:55px;
+ float:left;
+ text-align:right;
+ }
+
+div.reservelist li div.itemdiv{
+ display:block;
+ width:60px;
+ padding-top:35px;
+ height:55px;
+ border-right:solid 1px #F5F5F5;
+ float:left;
+ text-align:right;
+}
+
+div.reservelist li span.goukei{
+ text-align:right;
+}
+
+div.reservelist li input{
+ width:100%;
+ border:0px solid #F5F5F5;
+ text-align:right;
+}
 div.clr{
  clear:both;
 }

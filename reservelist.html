@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="ja">
+ <head>
+  <!-- META系(全ページ共通) -->
+  <meta http-equiv="Content-language" content="ja">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Script-Type" content="text/javascript">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta name="ROBOTS" content="index,follow">
+  <meta name="description" content="東京都大田区南馬込にある食品スーパーマーケット、スーパーキタムラの公式サイト。年中無休、営業時間AM9:30-PM10:00。">
+  <meta name="keywords" content="キタムラ,スーパーキタムラ,スーパーきたむら,スーパー北村,シェノール,惣菜,パン,お酒,日本酒,焼酎,ワイン,配達">
+
+  <!-- タイトル(ページごとに変更) -->
+  <title>ご注文商品一覧:食品スーパーマーケット　</title>
+
+  <!-- link(ページごとに変更) -->
+  <link rel="icon" href="./img/kitamura.ico" type="type/ico" sizes="16x16" /> 
+  <link rel="stylesheet" href="./css/kitamura.css" /> 
+  <link rel="next" href="" /> <!-- 次のページ -->
+  <link rel="prev" href=""/>  <!-- 前のページ -->
+
+  <!-- スクリプト(全ページ共通) -->
+  <script type="text/javascript" src="./js/jquery.js"></script>
+  <script type="text/javascript" src="./js/jquery.cookie.js"></script>
+  <script>
+var cookiename="reserve";
+
+
+
+//------------------------------------------------------//
+// cookieを配列へ変換
+//------------------------------------------------------//
+var cookie=(function getCookie(){
+ var c=$.cookie(cookiename);
+ if(! c) return false;
+ //配列初期化
+ var ary=[];
+
+ //「,」区切りで配列(rows)に格納
+ var rows=c.split(",");
+
+ //「__」区切りで配列(row)に格納
+ for(var i=0;i<rows.length;i++){
+  var row=rows[i].split("__");
+  var data={};
+
+  //「:」区切りで変数(key,val)に格納
+  for(var j=0;j<row.length;j++){
+   var key=row[j].split(":")[0];
+   var val=row[j].split(":")[1];
+
+   //連想配列へ格納
+   if(key && val) data[key]=val;
+  }//for j
+  //配列(ary)へ格納
+  ary.push(data);
+ }//for
+ return ary;
+})();
+
+//------------------------------------------------------//
+// 配列をHTMLで表示
+//------------------------------------------------------//
+function getHtml(cookie){
+ if(! cookie) return false;
+ var html="";
+ var goukei=0;
+ var items=0;
+ for(var i=0;i<cookie.length;i++){
+  var data=cookie[i];
+  html+="<li>";
+
+  html+="<div class='imgdiv'>";
+  html+="<img src='./img/"+data["jcode"]+"' alt='"+data["sname"]+data["jcode"]+"'>";
+  html+="</div>\n";
+
+  html+="<div class='snamediv'>";
+  html+=data["sname"];
+  html+="</div>\n";
+
+  html+="<div class='pricediv'>";
+  html+=data["price"];
+  html+="</div>\n";
+
+  html+="<div class='itemdiv'>";
+  html+="<input type='text' name='"+data["jcode"]+"' value='"+data["item"]+"'>";
+  html+="</div>\n";
+
+  html+="<div class='clr'></div>";
+  html+="</li>\n";
+
+  items+=(data["item"]-0);
+  goukei+=data["price"]*data["item"];
+ }//for i
+
+ //合計列追加
+ html+="<li>";
+ html+="<div class='imgdiv'></div>\n";
+ html+="<div class='snamediv'>合計</div>";
+ html+="<div class='pricediv'></div>\n";
+ html+="<div class='itemdiv'><span class='items'>"+items+"</span></div>\n";
+ html+="<div class='itemdiv'><span class='goukei'>"+goukei+"</span></div>\n";
+ html+="</li>\n";
+
+ var ul=$("<ul>").append(html);
+ $("div#main div.reservelist").empty().append(ul);
+
+ //イベント追加
+ $("div#main div.reservelist ul li input").change(function(){
+  setCookie($(this));
+ });//change
+}//getHtml
+
+//----------------------------------------------------------//
+// 数量変更をcookieへ登録
+//----------------------------------------------------------//
+function setCookie(elem){
+ var jcode=elem.attr("name");
+ var item=elem.val();
+
+ //数字チェック
+ if(! item.match(/^[0-9]$/)){
+  alert("数字でを入力してください");
+  return false;
+ }//if
+
+ //配列内データを更新
+ var items=0;
+ var goukei=0;
+ for(var i=0;i<cookie.length;i++){
+  var data=cookie[i];
+  if(data["jcode"]==jcode){
+   data["item"]=item;
+   break;
+  }//if
+ }//for i
+
+ //配列をcookieへ変換
+ var c="";
+ for(var i=0;i<cookie.length;i++){
+  if(c) c+=",";
+  for(var j in cookie[i]){
+   c+=j+":"+cookie[i][j].trim()+"__";
+  }//for j
+  items+=cookie[i]["item"]-0;
+  goukei+=cookie[i]["item"]*cookie[i]["price"];
+ }//for
+
+ //cookieへセット
+ $.cookie(cookiename,c,{expires:7,path:"/"});
+
+ //合計列変更
+ $("span.items").text(items);
+ $("span.goukei").text(goukei);
+ console.log(c);
+}//setCookie
+
+
+$(function(){
+ getHtml(cookie);
+});
+  </script>
+ </head>
+ <body>
+  <!-- wrapper -->
+  <div id="wrapper">
+
+   <!-- header -->
+   <div id="header">
+
+    <!-- logo -->
+    <div class="logo">
+     <a href="index.html">
+      <img src="./img/logo2.jpg" alt="スーパーキタムラ">
+     </a>
+    </div>
+    <!-- logo -->
+
+    <!-- hello -->
+    <div class="hello">
+     <h1>ご注文商品一覧</h1>
+    </div>
+    <!-- hello -->
+
+    <!-- mininavi -->
+    <div class="mininavi">
+     <ul>
+      <li><a href="about.html">会社概要</a></li>
+      <li><a href="access.html">アクセス</a></li>
+      <li>求人</li>
+      <li><a href="sinsotu.html"> 新卒採用</a></li>
+     </ul>
+    </div>
+    <!-- mininavi -->
+
+    <!-- timesale -->
+    <div class="timesale">
+     <ul>
+      <li><a href="index.html">ホーム</a></li>
+      <li> | </li>
+      <li><a href='tirasi.php'>今週のチラシ</a></li>
+      <li> | </li>
+      <li><a href="calendar.php">カレンダー</a></li>
+      <li> | </li>
+      <li><a href="item.php">商品のご案内</a></li>
+      <li> | </li>
+      <li>ご注文承り中</li>
+      <li> | </li>
+      <li>サービス</li>
+     </ul>
+    </div>
+    <!-- timesale -->
+     
+   <div class="clr"></div>
+   </div>
+   <!-- header -->
+
+   <!-- navi -->
+   <div id="navi">
+    <!-- allcate -->
+    <div id="allcate">
+      <h2>グループ一覧</h2>
+    </div>
+    <!-- allcate -->
+
+    <!-- search -->
+    <div id="search">
+    </div>
+    <!-- search -->
+   </div>
+   <!-- navi -->
+   <!-- leftside -->
+   <div id="leftside" style="margin:0px !important;">
+    <ul>
+     <li><a href='./reserve.php'>商品一覧へ</a></li>
+     <li><a href=''>注文する</a></li>
+    </ul>
+   </div>
+   <!-- leftside -->
+
+   <!-- rightside -->
+   <div id="rightside">
+    <!-- tirasiitem-->
+    <div class="tirasiitem">
+    </div>
+    <!-- tirasiitem-->
+
+   </div>
+   <!-- rightside -->
+
+   <!-- main -->
+   <div id="main">
+    <!-- reservelist -->
+    <div class="reservelist">
+    </div>
+    <!-- reservelist -->
+    <!-- calendar -->
+    <div class="calendaritem">
+    </div>
+    <!-- calendar -->
+
+    <!-- tirasiitem -->
+    <div class="tirasiitem">
+     <!-- tanpin -->
+     <div id="tanpin">
+     </div>
+     <!-- tanpin -->
+
+
+     <!-- janmas -->
+     <div class='janmas'>
+      <div class='clr'></div>
+     </div>
+     <!-- janmas -->
+
+    </div>
+    <!-- tirasiitem -->
+   </div>
+   <!-- main -->
+   
+   <div class='clr'></div>
+   <!--div class="clr"></div-->
+   <!-- footer -->
+   <div id="footer">
+    <h1>footer</h1>
+   </div>
+   <!-- footer -->
+
+  </div>
+  <!-- wrapper -->
+ </body>
+</html>

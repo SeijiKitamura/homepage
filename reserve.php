@@ -113,9 +113,10 @@ $(function(){
 //-------------------------------------------------------------------//
 function setItem(){
  //単品情報を変数へセット
- var item=$("input[name='orderitem']").val();
  var jcode=$("div#tanpin div.jcodediv").text().match(/[0-9]+/)[0];
+ var sname=$("div#tanpin div.snamediv").text();
  var price=$("div#tanpin div.baikadiv span").text();
+ var item=$("input[name='orderitem']").val();
  var d=new Date();
  var hiduke=d.getFullYear()*10000;
      hiduke+=(d.getMonth()+1)*100;
@@ -152,8 +153,8 @@ function setItem(){
   }//for i
  }//if
  
- if(hit!="false") ary[hit]={"jcode":jcode,"price":price,"item":item};
- else    ary.push({"jcode":jcode,"price":price,"item":item});
+ if(hit!="false") ary[hit]={"jcode":jcode,"sname":sname,"price":price,"item":item};
+ else    ary.push({"jcode":jcode,"sname":sname,"price":price,"item":item});
 
  //配列を文字列に変換
  var rows="";
