@@ -744,6 +744,31 @@ div.reservelist li input{
  border:0px solid #F5F5F5;
  text-align:right;
 }
+
+div.entry dl dt{
+ float:left;
+ width:150px;
+ text-align:right;
+ margin-bottom:10px;
+}
+
+div.entry dl dd{
+ margin-bottom:10px;
+}
+
+div.entry dl dd a{
+ display:block;
+ width:100px;
+ border:1px solid #F5F5F5;
+ text-align:center;
+ padding:5px;
+ float:left;
+}
+
+div.entry dl dd input{
+ width:250px;
+}
+
 div.clr{
  clear:both;
 }

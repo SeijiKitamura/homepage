@@ -302,7 +302,7 @@ class DB{
    $i=0;
    foreach($columns as $column=>$types){
     //列名をセット
-    if($i)$this->sql.=",";
+    if($i) $this->sql.=",";
     $this->sql.=$column;
     $this->sql.=" ".$types["type"];
     $this->sql.=" ".$types["null"];

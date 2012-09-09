@@ -1,16 +1,10 @@
 <?php
-require_once("./db.class.php");
+require_once("mail.class.php");
 try{
  //インスタンス
- $db=new DB();
-/*
- $db->CreateTable(TB_JANMAS);
- $db->CreateTable(TB_CLSMAS);
- $db->CreateTable(TB_TITLES);
- $db->CreateTable(TB_ITEMS);
- $db->CreateTable(TB_LINMAS);
- $db->CreateTable(TB_RESERVE);
-*/
+ $db=new ML();
+ $db->sendMail("seiji.kitamura@gmail.com","テスト","できるかな？");
+ echo "success";
 } 
 catch(Exception $e){
  echo "エラー:".$e->getMessage();

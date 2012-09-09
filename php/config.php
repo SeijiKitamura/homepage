@@ -27,6 +27,7 @@ define("JANMAS"  ,"janmas");            //単品マスタ
 define("CLSMAS"  ,"clsmas");            //クラスマスタ
 define("LINMAS"  ,"linmas");            //部門マスタ
 define("RESERVE" ,"reserve");           //ご予約商品マスタ
+define("USER"    ,"usermas");           //ご客様マスタ
 //---------------------------------------------------//
 
 //---------------------------------------------------//
@@ -62,6 +63,7 @@ define("TB_JANMAS"      ,TABLE_PREFIX.JANMAS);    //単品マスタ
 define("TB_CLSMAS"      ,TABLE_PREFIX.CLSMAS);    //クラスマスタ
 define("TB_LINMAS"      ,TABLE_PREFIX.LINMAS);    //部門マスタ
 define("TB_RESERVE"     ,TABLE_PREFIX.RESERVE);   //ご予約商品マスタ
+define("TB_USER"        ,TABLE_PREFIX.USER);      //お客様マスタ
 
 //---------------------------------------------------//
 // DB テーブル列系定数
@@ -470,6 +472,71 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"local"  =>"表示"
                                                 )//flg
                             )//TB_RESERVE
+              ,TB_USER=>array(
+                             "usermail"=>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>1
+                                               ,"local"  =>"メールアドレス"
+                                              )//usermail
+                            ,"password"=>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"パスワード"
+                                              )//password
+                            ,"name"    =>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"お名前"
+                                              )//name    
+                            ,"address" =>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"ご住所"
+                                              )//address 
+                           ,"tel"      =>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"お電話"
+                                              )//tel
+                           ,"daddress" =>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"お届先ご住所"
+                                              )//daddress 
+                           ,"dtel"     =>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"お届先電話"
+                                              )//dtel
+                           ,"rname"    =>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"領収書お名前"
+                                              )//rname
+                           ,"checkcode"=>array( "type"   =>"varchar(255)"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"''"
+                                               ,"primary"=>""
+                                               ,"local"  =>"チェックコード"
+                                              )//checkcode
+                            )//TB_USER
             );//TABLES
 
 //---------------------------------------------------//
@@ -539,6 +606,38 @@ $CSVCOLUMNS=array( TB_CAL   =>array( "hiduke"
                                     )//TB_RESERVE
                  );//CSVCOLUMNS
 //---------------------------------------------------//
+
+//---------------------------------------------------//
+// メール系定数
+//---------------------------------------------------//
+define("EMAILUSERNAME","order@kita-grp.co.jp"); //メールユーザー名
+define("EMAILPASS"    ,"36T67238");             //メールパスワード
+define("EMAIL"        ,EMAILUSERNAME);          //メールアドレス
+define("USERNAME"     ,"スーパーキタムラ");     //メール差出人名
+$SUBJECT=<<<EOF
+【スーパーキタムラ】メールアドレス登録完了のお知らせ
+EOF;
+
+$WELCOMMSG=<<<EOF
+スーパーキタムラからのお知らせです。
+
+ホームページにてご入力いただいたメールアドレスを登録しました。
+下記URLをクリックしてユーザー登録を続けてください。
+
+___MD5___  
+
+このメールに心当たりがない場合:
+お手数をかけますがこのメールを破棄していただきますようお願いいたします。
+このメールは弊社ホームページ上で、お客様が入力されたメールアドレスへ自動にて送信をしております。 一定時間を過ぎて登録が完了しない場合、自動でこのメールアドレスを削除いたします。弊社システムにこのメールアドレスが残ることはございません。
+
+お問い合わせ先:
+ご質問、不明な点等ございましたら下記メールアドレスまでご連絡ください。
+
+メールアドレス:super@kita-grp.co.jp
+
+メールアドレスご登録ありがとうございました。
+スーパーキタムラ
+EOF;
 
 //---------------------------------------------------//
 // データ表示系定数                                  //
