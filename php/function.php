@@ -1,11 +1,19 @@
 <?php
 //-------------------------------------------//
-// md5生成                                   //
+// checkcode生成                             //
 //-------------------------------------------//
-function GETMD5($str){
+function GETCHECKCODE($str){
+ $str=md5($str.SITEDIR.date("YmdHis"));
+ return  $str;
+}//GETCHECKCODE
+
+//-------------------------------------------//
+// password生成                              //
+//-------------------------------------------//
+function GETPASS($str){
  $str=md5($str.SITEDIR);
  return  $str;
-}//GETMD5
+}//GETPASS
 
 //-------------------------------------------//
 // CSVの値を配列へセット                     //

@@ -1,24 +1,37 @@
 <?php
 require_once("./php/auth.class.php");
 try{
- //Cookieを配列へ変換
- $ary=$_COOKIE["kitamura"];
- $ary=explode(",",$ary);
- foreach($ary as $key=>$val){
-  $s=explode(":",$val);
-  $cookie[$s[0]]=$s[1];//Cookie
- }//foreach
+ if($_POST){
+  //POSTを配列へ変換
+  $cookie=$_POST;
+ }//if
+ else if($_COOKIE){
+  //Cookieを配列へ変換
+  $ary=$_COOKIE["kitamura"];
+  $ary=explode(",",$ary);
+  foreach($ary as $key=>$val){
+   $s=explode(":",$val);
+   $cookie[$s[0]]=$s[1];//Cookie
+  }//foreach
+ }//else if
+ else{
+  throw new exception("お客様情報を登録してください");
+ }
 
- //Cookieを再セット
- setcookie("kitamura",$cookie["usermail"],time()+86400,"/");
+ //Cookieを一旦削除
+ setcookie("kitamura",0,time()-3600);
+ //setcookie("kitamura",$cookie["usermail"],time()+86400,"/");
 
  //メッセージセット
- $msg="登録が完了しました";
+ $msg="以下の内容で登録が完了しました。ありがとうございました。";
 
  //登録
  $db=new AUTH();
  $db->UserAdd($cookie);
- 
+ $user=$db->items[0];
+
+ //Cookieをセット
+ setcookie("kitamura",$user["usermail"].":".$user["checkcode"],time()+86400,"/");
 }//try
 catch(Exception $e){
  $msg="エラー:".$e->getMessage();
@@ -127,27 +140,26 @@ catch(Exception $e){
    <!-- main -->
     <div id="main">
      <div class="entry">
-      <p>
-      </p>
+      <p><?php echo $msg; ?></p>
 
       <dl>
        <dt>メールアドレス:</dt>
-       <dd id="usermail"><?php echo $cookie["usermail"]; ?></dd>
+       <dd id="usermail"><div><?php echo $cookie["usermail"]; ?></div></dd>
        <div class='clr'></div>
-       <dt><label for="username">お名前:</label></dt>
-       <dd id="name"><?php echo $cookie["name"]; ?></dd>
+       <dt>お名前:</dt>
+       <dd id="name"><div><?php echo $cookie["name"]; ?></div></dd>
        <div class='clr'></div>
-       <dt><label for="tel">電話番号:</label></dt>
-       <dd id="tel"><?php echo $cookie["tel"]; ?></dd>
+       <dt>電話番号:</dt>
+       <dd id="tel"><div><?php echo $cookie["tel"]; ?></div></dd>
        <div class='clr'></div>
-       <dt><label for="address">ご住所:</label></dt>
-       <dd id="address" ><?php echo $cookie["address"]; ?></dd>
-       <div class='clr'></div>
-       <dd id="comment" ><?php echo $msg; ?></dd>
+       <dt>ご住所:</dt>
+       <dd id="address" ><div><?php echo $cookie["address"]; ?></div></dd>
        <div class='clr'></div>
       </dl>
 
      </div>
+    <!-- entry -->
+
     <!-- calendar -->
     <div class="calendaritem">
     </div>

@@ -1,15 +1,25 @@
 <?php
 require_once("./php/auth.class.php");
 try{
- //GETでMD5を受け取る
- if(! $_GET["auth"]){
-  throw new exception("メールアドレスを登録してください");
- }
- $md5=$_GET["auth"];
  $db=new AUTH();
- $db->checkMD5($md5);
- if(! $db->ary) throw new exception("メールアドレス未登録です");
- $mail=$db->ary[0]["usermail"];
+ if($_GET["auth"]){
+  //GETが有効ならcheckcodeからユーザー情報を取得
+  $md5=$_GET["auth"];
+  $db->checkMD5($md5);
+  $user=$db->items;
+ }//if
+ else{
+  //COOKIEからユーザー情報をゲット
+  $c=$_COOKIE["kitamura"];
+  $c=explode(":",$c);
+  $cookie["usermail"]=$c[0];
+  $cookie["checkcode"]=$c[1];
+  if(! $cookie["usermail"] || ! $cookie["checkcode"]) throw new exception("再ログインが必要です");
+
+  $db->getAuth($cookie["usermail"],$cookie["checkcode"]);
+  $user=$db->items[0];
+ }
+ if(! $user) throw new exception("メールアドレスが未登録です");
 }//try
 catch(Exception $e){
  $msg="エラー:".$e->getMessage();
@@ -30,7 +40,7 @@ catch(Exception $e){
   <meta name="keywords" content="キタムラ,スーパーキタムラ,スーパーきたむら,スーパー北村,シェノール,惣菜,パン,お酒,日本酒,焼酎,ワイン,配達">
 
   <!-- タイトル(ページごとに変更) -->
-  <title>パスワード登録:スーパーキタムラ　食品スーパーマーケット　</title>
+  <title>お客様情報登録:スーパーキタムラ　食品スーパーマーケット　</title>
 
   <!-- link(ページごとに変更) -->
   <link rel="icon" href="./img/kitamura.ico" type="type/ico" sizes="16x16" /> 
@@ -45,11 +55,11 @@ catch(Exception $e){
 $(function(){
 
  $("input[id='password2']").change(function(){ checkPass(); });
- $("input[id='username']").blur(function(){ checkName(); });
+ $("input[id='name']").blur(function(){ checkName(); });
  $("input[id='tel']").blur(function(){ checkTel(); });
 
- $("a.touroku").bind("click",function(){
-  sendData();
+ $("form").submit(function(){
+  if(! sendData()) return false;
  });
 
 });//$(function()
@@ -91,7 +101,7 @@ function checkPass(){
 }//checkPass
 
 function checkName(){
- var n=$("input[id='username']");
+ var n=$("input[id='name']");
  var flg=true;
  var msg="";
  if(! n.val()){
@@ -134,26 +144,18 @@ function sendData(){
  var data={};
  var flg=true;
  var msg="この内容で登録しますか?";
- var url="./userresult.php";
  if(! checkPass()) flg=false;
  if(! checkName()) flg=false;
  if(! checkTel())  flg=false;
  if(! flg) return false;
  if(! confirm(msg)) return false;
- data={"usermail" :$("div#mail").text(),
-       "password" :$("input[id='password']").val(),
-       "name"     :$("input[id='username']").val(),
-       "tel"      :$("input[id='tel']").val(),
-       "address"  :$("input[id='address']").val(),
-       "checkcode":$("div.md5").text()
-      };
- var c="";
- for(var i in data){
-  if(c) c+=",";
-  c+=i+":"+data[i];
- }//for
- $.cookie("kitamura",c,{ expires: 1,path:"/" });
- window.location.href=url;
+
+ //メールアドレスをPOSTに追加
+ var usermail=$("div#mail").text();
+ var checkcode=$("div.md5").text();
+ $("form").append("<input type='text' id='usermail' name='usermail' value='"+usermail+"'>");
+ $("form").append("<input type='text' id='checkcode' name='checkcode' value='"+checkcode+"'>");
+ return true;
 }
   </script>
  </head>
@@ -174,7 +176,7 @@ function sendData(){
 
     <!-- hello -->
     <div class="hello">
-     <h1>パスワード登録</h1>
+     <h1>お客様情報登録</h1>
     </div>
     <!-- hello -->
 
@@ -228,35 +230,30 @@ function sendData(){
    <!-- main -->
     <div id="main">
      <div class="entry">
-      <p>
-<?php
- if($msg){
-  echo $msg;
-  return false;
- }//if
-?>
-      </p>
-      <dl>
-       <dt>メールアドレス:</dt>
-       <dd><div id="mail"><?php echo $mail; ?></div></dd>
-       <dt><label for="password">パスワード:</label></dt>
-       <dd><input id ="password" type="password" value=""></dd>
-       <dt><label for="password2">パスワード確認:</label></dt>
-       <dd><input id ="password2" type="password" value=""><span></span></dd>
-       <dt><label for="username">お名前:</label></dt>
-       <dd><input id ="username" type="text" value=""><span></span></dd>
-       <dt><label for="tel">電話番号:</label></dt>
-       <dd><input id ="tel" type="text" value=""><span></span></dd>
-       <dt><label for="address">ご住所:</label></dt>
-       <dd><input id ="address" type="text" value=""></dd>
-       <dt>識別コード:</dt>
-       <dd><div class="md5"><?php echo $md5; ?></div></dd>
-       <dt></dt>
-       <dd>
-        <a class="torikesi">取消</a>
-        <a class="touroku">登録</a>
-       </dd>
-      </dl>
+      <p> <?php echo $msg; ?> </p>
+      <form action="./userresult.php" method="post">
+       <dl class="login">
+        <dt>メールアドレス:</dt>
+        <dd><div id="mail"><?php echo $user["usermail"]; ?></div></dd>
+        <dt><label for="password">パスワード:</label></dt>
+        <dd><input id ="password" name="password" type="password" value=""></dd>
+        <dt><label for="password2">パスワード確認:</label></dt>
+        <dd><input id ="password2" name="password2" type="password" value=""><span></span></dd>
+        <dt><label for="name">お名前:</label></dt>
+        <dd><input id ="name" name="name" type="text" value="<?php echo $user["name"]; ?>"><span></span></dd>
+        <dt><label for="tel">電話番号:</label></dt>
+        <dd><input id ="tel" name="tel" type="text" value="<?php echo $user["tel"]; ?>"><span></span></dd>
+        <dt><label for="address">ご住所:</label></dt>
+        <dd><input id ="address" name="address" type="text" value="<?php echo $user["address"]; ?>"></dd>
+        <dt>識別コード:</dt>
+        <dd><div class="md5"><?php echo $user["checkcode"]; ?></div></dd>
+        <dt></dt>
+        <dd>
+         <input name="touroku" type="submit" value="この内容で登録する">
+        </dd>
+       </dl>
+      </form>
+
 
      </div>
     <!-- calendar -->

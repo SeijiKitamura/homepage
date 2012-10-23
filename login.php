@@ -1,12 +1,24 @@
 <?php
 require_once("./php/auth.class.php");
 try{
- //ログイン判定
- $cookie=$_COOKIE["kitamura"];
- $flg=false;
- if($cookie) $flg=true;
+ //クッキー存在チェック
+ $c=$_COOKIE["kitamura"];
+ if($c){
+  //クッキーを配列化
+  $c=explode(":",$c);
+  $cookie["usermail"]=$c[0];
+  $cookie["checkcode"]=$c[1];
+
+  //クッキー有効を確認
+  $db=new AUTH();
+  $db->getAuth($cookie["usermail"],$cookie["checkcode"]);
+  $user=$db->items[0];
+  print_r($user);
+  print_r($cookie);
+ }//if
 }//try
 catch(Exception $e){
+ echo "エラー:".$e->getMessage();
 }//catch
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -38,17 +50,96 @@ catch(Exception $e){
 
   <script>
 $(function(){
- //ログイン判定
- checkCookie();
+ $("form#login_logout").submit(function(){
+  if($(this).find("input[name=login]").length){
+   if(! checkMail($("input[id=usermail]"))) return false;
+   if(! checkPass($("input[id=password]"))) return false;
+   console.log("login");
+   //ログイン認証
+   var url="./php/getLoginPass.php";
+   var data={"usermail":$("input[id=usermail]").val(),
+             "password":$("input[id=password]").val()
+            };
+   console.log(data);
+   $.post(url,data,function(html){
+    //エラーチェック
+    if(html.match(/エラー/)){
+     $("input[id=password]").parent()
+                            .find("span")
+                            .text("パスワードが違います");
+     return false;
+    }
+    //クッキーセット
+    $.cookie("kitamura",html,{path:"/",expires:1});
+    console.log(html);
+    window.location.href="index.html";
+   });//$.post(url,data,function(html){
+  }//if
+  else if($(this).find("input[name=logout]").length){
+   console.log("logout");
+   //クッキー削除
+   $.cookie("kitamura","",{path:"/",expires:-1});
+   alert("ログアウトしました");
+   window.location.href="index.html";
+  }//else
 
- $("a.login").bind("click",function(){
-  login();
- });//$("#login").bind("click",function(){
-
- $("a.logout").bind("click",function(){
-  logout();
- });//$("#logout").bind("click",function(){
+  //画面遷移キャンセル
+  return false;
+ });// $("form#login_logout").submit(function(){
+ 
+ $("a.forget").click(function(){
+  //メールアドレスチェック
+  if(! checkMail($("input[id=usermail]"))) return false;
+  var usermail=$("input[id=usermail]").val();
+  $("form#forgetpass").append("<input name='usermail' type='text' value='"+usermail+"'>");
+  $("form#forgetpass").submit();
+ });
 });
+
+//--------------------------checkMail----------------------------------//
+function checkMail(elem){
+ var v=elem.val();
+ var msg="メールアドレスを確認してください";
+ elem.parent().find("span").text("");
+ if(! v || ! v.match(/[@]/)){
+  elem.parent().find("span").text(msg);
+  return  false;
+ }//if(! v || ! v.match(/[@]/)){
+ return true;
+}
+//--------------------------checkMail----------------------------------//
+
+//--------------------------checkPass----------------------------------//
+function checkPass(elem){
+ var v=elem.val();
+ var msg="パスワードを確認してください";
+ elem.parent().find("span").text("");
+ if(! v || ! v.match(/^[0-9a-zA-z]+$/)){
+  elem.parent().find("span").text(msg);
+  return false;
+ }//if(! v || ! v.match(/^[0-9a-zA-z]+$/)){
+ return true;
+}
+//--------------------------checkPass----------------------------------//
+
+
+/*
+//--------------------------forget-------------------------------------//
+function forget(){
+ var url="./checkmail.php";
+ var data={"usermail":$("#mail").val()};
+ if(! checkMail($("#mail"))) return false;
+ $.post(url,data,function(html){
+  //エラーチェック
+  if(html.match(/エラー/)){
+   alert(html);
+   return false;
+  }//if(html.match(/エラー/)){
+  
+  window.location.href="./checkmail.php";
+ });//$.post(url,data,function(html){
+}
+//--------------------------forget-------------------------------------//
 
 //--------------------------login--------------------------------------//
 function login(){
@@ -89,31 +180,6 @@ function logout(){
 }
 //--------------------------logout-------------------------------------//
 
-//--------------------------checkMail----------------------------------//
-function checkMail(elem){
- $("dd.msg").empty();
- var v=elem.val();
- console.log(v);
- if(! v || ! v.match(/[@]/)){
-  elem.after("<dd class='msg'>メールアドレスを確認してください</dd>");
-  return  false;
- }//if(! v || ! v.match(/[@]/)){
- return true;
-}
-//--------------------------checkMail----------------------------------//
-
-//--------------------------checkPass----------------------------------//
-function checkPass(elem){
- $("dd.msg").empty();
- var v=elem.val();
- if(! v || ! v.match(/^[0-9a-zA-z]+$/)){
-  elem.after("<dd class='msg'>パスワードを確認してください</dd>");
-  return false;
- }//if(! v || ! v.match(/^[0-9a-zA-z]+$/)){
- return true;
-}
-//--------------------------checkPass----------------------------------//
-
 //--------------------------checkCookie--------------------------------//
 function checkCookie(){
  var flg=true;
@@ -124,6 +190,7 @@ function checkCookie(){
   //メールアドレス等非表示
   $("#leftside dl dt:lt(2)").empty();
   $("#leftside dl dd:lt(3)").empty();
+  $("#leftside dl dd:lt(4)").empty();
  }//if
  else{
   //ログアウト非表示
@@ -131,7 +198,7 @@ function checkCookie(){
  }//else
 }//function checkCookie(){
 //--------------------------checkCookie--------------------------------//
-
+*/
   </script>
  </head>
  <body>
@@ -189,14 +256,6 @@ function checkCookie(){
    <!-- navi -->
    <!-- leftside -->
    <div id="leftside" style="margin:0px !important;">
-    <dl>
-     <dt><label for="mail">メールアドレス:</label></dt>
-     <dd><input id ="mail" type="mail" value=""></dd>
-     <dt><label for="password">パスワード:</label></dt>
-     <dd><input id ="password" type="password" value=""></dd>
-     <dd><a class="login">ログイン</a></dd>
-     <dd><a class="logout">ログアウト</a></dd>
-    </dl>
    </div>
    <!-- leftside -->
 
@@ -215,7 +274,33 @@ function checkCookie(){
      <div class="entry">
       <p>
       </p>
-
+      <dl>
+       <form id="login_logout" method="post" action="./index.html">
+<?php
+ if(! $user){
+  echo "<dt><label for='usermail'>メールアドレス:</label></dt>";
+  echo "<dd><input id ='usermail' type='text' value=''><span></span></dd>";
+  echo "<dt><label for='password'>パスワード:</label></dt>";
+  echo "<dd><input id ='password' type='password' value=''><span></span></dd>";
+  echo "<dt></dt>";
+  echo "<dd><input name='login' type='submit' value='ログイン' /></dd>\n";
+  echo "<dt></dt>";
+ }//if
+ else if($user){
+  echo "<dt></dt>";
+  echo "<dd>".$user["name"]."さんでログイン中....</dd>";
+  echo "<dt></dt>";
+  echo "<dd><input name='logout' type='submit' value='ログアウト' /></dd>\n";
+ }//else
+?>
+       </form>
+       <form id="forgetpass" method="post" action="checkmail.php">
+<?php
+  echo "<dt></dt>";
+  echo "<dd><a class='forget' href='#'>パスワードを忘れた</a></dd>\n";
+?>
+       </form>
+      </dl>
      </div>
     <!-- calendar -->
     <div class="calendaritem">

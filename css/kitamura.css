@@ -745,29 +745,49 @@ div.reservelist li input{
  text-align:right;
 }
 
+div.entry dl {
+ border :2px solid #F5F5F5;
+ padding:30px 30px 30px 30px;
+}
 div.entry dl dt{
+ font-size:0.8em;
  float:left;
- width:150px;
+ width:100px;
+ height:2em;
+ padding-top:8px;
  text-align:right;
- margin-bottom:10px;
 }
 
 div.entry dl dd{
- margin-bottom:10px;
+ margin:0 0 20px 0;
 }
 
+div.entry dl dd div{
+ padding-top:6px;
+}
+div.entry dl dd input[type='text'],
+div.entry dl dd input[type='password']{
+ width:400px;
+ height:2em;
+ border :3px solid #F5F5F5;
+}
+
+div.entry dl dd input[type='submit']{
+ width:300px;
+ height:2em;
+ text-align:center;
+}
+
+/*
 div.entry dl dd a{
  display:block;
  width:100px;
  border:1px solid #F5F5F5;
  text-align:center;
  padding:5px;
- float:left;
+ float:right;
 }
-
-div.entry dl dd input{
- width:250px;
-}
+*/
 
 div.clr{
  clear:both;

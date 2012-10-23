@@ -1,11 +1,12 @@
 <?php
 require_once("./php/auth.class.php");
 try{
+ print_r($_POST);
  //POSTで前のページからメールアドレスを受け取る
- if(! $_POST["email"]){
+ if(! $_POST["usermail"]){
   throw new exception("メールアドレスを入力してください");
  }
- $mail=$_POST["email"];
+ $mail=$_POST["usermail"];
  $db=new AUTH();
  $db->checkMail($mail);
  $msg =$mail."へ確認メールを送信しました。<br />";
@@ -131,11 +132,13 @@ $(function(){
 
    <!-- main -->
     <div id="main">
-     <p>
-<?php
- echo  $msg;
-?>
-     </p>
+
+     <!-- entry -->
+     <div class="entry">
+     <p> <?php echo  $msg; ?> </p>
+     </div>
+     <!-- entry -->
+
     <!-- calendar -->
     <div class="calendaritem">
     </div>

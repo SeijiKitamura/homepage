@@ -25,37 +25,21 @@ class AUTH extends DB{
   //データ初期化
   $this->items=null;
 
-  //テーブル列情報ゲット
-  $this->columns=$GLOBALS["TABLES"][TB_USER];
-  if(! $this->columns){
-   $msg="テーブル情報がありません。設定を見直してください。";
-   throw new exception($msg);
-  }
-
   //メールアドレスチェック(@が入っていればよしとする)
   if(! preg_match("/[@]/",$mail)){
    throw new exception("emailアドレスが正しくありません");
   }
 
-  //既存データチェック
-  $this->select="usermail,password";
-  $this->from =TB_USER;
-  $this->where ="usermail='".$mail."'";
-  $data=$this->getArray();
-  if($data){
-   throw new exception("入力していただいたアドレスはすでに登録済みです");
-  }//if
-  else{
-   //未登録の場合、checkcodeにmd5を登録して返す
-   $md5=GETMD5($mail);
-   $this->updatecol=array("usermail" =>$mail,
-                          "checkcode"=>$md5);
-   $this->from=TB_USER;
-   $this->where="usermail='".$mail."'";
-   $this->update();
-   sendAuthMail($mail,$md5);
-   return $md5;
-  }//else
+  //checkcodeにmd5を登録して返す(登録済みならパスワード初期化)
+  $md5=GETCHECKCODE($mail);
+  $this->updatecol=array("usermail" =>$mail,
+                         "password" =>"",
+                         "checkcode"=>$md5);
+  $this->from=TB_USER;
+  $this->where="usermail='".$mail."'";
+  $this->update();
+  sendAuthMail($mail,$md5);
+  return $md5;
  }//checkMail
 
  //---------------------------------------------------------//
@@ -63,10 +47,11 @@ class AUTH extends DB{
  public function checkMD5($md5){
   if(! $md5) throw new exception("メールアドレス未登録");
 
-  $this->select="usermail";
+  $this->select="usermail,name,address,tel,daddress,dtel,rname,checkcode,".CDATE;
   $this->from =TB_USER;
   $this->where="checkcode='".$md5."'";
   $this->getArray();
+  $this->items=$this->ary[0];
   return true;
  }//checkMD5
 
@@ -99,22 +84,31 @@ class AUTH extends DB{
   $user["password"]=md5($user["usermail"].$user["password"].SITEDIR);
 
   //既存データ確認
-  $this->select="usermail";
+  $this->select="usermail,password";
   $this->from=TB_USER;
   $this->where =" usermail='".$user["usermail"]."'";
-  $this->where.=" and password<>''";
   $this->where.=" and checkcode='".$user["checkcode"]."'";
   $this->items=$this->getArray();
-  if($this->items) throw new exception("すでに登録済みです");
+  if($this->items[0]["password"] && $this->items[0]["password"]!==$user["password"]){
+   throw new exception("パスワードが違います");
+  }//if
 
-  //データ更新
-  $this->updatecol=$user;
+  //データ更新(checkcode更新する)
+  $ary=array("usermail" =>$user["usermail"],
+             "password" =>$user["password"],
+             "name"     =>$user["name"],
+             "address"  =>$user["address"],
+             "tel"      =>$user["tel"],
+             "checkcode"=>GETCHECKCODE($user["usermail"].$user["password"])
+            );
+
+  $this->updatecol=$ary;
   $this->from=TB_USER;
   $this->where="usermail='".$user["usermail"]."'";
   $this->update();
 
   //更新したデータを返す
-  $this->select="usermail,name,address,tel";
+  $this->select="usermail,name,address,tel,checkcode";
   $this->from=TB_USER;
   $this->where="usermail='".$user["usermail"]."'";
   $this->items=$this->getArray();
@@ -124,7 +118,7 @@ class AUTH extends DB{
  // パスワード認証
  //---------------------------------------------------------//
  public function getUser($mail,$pass){
-  $pass=md5($mail.$pass.SITEDIR);
+  $pass=GETPASS($mail.$pass);
 
   $this->select="usermail,password";
   $this->from=TB_USER;
@@ -133,8 +127,8 @@ class AUTH extends DB{
   if(! $this->items) throw new exception("メールアドレス未登録です");
   if($pass!==$this->items[0]["password"]) throw new exception("パスワード、メールアドレスが違います");
 
-  //パスワードOK
-  $checkcode=md5($mail.$pass.SITEDIR.date("Ymd"));
+  //checkcode更新
+  $checkcode=GETCHECKCODE($mail.$pass);
   $this->updatecol=array("checkcode"=>$checkcode);
   $this->from=TB_USER;
   $this->where =" usermail='".$mail."'";
@@ -160,7 +154,7 @@ class AUTH extends DB{
   if($cdate<$d) throw new exception("再ログインが必要です");
 
   //認証
-  if(trim($this->items[0]["checkcode"])!==trim($checkcode)) throw new exception("パスワードが違います");
+  if(trim($this->items[0]["checkcode"])!==trim($checkcode)) throw new exception("もう一度ログインが必要です");
 
   return true;
  }//getAuth
