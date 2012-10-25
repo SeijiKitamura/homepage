@@ -1,3 +1,32 @@
+<?php
+require_once("./php/janmas.class.php");
+require_once("./php/auth.class.php");
+try{
+ //分類グループゲット
+ $db=new JANMAS();
+ $db->getLinMas();
+ $grp=$db->items;
+
+ //Cookieチェック
+ if($_COOKIE["kitamura"]){
+  $c=explode(":",$_COOKIE["kitamura"]);
+  $mail=$c[0];
+  $pass=$c[1];
+ }//if
+ 
+ //ユーザー名ゲット
+ if($mail && $pass){
+  $db=new AUTH();
+  $db->getAuth($mail,$pass);
+  $username=$db->items[0]["name"];
+ }//if
+
+}//try
+catch(Exception $e){
+ $err[]="エラー:".$e->getMessage();
+}
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -44,8 +73,7 @@
     <!-- hello -->
     <div class="hello">
      <p>
-     いらっしゃいませ。<br />
-     スーパーキタムラ　へようこそ。
+
      </p>
     </div>
     <!-- hello -->
@@ -53,9 +81,15 @@
     <!-- mininavi -->
     <div class="mininavi">
      <ul>
+      <li><a href="login.php">
+<?php
+ if($username) echo $username."さん";
+ else echo "ログイン";
+?>
+       </a></li>
       <li><a href="about.html">会社概要</a></li>
       <li><a href="access.html">アクセス</a></li>
-      <li>求人</li>
+      <li><a href="#">求人</a></li>
       <li><a href="sinsotu.html"> 新卒採用</a></li>
      </ul>
     </div>
@@ -85,35 +119,22 @@
 
    <!-- navi -->
    <div id="navi">
-    <!-- allcate -->
-    <div id="allcate">
-      すべてのカテゴリ
-    </div>
-    <!-- allcate -->
-
-    <!-- search -->
-    <div id="search">
-     商品検索:<input name="searchitem" type="text">
-    </div>
-    <!-- search -->
    </div>
    <!-- navi -->
 
    <!-- leftside -->
    <div id="leftside">
-    <ul>
-     <li>牛乳・チーズ・バター</li>
-     <li>冷凍食品・アイス</li>
-     <li>佃煮・漬物</li>
-     <li>生麺・練物・納豆</li>
-     <li>こんにゃく・豆腐</li>
-     <li>一般食料品</li>
-     <li>お菓子・和菓子</li>
-     <li>お米・飲料</li>
-     <li>ビール・発泡酒</li>
-     <li>日本酒・焼酎</li>
-     <li>ワイン・ウイスキー</li>
-     <li>ブランデー・リキュール</li>
+    <ul id="lingroup">
+<?php
+//グループ表示
+foreach($grp["data"] as $key=>$row){
+ echo "<li>";
+ echo "<a href='#'>";
+ echo $row["linname"];
+ echo "</a>";
+ echo "</li>\n";
+}//foreach
+?>
     </ul>
    </div>
    <!-- leftside -->

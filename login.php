@@ -72,7 +72,8 @@ $(function(){
     //クッキーセット
     $.cookie("kitamura",html,{path:"/",expires:1});
     console.log(html);
-    window.location.href="index.html";
+    //window.location.href="index.html";
+    window.location.href="index.php";
    });//$.post(url,data,function(html){
   }//if
   else if($(this).find("input[name=logout]").length){
@@ -80,7 +81,8 @@ $(function(){
    //クッキー削除
    $.cookie("kitamura","",{path:"/",expires:-1});
    alert("ログアウトしました");
-   window.location.href="index.html";
+   //window.location.href="index.html";
+   window.location.href="index.php";
   }//else
 
   //画面遷移キャンセル
@@ -210,7 +212,7 @@ function checkCookie(){
 
     <!-- logo -->
     <div class="logo">
-     <a href="index.html">
+     <a href="index.php">
       <img src="./img/logo2.jpg" alt="スーパーキタムラ">
      </a>
     </div>
@@ -275,7 +277,7 @@ function checkCookie(){
       <p>
       </p>
       <dl>
-       <form id="login_logout" method="post" action="./index.html">
+       <form id="login_logout" method="post" action="./index.php">
 <?php
  if(! $user){
   echo "<dt><label for='usermail'>メールアドレス:</label></dt>";

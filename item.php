@@ -138,7 +138,7 @@ try{
  $ul="<ul class='".$ulcls."'>".$li."</ul>\n";
  //$ul.="<div class='clr'></div>\n";
 
-
+ echo "success";
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
