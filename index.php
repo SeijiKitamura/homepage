@@ -1,6 +1,8 @@
 <?php
 require_once("./php/janmas.class.php");
 require_once("./php/auth.class.php");
+require_once("./php/calendar.class.php");
+require_once("./php/tirasi.class.php");
 try{
  //分類グループゲット
  $db=new JANMAS();
@@ -21,6 +23,20 @@ try{
   $username=$db->items[0]["name"];
  }//if
 
+ //カレンダーゲット
+ //$hiduke=date("Y-m-d",strtotime("2012/10/5"));
+ $hiduke=date("Y-m-d");
+ $db=new CL();
+ $db->getItem($hiduke);
+ $cal=$db->item;
+
+ //チラシゲット
+ $db=new TIRASI();
+ $db->getTitleList($hiduke);
+ $title=$db->items["data"][0]; //直近のチラシタイトル
+ $db->getItemList($title["tirasi_id"],null,null,null);
+ $items=count($db->items["data"]); //チラシ掲載商品数
+ 
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
@@ -141,43 +157,38 @@ foreach($grp["data"] as $key=>$row){
 
    <!-- rightside -->
    <div id="rightside">
+    <!-- koukoku -->
+    <div class="event">
+     <h4>広告のご案内</h4>
+<?php
+//ここに広告のページへtirasi_idを引数にしたリンクを挿入
 
-    <!-- todayevent -->
+$sday=date("n月j日",strtotime($title["hiduke"]));
+$eday=date("n月j日",strtotime($title["view_end"]));
+echo "<div class='tirasi_kikan'>".$sday."から".$eday."まで</div>\n";
+echo "<div class='tirasi_title'>".$title["title"]."</div>\n";
+echo "<div class='tirasi_items'>合計".$items."点掲載</div>\n";
+?>
+    </div>
+    <!-- koukoku -->
+
+
+    <!-- calendar -->
+    <div class="event">
     <a href="calendar.php" target="_blank">
-    <div class="event">
-      <h4>本日のイベント</h4>
-      カレンダーの内容を表示。<br/>
-      クリックしたら
-      カレンダーページへ移動
-    </div>
+<?php
+if($cal["data"]){
+ $h=date("m月d日",strtotime($cal["data"]["hiduke"]));
+ preg_match("/([^円倍割引]+)([円倍割引]+)/",$cal["data"]["rate"],$rate);
+ echo "<h4>".$h."限り</h4>";
+ echo "<div class='snamediv'>".$cal["data"]["title"]."</div>";
+ echo "<div class='baikadiv'><span>".$rate[1]."</span>".$rate[2]."</div>";
+ echo "<div class='noticediv'>".$cal["data"]["notice"]."</div>";
+}//if
+?>
     </a>
-    <!-- todayevent -->
-
-    <!-- mailbox -->
-    <div class="event">
-     <h4>メール情報</h4>
-     メールの内容を表示。<br/>
-     クリックしたら
-     メール一覧ページへ移動
-
     </div>
-    <!-- mailbox -->
-
-    <!-- twitter -->
-    <div class="event">
-     <h4>ツイッター</h4>
-     ツイッターウィジットを表示
-    </div>
-    <!-- twitter -->
-
-    <!-- koukoku -->
-    <div class="event">
-     <h4>チラシ広告</h4>
-     広告イメージを表示。<br />
-     クリックしたら広告ページへ移動
-
-    </div>
-    <!-- koukoku -->
+    <!-- calendar -->
 
    </div>
    <!-- rightside -->

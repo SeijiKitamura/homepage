@@ -30,7 +30,6 @@ class CL extends DB{
    throw new exception("CSV列情報がありません。設定を見なおしてください。config CSVCOLUMNS");
   }
  }//__construct
-
  //---------------------------------------------------------//
  // CSVファイルの整合性をチェック
  // 返り値:true false

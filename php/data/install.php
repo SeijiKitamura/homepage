@@ -1,10 +1,9 @@
 <?php
 require_once("../db.class.php");
 try{
- echo "success";
  $db=new DB();
  echo "<pre>";
- print_r($db->CreateTable(TB_SPECIAL));
+ print_r($db->CreateTable(TB_MAILITEMS));
  echo "</pre>";
 }
 catch(Exception $e){

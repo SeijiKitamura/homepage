@@ -20,14 +20,16 @@ define("DATADIR",PHPDIR."data/"); //更新データ
 //----------------------------------------------------------//
 // ファイル名定数(これがそのままテーブル名となる)
 //----------------------------------------------------------//
-define("CAL"     ,"calendar");          //カレンダー
-define("TITLES"  ,"tirasititle");       //チラシタイトル
-define("ITEMS"   ,"tirasiitem");        //チラシデータ
-define("JANMAS"  ,"janmas");            //単品マスタ
-define("CLSMAS"  ,"clsmas");            //クラスマスタ
-define("LINMAS"  ,"linmas");            //部門マスタ
-define("RESERVE" ,"reserve");           //ご予約商品マスタ
-define("USER"    ,"usermas");           //ご客様マスタ
+define("CAL"      ,"calendar");          //カレンダー
+define("TITLES"   ,"tirasititle");       //チラシタイトル
+define("ITEMS"    ,"tirasiitem");        //チラシデータ
+define("JANMAS"   ,"janmas");            //単品マスタ
+define("CLSMAS"   ,"clsmas");            //クラスマスタ
+define("LINMAS"   ,"linmas");            //部門マスタ
+define("RESERVE"  ,"reserve");           //ご予約商品マスタ
+define("USER"     ,"usermas");           //ご客様マスタ
+define("MAIL0873" ,"mail0873");              //メール
+define("MAILITEMS","mailitems");        //メールアイテム
 //---------------------------------------------------//
 
 //---------------------------------------------------//
@@ -64,6 +66,8 @@ define("TB_CLSMAS"      ,TABLE_PREFIX.CLSMAS);    //クラスマスタ
 define("TB_LINMAS"      ,TABLE_PREFIX.LINMAS);    //部門マスタ
 define("TB_RESERVE"     ,TABLE_PREFIX.RESERVE);   //ご予約商品マスタ
 define("TB_USER"        ,TABLE_PREFIX.USER);      //お客様マスタ
+define("TB_MAIL0873"    ,TABLE_PREFIX.MAIL0873);  //メール
+define("TB_MAILITEMS"   ,TABLE_PREFIX.MAILITEMS); //メールアイテム
 
 //---------------------------------------------------//
 // DB テーブル列系定数
@@ -537,6 +541,82 @@ $TABLES=array(TB_TITLES=>array(
                                                ,"local"  =>"チェックコード"
                                               )//checkcode
                             )//TB_USER
+              ,TB_MAIL0873=>array(
+                               "id"    =>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>"auto"
+                                               ,"default"=>"0"
+                                               ,"primary"=>1
+                                               ,"local"  =>"番号"
+                                              )//id
+                             ,"hiduke"   =>array( "type"   =>"date"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"'0000-00-00'"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"販売日"
+                                                )//hiduke    
+                             ,"title"    =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"タイトル"
+                                                )//title    
+                             ,"main"     =>array( "type"   =>"varchar(2000)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"本文"
+                                                )//main    
+ 
+                            )//TB_MAIL0873
+              ,TB_MAILITEMS=>array(
+                               "id"    =>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>"auto"
+                                               ,"default"=>"0"
+                                               ,"primary"=>1
+                                               ,"local"  =>"番号"
+                                              )//id
+                             ,"hiduke"   =>array( "type"   =>"date"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"'0000-00-00'"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"販売日"
+                                                )//hiduke    
+                             ,"jcode"    =>array( "type"   =>"varchar(14)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"0"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"JANコード"
+                                                )//jcode   
+                             ,"tani"     =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"販売単位"
+                                                )//tani    
+                             ,"baika"    =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"売価"
+                                                )//baika   
+                             ,"notice"   =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"コメント"
+                                                )//notice  
+
+                            )//TB_MAILITEMS
             );//TABLES
 
 //---------------------------------------------------//
