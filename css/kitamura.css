@@ -797,6 +797,11 @@ div.entry dl dd input[type='submit']{
  text-align:center;
 }
 
+div.entry dl dd textarea{
+ width:400px;
+ height:20em;
+ border :3px solid #F5F5F5;
+}
 /*
 div.entry dl dd a{
  display:block;
@@ -828,6 +833,7 @@ ul#lingroup li a{
  background-color:#FFFFF0;
  padding:3px;
 }
+
 div.clr{
  clear:both;
 }

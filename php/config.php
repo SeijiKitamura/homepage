@@ -28,8 +28,8 @@ define("CLSMAS"   ,"clsmas");            //クラスマスタ
 define("LINMAS"   ,"linmas");            //部門マスタ
 define("RESERVE"  ,"reserve");           //ご予約商品マスタ
 define("USER"     ,"usermas");           //ご客様マスタ
-define("MAIL0873" ,"mail0873");              //メール
-define("MAILITEMS","mailitems");        //メールアイテム
+define("MAILLIST" ,"maillist");          //メール
+define("MAILITEMS","mailitems");         //メールアイテム
 //---------------------------------------------------//
 
 //---------------------------------------------------//
@@ -66,7 +66,7 @@ define("TB_CLSMAS"      ,TABLE_PREFIX.CLSMAS);    //クラスマスタ
 define("TB_LINMAS"      ,TABLE_PREFIX.LINMAS);    //部門マスタ
 define("TB_RESERVE"     ,TABLE_PREFIX.RESERVE);   //ご予約商品マスタ
 define("TB_USER"        ,TABLE_PREFIX.USER);      //お客様マスタ
-define("TB_MAIL0873"    ,TABLE_PREFIX.MAIL0873);  //メール
+define("TB_MAILLIST"    ,TABLE_PREFIX.MAILLIST);  //メール
 define("TB_MAILITEMS"   ,TABLE_PREFIX.MAILITEMS); //メールアイテム
 
 //---------------------------------------------------//
@@ -541,7 +541,7 @@ $TABLES=array(TB_TITLES=>array(
                                                ,"local"  =>"チェックコード"
                                               )//checkcode
                             )//TB_USER
-              ,TB_MAIL0873=>array(
+              ,TB_MAILLIST=>array(
                                "id"    =>array( "type"   =>"int"
                                                ,"null"   =>"not null"
                                                ,"extra"  =>"auto"
@@ -571,7 +571,7 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"local"  =>"本文"
                                                 )//main    
  
-                            )//TB_MAIL0873
+                            )//TB_MAILLIST
               ,TB_MAILITEMS=>array(
                                "id"    =>array( "type"   =>"int"
                                                ,"null"   =>"not null"
@@ -586,6 +586,13 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"default"=>"'0000-00-00'"
                                                  ,"primary"=>""
                                                  ,"local"  =>"販売日"
+                                                )//hiduke    
+                             ,"saletype" =>array( "type"   =>"int"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"0"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"販売タイプ"
                                                 )//hiduke    
                              ,"jcode"    =>array( "type"   =>"varchar(14)"
                                                  ,"null"   =>"not null"

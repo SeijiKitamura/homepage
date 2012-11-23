@@ -1,10 +1,13 @@
 <?php
-require_once("mail.class.php");
+require_once("tirasi.class.php");
 try{
  //インスタンス
- $db=new ML();
- $db->sendMail("seiji.kitamura@gmail.com","テスト","できるかな？");
  echo "success";
+ $db=new TIRASI();
+ echo "success2";
+ echo "<pre>";
+  print_r($db->getData());
+ echo "</pre>";
 } 
 catch(Exception $e){
  echo "エラー:".$e->getMessage();

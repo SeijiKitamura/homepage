@@ -29,24 +29,24 @@ try{
 //                ["status"]  true false
 //                ["local"]   日本語列名
 //------------------------------------------------------------//
-
  //引数セット
  $tirasi_id=$_GET["tirasi_id"];
  $hiduke=$_GET["hiduke"];
  $lincode=$_GET["lincode"];
-
+ 
  //引数チェック
- if(! $tirasi_id ||! is_numeric($tirasi_id)){
+ if($tirasi_id && ! is_numeric($tirasi_id)){
   throw new exception("チラシ番号は数字で入力してください");
  }
 
- if(! $hiduke ||! CHKDATE($hiduke)){
+ if($hiduke && ! CHKDATE($hiduke)){
   throw new exception("日付が不正です");
  }
  
  if($lincode && ! is_numeric($lincode)){
   throw new exception("部門番号が不正です");
  }
+
  //チラシ系データゲット
  $db=new TIRASI();
  $data=($db->getData($tirasi_id,$hiduke,$lincode));
@@ -58,6 +58,7 @@ try{
   $db2->getJanMas($lincode,0,0,0);
   $data["jlinitems"]=$db2->items;
  }
+ echo "success";
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();

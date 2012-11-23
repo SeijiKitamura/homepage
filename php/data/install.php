@@ -3,7 +3,7 @@ require_once("../db.class.php");
 try{
  $db=new DB();
  echo "<pre>";
- print_r($db->CreateTable(TB_MAILITEMS));
+ print_r($db->CreateTable(TB_MAILLIST));
  echo "</pre>";
 }
 catch(Exception $e){

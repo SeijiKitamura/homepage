@@ -49,7 +49,6 @@ class TIRASI extends DB{
 
  }//__construct
 
-
  //---------------------------------------------------------//
  // CSVファイルの整合性をチェック
  // 返り値:true false
@@ -583,6 +582,14 @@ class TIRASI extends DB{
   //タイトル一覧
   $this->getTitleList(date("Y-m-d"));
   $data["titles"]=$this->items;
+
+  if(! $tirasi_id){
+   $tirasi_id=$this->items["data"][0]["tirasi_id"];
+  }//if
+
+  if(! $hiduke){
+   $hiduke=$data["titles"]["data"][0]["hiduke"];
+  }//if
 
   //販売日一覧
   $this->getDayList($tirasi_id,$lincode);
