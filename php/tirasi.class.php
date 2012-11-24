@@ -224,6 +224,10 @@ class TIRASI extends DB{
    throw new exception("日付を確認してください。");
   }
 
+  if(! $hiduke){
+   $hiduke=date("Y-m-d");
+  }
+
   //表示する列名をセット
   $col=array( "hiduke"
              ,"title"
@@ -354,11 +358,13 @@ class TIRASI extends DB{
 
   $this->group =$col;
   if($hiduke!=="all"){
-   $this->group.=" having min(t.hiduke)='".$hiduke."'";
+   //$this->group.=" having min(t.hiduke)='".$hiduke."'";
   }//if
 
   //並び順をセット
   $this->order =" t.tirasi_id";   //チラシ番号
+  $this->order.=",case when min(t.hiduke)=max(t.hiduke) ";
+  $this->order.=" then 0 else 1 end";
   $this->order.=",min(t.hiduke)"; //掲載開始日
   $this->order.=",max(t.hiduke)"; //掲載終了日
   $this->order.=",t.saletype";    //通常、イベント
@@ -436,6 +442,8 @@ class TIRASI extends DB{
  //       :$this->items[status] 処理の状態を格納(true false)
  //---------------------------------------------------------//
  public function getImageList($tirasi_id){
+  $this->columns=null;
+
   //引数チェック
   if(! $tirasi_id || ! is_numeric($tirasi_id)){
    throw new exception("チラシ番号が不正です");
@@ -719,14 +727,14 @@ class TIRASI extends DB{
  // 商品のHTMLを返すクラス
  // 返り値:<a>
  //---------------------------------------------------------//
- public function getHtmlItem($data,$path){
+ public function getHtmlItem($data,$path,$tanpni=null){
   //リセット
+  $startday=null;
   $endday=null;
   $html="";
-
   foreach($data["data"] as $key=>$val){
     //終了日が変われば期間を表示
-    if($val["endday"]!==$endday){
+    if($val["startday"]!==$startday || $val["endday"]!==$endday){
      if($val["startday"]===$val["endday"]){
       $msg=date("n月j日",strtotime($val["endday"]))."限り";
      }
@@ -749,8 +757,17 @@ class TIRASI extends DB{
     $url.="&hiduke=".$val["startday"];
     $url.="&lincode=".$val["lincode"];
     $url.="&jcode=".$val["jcode"];
-    $html.="<a href='".$url."'>\n"; //単品画面へリンク
-    $html.="<div class='imgdiv'><img src='./img/".$val["jcode"].".jpg' alt='".$val["sname"]."'></div>\n";
+    if(! $path) $html.="<a>\n";
+    else $html.="<a href='".$url."'>\n"; //単品画面へリンク
+
+    //画像表示
+    $html.="<div class='imgdiv'>\n";
+    if(file_exists("./img/".$val["jcode"].".jpg")){
+     $html.="<img src='./img/".$val["jcode"].".jpg' alt='".$val["sname"]."'>\n";
+    }
+    $html.="</div>\n";
+
+    //商品情報表示
     $html.="<div class='makerdiv'>".$val["maker"]."</div>\n";
     $html.="<div class='snamediv'>".$val["sname"]."</div>\n";
     $html.="<div class='tanidiv'>".$val["tani"]."</div>\n";
@@ -761,6 +778,7 @@ class TIRASI extends DB{
     $html.="</a>\n";
 
     //現在の値をセット
+    $startday=$val["startday"];
     $endday=$val["endday"];
     $subtitle=$val["subtitle"];
   }//foreach

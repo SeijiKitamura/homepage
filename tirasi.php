@@ -1,6 +1,8 @@
 <?php
 require_once("./php/tirasi.class.php");
 require_once("./php/janmas.class.php");
+require_once("./php/calendar.class.php");
+
 try{
 //------------------------------------------------------------//
 // データゲット
@@ -30,14 +32,15 @@ try{
 //                ["local"]   日本語列名
 //------------------------------------------------------------//
  //引数セット
- $tirasi_id=$_GET["tirasi_id"];
- $hiduke=$_GET["hiduke"];
+ //$tirasi_id=$_GET["tirasi_id"];
+ //$hiduke=$_GET["hiduke"];
+ //$jcode=$_GET["jcode"];
  $lincode=$_GET["lincode"];
  
  //引数チェック
- if($tirasi_id && ! is_numeric($tirasi_id)){
-  throw new exception("チラシ番号は数字で入力してください");
- }
+// if($tirasi_id && ! is_numeric($tirasi_id)){
+//  throw new exception("チラシ番号は数字で入力してください");
+// }
 
  if($hiduke && ! CHKDATE($hiduke)){
   throw new exception("日付が不正です");
@@ -47,10 +50,38 @@ try{
   throw new exception("部門番号が不正です");
  }
 
- //チラシ系データゲット
+ //チラシタイトルゲット
  $db=new TIRASI();
- $data=($db->getData($tirasi_id,$hiduke,$lincode));
+ $db->getTitleList($hiduke);
+ $title=$db->items;
+ if(! $tirasi_id) $tirasi_id=$title["data"][0]["tirasi_id"];
+ if(! $hiduke){    
+  $hiduke=$title["data"][0]["hiduke"];
+  if(strtotime($hiduke)<strtotime(date("Y-m-d"))){
+   $hiduke=date("Y-m-d");
+  }//if
+ }//if
+ 
+ //チラシアイテムゲット(単品)
+ if($jcode){
+  $db->getItemList($tirasi_id,$hiduke,$lincode,$jcode);
+  $item=$db->items;
+ }//if
 
+ //チラシアイテムゲット(一覧)
+ $db->getItemList($tirasi_id,$hiduke,$lincode);
+ $items=$db->items;
+
+ //Linリストゲット
+ $db->getLinList($tirasi_id,$hiduke);
+ $lin=$db->items;
+
+ //カレンダーゲット
+ $db2=new CL();
+ $db2->getItem($hiduke);
+ $cal=$db2->item;
+
+/*
  if($lincode){
   //単品マスタ系データゲット
   $db2=new JANMAS();
@@ -59,6 +90,7 @@ try{
   $data["jlinitems"]=$db2->items;
  }
  echo "success";
+*/
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
@@ -102,7 +134,7 @@ catch(Exception $e){
 
     <!-- logo -->
     <div class="logo">
-     <a href="index.html">
+     <a href="index.php">
       <img src="./img/logo2.jpg" alt="スーパーキタムラ">
      </a>
     </div>
@@ -110,7 +142,7 @@ catch(Exception $e){
 
     <!-- hello -->
     <div class="hello">
-     <h1>今週の広告</h1>
+     <h1></h1>
     </div>
     <!-- hello -->
 
@@ -128,7 +160,7 @@ catch(Exception $e){
     <!-- timesale -->
     <div class="timesale">
      <ul>
-      <li><a href="index.html">ホーム</a></li>
+      <li><a href="index.php">ホーム</a></li>
       <li> | </li>
       <li>今週のチラシ</li>
       <li> | </li>
@@ -168,30 +200,44 @@ echo $html;
    <!-- navi -->
    <!-- leftside -->
    <div id="leftside">
-<?PHP
-$html=$db->getHtmlLinList($data["linlist"],$tirasi_id,$hiduke,$lincode);
-echo $html;
+    <ul id="lingroup">
+     <li><a href="tirasi.php">すべて</a></li>
+<?php
+foreach ($lin["data"] as $rows=>$col){
+ echo "<li>";
+ echo "<a href='?lincode=".$col["lincode"]."'>";
+ echo $col["linname"]."(".$col["cnt"].")"."</a>";
+ echo "</li>\n";
+}//foreach
 ?>
+    </ul>
    </div>
    <!-- leftside -->
 
    <!-- rightside -->
    <div id="rightside">
-    <!-- nextday -->
-    <div class="tirasiitem">
+    <!-- calendar-->
+    <div class="event">
+     <a href="calendar.php" target="_blank">
 <?php
-$html=$db->getHtmlItem($data["nextitems"],"tirasiitem.php");
-echo $html;
+if($cal["data"]){
+ $h=date("m月d日",strtotime($cal["data"]["hiduke"]));
+ preg_match("/([^円倍割引]+)([円倍割引]+)/",$cal["data"]["rate"],$rate);
+ echo "<h4>".$h."限り</h4>";
+ echo "<div class='snamediv'>".$cal["data"]["title"]."</div>";
+ echo "<div class='baikadiv'><span>".$rate[1]."</span>".$rate[2]."</div>";
+ echo "<div class='noticediv'>".$cal["data"]["notice"]."</div>";
+}//if
 ?>
+     </a>
+
     </div>
-    <!-- nextday -->
+    <!-- calendar-->
    </div>
    <!-- rightside -->
 
    <!-- main -->
    <div id="main">
-   
-    <!-- tirasiitem -->
     <div class="tirasiitem">
 <?php
 //エラーがあれば処理終了
@@ -201,10 +247,11 @@ if($err && DEBUG){
  echo "</pre>";
  return false;
 }
-$html=$db->getHtmlItem($data["items"],"tirasiitem.php");
+//アイテム表示
+$html=$db->getHtmlItem($items,"tirasiitem.php");
 echo $html;
 ?>
-     <!-- janmas -->
+     <!-- tirasiitem -->
      <div class='janmas'>
 <?php
 if($data["jlinitems"]){
@@ -232,6 +279,10 @@ if(DEBUG){
    <!-- footer -->
    <div id="footer">
     <h1>footer</h1>
+    <span style="font-size:12px;">
+    掲載している商品は予定数量に到達次第、販売終了となります。
+    また掲載している価格と店頭価格に差異があった場合には、店頭価格を優先させていただきます。
+    </span>
    </div>
    <!-- footer -->
 

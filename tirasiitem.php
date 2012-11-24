@@ -86,7 +86,7 @@ catch(Exception $e){
 
     <!-- hello -->
     <div class="hello">
-     <h1>今週の広告</h1>
+     <h1></h1>
     </div>
     <!-- hello -->
 
@@ -132,6 +132,7 @@ catch(Exception $e){
     <!-- search -->
     <div id="search">
 <?PHP
+/*
 try{
  //単一チラシの日別掲載日を表示
  $html=$db->getHtmlDaysList($data["days"],$tirasi_id,$hiduke,$lincode);
@@ -140,6 +141,7 @@ try{
 catch(Exception $e){
  $err[]=$e->getMessage();
 }//catch
+*/
 ?>
     </div>
     <!-- search -->
@@ -147,15 +149,26 @@ catch(Exception $e){
    <!-- navi -->
    <!-- leftside -->
    <div id="leftside">
+    <ul id="lingroup">
+     <li><a href="tirasi.php">すべて</a></li>
 <?php
-try{
- $html=$db->getHtmlLinList($data["linlist"],$tirasi_id,$hiduke,$lincode);
- echo $html;
-}//try
-catch(Exception $e){
- $err[]=$e->getMessage();
-}//catch
+foreach ($data["linlist"]["data"] as $rows=>$col){
+ echo "<li>";
+ echo "<a href='tirasi.php?lincode=".$col["lincode"]."'>";
+ echo $col["linname"]."(".$col["cnt"].")"."</a>";
+ echo "</li>\n";
+}//foreach
+
+//try{
+// $html=$db->getHtmlLinList($data["linlist"],$tirasi_id,$hiduke,$lincode);
+// echo $html;
+//}//try
+//catch(Exception $e){
+// $err[]=$e->getMessage();
+//}//catch
+
 ?>
+    </ul>
    </div>
    <!-- leftside -->
 
@@ -197,7 +210,7 @@ try{
  $html.="<div id='tanpin'>";
  echo $html;
  
- $html=$db->getHtmlItem($data["item"],"tirasiitem.php");
+ $html=$db->getHtmlItem($data["item"],"");
  echo $html;
  echo "</div>\n";
  
