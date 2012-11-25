@@ -1,6 +1,7 @@
 <?php
 require_once("./php/janmas.class.php");
 require_once("./php/calendar.class.php");
+require_once("./php/tirasi.class.php");
 
 try{
 //------------------------------------------------------------//
@@ -41,24 +42,39 @@ try{
  if($lincode && ! is_numeric($lincode)){
   throw new exception("ラインコードは数字で入力してください");
  }
+
  if($clscode && ! is_numeric($clscode)){
   throw new exception("クラスコードは数字で入力してください");
  }
+
  if($jcode && ! is_numeric($jcode)){
   throw new exception("JANコードは数字で入力してください");
  }
+
+ if(! $jcode) $jcode=0;
+
  if($datanum && ! is_numeric($datanum)){
   throw new exception("表示番号は数字で入力してください");
  }
+
  if($hiduke && !CHKDATE($hiduke)){
   throw new exception("日付が不正です");
  }
+
  if(! $hiduke) $hiduke=date("Y-m-d");
+
+ //チラシゲット
+ $db=new TIRASI();
+ $db->getTitleList($hiduke);
+ $title=$db->items["data"][0];
+ $db->getItemList($title["tirasi_id"],null,null,null);
+ $items=count($db->items["data"]);
 
  //calendarをゲット
  $cal=new CL();
  $cal->getItem($hiduke);
- $data["calendar"]=$cal->item;
+ //$data["calendar"]=$cal->item;
+ $cal=$cal->item;
 
  //単品マスタ系データゲット
  $db=new JANMAS();
@@ -69,12 +85,12 @@ try{
  $db->getClsMas($lincode);
  $data["clslist"]=$db->items;
 
- $db->getJanMas($lincode,$clscode,0,$datanum);
+ $db->getJanMas($lincode,$clscode,$jcode,$datanum,null,1);
  $data["linitems"]=$db->items;
 
  //クラス内アイテムゲット
  if($clscode){
-  $db->getJanMas($lincode,$clscode,0,$datanum);
+  $db->getJanMas($lincode,$clscode,$jcode,$datanum,null,1);
   $data["clsitems"]=$db->items;
  }
 
@@ -138,7 +154,6 @@ try{
  $ul="<ul class='".$ulcls."'>".$li."</ul>\n";
  //$ul.="<div class='clr'></div>\n";
 
- echo "success";
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
@@ -182,7 +197,7 @@ catch(Exception $e){
 
     <!-- logo -->
     <div class="logo">
-     <a href="index.html">
+     <a href="index.php">
       <img src="./img/logo2.jpg" alt="スーパーキタムラ">
      </a>
     </div>
@@ -190,7 +205,7 @@ catch(Exception $e){
 
     <!-- hello -->
     <div class="hello">
-     <h1>商品のご案内</h1>
+     <h1></h1>
     </div>
     <!-- hello -->
 
@@ -208,7 +223,7 @@ catch(Exception $e){
     <!-- timesale -->
     <div class="timesale">
      <ul>
-      <li><a href="index.html">ホーム</a></li>
+      <li><a href="index.php">ホーム</a></li>
       <li> | </li>
       <li><a href='tirasi.php'>今週のチラシ</a></li>
       <li> | </li>
@@ -255,7 +270,8 @@ echo $html;
    <!-- leftside -->
 
    <!-- rightside -->
-   <div id="rightside" style="float:left !important;margin:0 2px !important;">
+   <div id="rightside">
+    <h4>さらに絞り込み</h4>
 <?php
 $html=$db->getHtmlClsList($data["clslist"],$lincode,$clscode,$hiduke);
 echo $html;
@@ -264,6 +280,37 @@ echo $html;
     <div class="tirasiitem">
     </div>
     <!-- tirasiitem-->
+
+    <!-- koukoku-->
+    <div class="event">
+<?php
+//ここに広告のページへtirasi_idを引数にしたリンクを挿入
+
+$sday=date("n月j日",strtotime($title["hiduke"]));
+$eday=date("n月j日",strtotime($title["view_end"]));
+echo "<div class='tirasi_kikan'>".$sday."から".$eday."まで</div>\n";
+echo "<div class='tirasi_title'>".$title["title"]."</div>\n";
+echo "<div class='tirasi_items'>合計".$items."点掲載</div>\n";
+?>
+
+    </div>
+    <!-- koukoku-->
+
+    <!-- calendar-->
+    <div class="event">
+<?php
+if($cal["data"]){
+ $h=date("m月d日",strtotime($cal["data"]["hiduke"]));
+ preg_match("/([^円倍割引]+)([円倍割引]+)/",$cal["data"]["rate"],$rate);
+ echo "<h4>".$h."限り</h4>";
+ echo "<div class='snamediv'>".$cal["data"]["title"]."</div>";
+ echo "<div class='baikadiv'><span>".$rate[1]."</span>".$rate[2]."</div>";
+ echo "<div class='noticediv'>".$cal["data"]["notice"]."</div>";
+
+}//if
+?>
+    </div>
+    <!-- calendar-->
 
    </div>
    <!-- rightside -->
@@ -306,7 +353,7 @@ if($data["calendar"]["data"]){
 <?php
 //単品表示
 if($data["item"]["data"]){
- $html=$db->getHtmlJanMas($data["item"],0,$hiduke);
+ $html=$db->getHtmlJanMas($data["item"],0,$hiduke,1);
  echo $html;
 }
 ?>
@@ -338,6 +385,12 @@ echo $html;
 }
 
 echo $ul;
+
+/*
+echo "<pre>";
+print_r($data["linitems"]);
+echo "</pre>";
+*/
 ?>
       <div class='clr'></div>
      </div>
@@ -345,30 +398,32 @@ echo $ul;
 
     </div>
     <!-- tirasiitem -->
-    <p>
     <h4>表示されている商品について：</h4>
+    <p>
     こちらに表示されている商品は品揃えを保証するものではございません。
-    こちらに表示されている商品でも、メーカーによる終売、品切、取扱中止、
-    等の理由により販売できない場合もございます。誠に恐れいりますが、
-    何卒ご了承くださいませ。<br />
+    メーカーによる終売、品切、取扱中止等の理由により販売できない場合も
+    ございます。
+    </p>
     <h4>表示されている価格について：</h4>
-    こちらに表示されている価格は、前日までの販売実績を元に表示しております。
-    表示されている価格と店頭での価格に差異があった場合、誠に
-    恐れ入りますが店頭での価格にて販売させていただきます。<br/>
+    <p>
+    表示されている価格と店頭価格に差異があった場合、誠に
+    恐れ入りますが店頭価格にて販売させていただきます。
     </p>
    </div>
    <!-- main -->
 
-   <!--div class="clr"></div-->
+   <div class="clr"></div>
    <!-- footer -->
    <div id="footer">
     <h1>footer</h1>
 <?php
+/*
 if(DEBUG){
  echo "<pre>";
  print_r($data);
  echo "</pre>";
 }
+*/
 ?>
    </div>
    <!-- footer -->

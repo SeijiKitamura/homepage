@@ -200,7 +200,7 @@ echo $html;
    <!-- navi -->
    <!-- leftside -->
    <div id="leftside">
-    <ul id="lingroup">
+    <ul class="grouplist">
      <li><a href="tirasi.php">すべて</a></li>
 <?php
 foreach ($lin["data"] as $rows=>$col){

@@ -124,7 +124,7 @@ catch(Exception $e){
       <li> | </li>
       <li><a href="calendar.php">カレンダー</a></li>
       <li> | </li>
-      <li><a href="item.php">商品のご案内</a></li>
+      <li><a href="item.php?lincode=1">商品のご案内</a></li>
       <li> | </li>
       <li>ご注文承り中</li>
       <li> | </li>
@@ -144,12 +144,12 @@ catch(Exception $e){
 
    <!-- leftside -->
    <div id="leftside">
-    <ul id="lingroup">
+    <ul class="grouplist">
 <?php
 //グループ表示
 foreach($grp["data"] as $key=>$row){
  echo "<li>";
- echo "<a href='#'>";
+ echo "<a href='item.php?lincode=".$row["lincode"]."'>";
  echo $row["linname"];
  echo "</a>";
  echo "</li>\n";
@@ -202,10 +202,10 @@ if($cal["data"]){
     <div class="janmas">
      <h3>新商品のご案内</h3>
 <?php
-//新商品(10アイテムに絞る)
+//新商品(NEWITEM :confing.php内に記述)
 $i=0;
-if(count($newitems["data"])>10){
- for($i=0;$i<10;$i++){
+if(count($newitems["data"])>NEWITEM){
+ for($i=0;$i<NEWITEM;$i++){
   $nitems["data"][$i]=$newitems["data"][$i];
  }//for
 }//if

@@ -168,18 +168,22 @@ input[name='searchitem']{
  width:100px;
 }
 /*div#leftside ul,*/
+/*
 div#rightside ul{
  list-style-type:none;
 }
+*/
 
 /*div#leftside ul li,*/
+/*
 div#rightside ul li{
  margin:0 0 2px 0;
  padding:3px 5px;
  font-size:15px;
 }
-
+*/
 /*div#leftside ul li a ,*/
+/*
 div#rightside ul li a{
  display:block;
  text-decoration:none;
@@ -187,7 +191,7 @@ div#rightside ul li a{
  border:solid 2px #F5F5F5;
  padding:10px;
 }
-
+*/
 div#leftside ul li a img{
  /*
  width:96px;
@@ -813,17 +817,17 @@ div.entry dl dd a{
 }
 */
 
-ul#lingroup{
+ul.grouplist{
  list-style:none;
 }
 
-ul#lingroup li{
+ul.grouplist li{
  height:1.5em;
  width:100%;
  overflow:hidden;
 }
 
-ul#lingroup li a{
+ul.grouplist li a{
  display:block;
  border:solid 1px #F5F5F5;
  font-size:small;
