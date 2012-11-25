@@ -1,12 +1,13 @@
 <?php
-require_once("tirasi.class.php");
+require_once("janmas.class.php");
 try{
  //インスタンス
  echo "success";
- $db=new TIRASI();
+ $db=new JANMAS();
  echo "success2";
+ $db->getNewItem();
  echo "<pre>";
-  print_r($db->getData());
+ print_r($db->items);
  echo "</pre>";
 } 
 catch(Exception $e){

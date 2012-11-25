@@ -399,6 +399,58 @@ class JANMAS extends DB{
 
  }//getJanMas
 
+ //---------------------------------------------------------//
+ // 新規登録商品リストを返す
+ // 返り値:true false
+ //       :$this->items[data]   商品マスタを格納
+ //       :$this->items[local]  列名を格納
+ //       :$this->items[status] データの状態を格納(true false)
+ //---------------------------------------------------------//
+ public function getNewItem(){
+  //データリセット
+  $this->items=null;
+  
+  //抽出基準をセット
+  $d=date("Y-m-d",strtotime("-".SALESTART."days"));
+
+  $table=$GLOBALS["TABLES"];
+  //データゲット
+  $this->select ="t.clscode,t.jcode,t.sname";
+  $this->select.=",t.stdprice,t.price,t.salestart,t.lastsale";
+  $this->from =TB_JANMAS ." as t ";
+  $this->where ="t.salestart>'".$d."'";
+  $this->where.="and t.lastsale>'".$d."'";
+  $this->order ="t.salestart desc,t.clscode desc,t.jcode";
+  $janmas=$this->getArray();
+
+  //広告売価を反映
+  $this->select ="t.jcode,t.tani,t.baika";
+  $this->from =TB_ITEMS." as t ";
+  $this->where ="t.hiduke='".date("Y-m-d")."'";
+  $this->order ="t.jcode";
+  $tirasi=$this->getArray();
+  foreach($janmas as $key=>$val){
+   foreach($tirasi as $key1=>$val1){
+    if($val["jcode"]==$val1["jcode"]){
+     $val["price"]=$val1["baika"];
+     break;
+    }//if
+   }//foreach
+  }//foreach
+
+  $this->items["data"]=$janmas;
+  $this->items["status"]=true;
+  $this->items["local"]=array( $table[TB_JANMAS]["clscode"]["local"]
+                              ,$table[TB_JANMAS]["jcode"]["local"]
+                              ,$table[TB_JANMAS]["sname"]["local"]
+                              ,$table[TB_JANMAS]["stdprice"]["local"]
+                              ,$table[TB_JANMAS]["price"]["local"]
+                              ,$table[TB_JANMAS]["salestart"]["local"]
+                              ,$table[TB_JANMAS]["lastsale"]["local"]
+                             );
+
+ }//public function getNewItem(){
+
 /*
  public function getSearchItem($word){
   $this->items=null;
@@ -439,15 +491,23 @@ class JANMAS extends DB{
   $html="";
   $i=0;
   foreach($data["data"] as $key=>$val){
+   //url生成
    $url ="item.php?lincode=".$val["lincode"];
    $url.="&clscode=".$val["clscode"];
    $url.="&jcode=".$val["jcode"];
    $url.="&datanum=".$datanum;
    $url.="&hiduke=".$hiduke;
    //$url.="&datanum=0";
-
    $html.="<a href='".$url."'>";
-   $html.="<div class='imgdiv'><img src='./img/".$val["jcode"].".jpg' alt='".$val["sname"]."'></div>\n";
+
+   //img生成
+   $html.="<div class='imgdiv'>";
+   if(file_exists("./img/".$val["jcode"].".jpg")){
+    $html.="<img src='./img/".$val["jcode"].".jpg' alt='".$val["sname"]."'>";
+   }
+   $html.="</div>\n";
+
+   //商品情報生成
    $html.="<div class='snamediv'>".$val["sname"]."</div>\n";
    $html.="<div class='baikadiv'>";
    if($val["price"]) $html.="<span>".$val["price"]."</span>";

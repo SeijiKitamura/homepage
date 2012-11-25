@@ -9,6 +9,10 @@ try{
  $db->getLinMas();
  $grp=$db->items;
 
+ //新商品データゲット
+ $db->getNewItem();
+ $newitems=$db->items;
+
  //Cookieチェック
  if($_COOKIE["kitamura"]){
   $c=explode(":",$_COOKIE["kitamura"]);
@@ -195,7 +199,25 @@ if($cal["data"]){
 
    <!-- main -->
    <div id="main">
+    <div class="janmas">
+     <h3>新商品のご案内</h3>
+<?php
+//新商品(10アイテムに絞る)
+$i=0;
+if(count($newitems["data"])>10){
+ for($i=0;$i<10;$i++){
+  $nitems["data"][$i]=$newitems["data"][$i];
+ }//for
+}//if
+else $nitems["data"]=$newitems["data"];
+$nitems["status"]=$newitems["status"];
+$items["local"]=$newitems["local"];
 
+$db=new JANMAS();
+$html=$db->getHtmlJanMas($nitems);
+echo $html;
+?>
+    </div>
     <!-- event -->
     <div class="event">
      event1

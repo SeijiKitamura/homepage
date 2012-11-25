@@ -301,13 +301,20 @@ $TABLES=array(TB_TITLES=>array(
                                                ,"primary"=>""
                                                ,"local"  =>"売価"
                                               )//price
+                          ,"salestart" =>array(  "type"  =>"date"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>"'0000-00-00'"
+                                               ,"primary"=>""
+                                               ,"local"  =>"販売開始日"
+                                              )//salestart
                           ,"lastsale" =>array(  "type"   =>"date"
                                                ,"null"   =>"not null"
                                                ,"extra"  =>""
                                                ,"default"=>"'0000-00-00'"
                                                ,"primary"=>""
                                                ,"local"  =>"最終販売日"
-                                              )//price
+                                              )//lastsale
                             )//TB_JANMAS
               ,TB_CLSMAS=>array(
                               "clscode"=>array( "type"   =>"int"
@@ -736,4 +743,5 @@ EOF;
 define("JANMASLIMIT",30);//tirasiitem.php,item.php 「こんな商品･･」表示数 
 define("NAVISTART",5);   //item.php 「こんな商品･･」表示数 
 define("NAVISPAN",10);     //item.php 「こんな商品･･」表示数 
+define("SALESTART",30); //新商品の抽出基準。本日より何日前までを新商品とするか
 ?>
