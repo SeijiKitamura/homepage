@@ -567,6 +567,11 @@ class JANMAS extends DB{
   //リンク先URLをセット
   $url="item.php?hiduke=".$hiduke."&datanum=0&lincode=".$lincode."&clscode=";
 
+  $li ="<li>";
+  if($clscode) $li.="<a href='".$url."'>";
+  $li.="すべての商品";
+  if($clscode) $li.="</a>";
+  $li.="</li>\n";
   //リスト作成
   foreach($data["data"] as $key=>$val){
    $li.="<li>";
@@ -579,7 +584,7 @@ class JANMAS extends DB{
   $ul="<ul class='".$ulcls."'>\n".$li."</ul>\n";
   //$ul.="<div class='clr'></div>";
   return $ul;
- }//getHtmlLinList
+ }//getHtmlClsList
 
  //---------------------------------------------------------//
  // アイテム画像を追加するHTMLを作成

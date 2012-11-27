@@ -144,18 +144,11 @@ catch(Exception $e){
 
    <!-- leftside -->
    <div id="leftside">
-    <ul class="grouplist">
 <?php
-//グループ表示
-foreach($grp["data"] as $key=>$row){
- echo "<li>";
- echo "<a href='item.php?lincode=".$row["lincode"]."'>";
- echo $row["linname"];
- echo "</a>";
- echo "</li>\n";
-}//foreach
+$db=new JANMAS();
+$html=$db->getHtmlLinList($grp,$lincode);
+echo $html;
 ?>
-    </ul>
    </div>
    <!-- leftside -->
 
@@ -214,7 +207,7 @@ $nitems["status"]=$newitems["status"];
 $items["local"]=$newitems["local"];
 
 $db=new JANMAS();
-$html=$db->getHtmlJanMas($nitems);
+$html=$db->getHtmlJanMas($nitems,0);
 echo $html;
 ?>
     </div>

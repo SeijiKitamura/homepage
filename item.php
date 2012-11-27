@@ -91,7 +91,7 @@ try{
  //クラス内アイテムゲット
  if($clscode){
   $db->getJanMas($lincode,$clscode,$jcode,$datanum,null,1);
-  $data["clsitems"]=$db->items;
+  //$data["clsitems"]=$db->items;
  }
 
  //単品データゲット
@@ -330,18 +330,38 @@ if($err && DEBUG){
     <!-- calendar -->
     <div class="calendaritem">
 <?php
-if($data["calendar"]["data"]){
- $cal=$data["calendar"]["data"];
- $nen=date("Y",strtotime($cal["hiduke"]));
- $tuki=date("m",strtotime($cal["hiduke"]));
- $url="calendar.php?nen=".$nen."&tuki=".$tuki;
- $html ="<a href='".$url."'>\n";
- $html.="カレンダー情報：";
- $html.=date("n月j日",strtotime($cal["hiduke"]))."限り";
- $html.=$cal["title"]."全品".$cal["rate"];
- $html.="</a>\n";
- echo "<h4>".$html."</h4>\n";
-}
+//echo $cal["hiduke"]." ".$hiduke." ".$cal["clscode"]." ".$clscode;
+if($cal && $cal["data"]["hiduke"]==$hiduke && $cal["data"]["clscode"]===$clscode){
+ $tuki=date("n",strtotime($cal["data"]["hiduke"]));
+ $hi=date("j",strtotime($cal["data"]["hiduke"]));
+
+ preg_match("/[0-9A-z]+/",$cal["data"]["rate"],$match);
+ preg_match("/[^0-9A-z]+/",$cal["data"]["rate"],$match2);
+
+ $html ="<h2>";
+ $html.="カレンダー情報:";
+ $html.="<span>".$tuki."</span>月<span>".$hi."</span>日限り ";
+ $html.="<span>".$cal["data"]["title"]." </span>";
+ if($match) {
+  $html.="<span>".$match[0]."</span>";
+  $html.=$match2[0];
+ }
+ else $html.="<span>".$cal["data"]["rate"]."</span>";
+ $html.="</h2>\n";
+ echo $html;
+}//if
+//if($data["calendar"]["data"]){
+// $cal=$data["calendar"]["data"];
+// $nen=date("Y",strtotime($cal["hiduke"]));
+// $tuki=date("m",strtotime($cal["hiduke"]));
+// $url="calendar.php?nen=".$nen."&tuki=".$tuki;
+// $html ="<a href='".$url."'>\n";
+// $html.="カレンダー情報：";
+// $html.=date("n月j日",strtotime($cal["hiduke"]))."限り";
+// $html.=$cal["title"]." ".$cal["rate"];
+// $html.="</a>\n";
+// echo "<h4>".$html."</h4>\n";
+//}
 ?>
     </div>
     <!-- calendar -->
@@ -417,13 +437,11 @@ echo "</pre>";
    <div id="footer">
     <h1>footer</h1>
 <?php
-/*
 if(DEBUG){
  echo "<pre>";
- print_r($data);
+ print_r($data["clsitems"]);
  echo "</pre>";
 }
-*/
 ?>
    </div>
    <!-- footer -->
