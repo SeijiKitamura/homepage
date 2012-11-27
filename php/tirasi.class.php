@@ -540,13 +540,13 @@ class TIRASI extends DB{
  //       :$this->items[local]  列名
  //       :$this->items[status] 処理の状態を格納(true false)
  //---------------------------------------------------------//
- public function getLinList($tirasi_id,$hiduke){
+ public function getLinList($tirasi_id,$hiduke=null){
   //引数チェック
   if(! $tirasi_id || ! is_numeric($tirasi_id)){
    throw new exception("チラシ番号が不正です");
   }
 
-  if(! $hiduke || ! CHKDATE($hiduke)){
+  if($hiduke && ! CHKDATE($hiduke)){
    throw new exception("日付が不正です");
   }
 
@@ -555,26 +555,27 @@ class TIRASI extends DB{
   $this->items=null;
   $this->columns=null;
 
-  $this->select =" t.hiduke";
-  $this->select.=",t3.lincode";
-  $this->select.=",t3.linname";
-  $this->select.=",count(t.hiduke) as cnt";
-  $this->from =TB_ITEMS." as t ";
+  $this->select="t4.lincode,t4.linname,count(t4.jcode) as cnt";
+  $this->from =" (select t3.lincode,t3.linname,t.jcode ";
+  $this->from.=" from ".TB_ITEMS." as t ";
   $this->from.=" inner join ".TB_JANMAS." as t1 on";
   $this->from.=" t.jcode=t1.jcode";
   $this->from.=" inner join ".TB_CLSMAS." as t2 on";
   $this->from.=" t1.clscode=t2.clscode";
   $this->from.=" inner join ".TB_LINMAS." as t3 on";
   $this->from.=" t2.lincode =t3.lincode";
-  $this->where =" t.tirasi_id=".$tirasi_id;
-  $this->where.=" and t.hiduke='".$hiduke."'";
-  $this->group ="t.hiduke,t3.lincode,t3.linname";
-  $this->order =$this->group;
+  $this->from.=" where t.tirasi_id=".$tirasi_id;
+  $this->from.=" group by";
+  $this->from.=" t3.lincode,t3.linname,t.jcode";
+  $this->from.=" ) as t4";
+  $this->where="";
+  $this->group=" t4.lincode,t4.linname";
+  $this->order=" t4.lincode";
 
   //データセット
   $this->items["data"]=$this->getArray();
   $this->items["status"]=true;
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_ITEMS]["hiduke"]["local"];
+  //$this->items["local"][]=$GLOBALS["TABLES"][TB_ITEMS]["hiduke"]["local"];
   $this->items["local"][]=$GLOBALS["TABLES"][TB_LINMAS]["lincode"]["local"];
   $this->items["local"][]=$GLOBALS["TABLES"][TB_LINMAS]["linname"]["local"];
   $this->items["local"][]="データ数";

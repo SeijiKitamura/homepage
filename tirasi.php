@@ -73,7 +73,7 @@ try{
  $items=$db->items;
 
  //Linリストゲット
- $db->getLinList($tirasi_id,$hiduke);
+ $db->getLinList($tirasi_id);
  $lin=$db->items;
 
  //カレンダーゲット
