@@ -74,7 +74,7 @@ catch(Exception $e){
 
     <!-- logo -->
     <div class="logo">
-     <a href="index.html">
+     <a href="index.php">
       <img src="./img/logo2.jpg" alt="スーパーキタムラ">
      </a>
     </div>
@@ -82,7 +82,7 @@ catch(Exception $e){
 
     <!-- hello -->
     <div class="hello">
-     <h2>お買得カレンダー</h2>
+     <h2></h2>
     </div>
     <!-- hello -->
 
@@ -100,7 +100,7 @@ catch(Exception $e){
     <!-- timesale -->
     <div class="timesale">
      <ul>
-      <li><a href="index.html">ホーム</a></li>
+      <li><a href="index.php">ホーム</a></li>
       <li> | </li>
       <li><a href='tirasi.php'>今週のチラシ</a></li>
       <li> | </li>
@@ -137,7 +137,7 @@ catch(Exception $e){
    <!-- navi -->
    <!-- leftside -->
    <div id="leftside">
-<?PHP
+<?php
 $html=$db->getHtmlCalList($data["lists"],$nen,$tuki);
 echo $html;
 ?>
@@ -171,9 +171,9 @@ if($err && DEBUG){
 
     <!-- calendaritem -->
     <div class="calendaritem">
-    <h2><?php echo $tuki*1; ?>月</h2>
+    <h2><?php echo $nen."年".($tuki*1)."月"; ?>のお買得情報！！</h2>
 <?php
-$html=$db->getHtmlCalItem($data["items"],2012,7);
+$html=$db->getHtmlCalItem($data["items"],$nen,$tuki);
 echo $html;
 ?>
      <div class='clr'></div>
@@ -210,11 +210,11 @@ echo $html;
    <div id="footer">
     <h1>footer</h1>
 <?php
-if(DEBUG){
- echo "<pre>";
- print_r($data);
- echo "</pre>";
-}
+//if(DEBUG){
+// echo "<pre>";
+// print_r($data);
+// echo "</pre>";
+//}
 ?>
    </div>
    <!-- footer -->

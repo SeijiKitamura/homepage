@@ -123,10 +123,22 @@ class CL extends DB{
   $this->select.=",date_format(hiduke,'%c') as tuki";
   $this->select.=",count(hiduke) as cnt";
   $this->from   =TB_CAL;
-  //$this->where  =" hiduke>'".date("Y-m-01")."'";
+  $this->where  =" hiduke>'".date("Y-m-01")."'";
   $this->group  =" date_format(hiduke,'%Y')";
   $this->group .=",date_format(hiduke,'%c')";
   $this->order  =$this->group;
+
+  $this->select =" date_format(t.hiduke,'%Y') as nen";
+  $this->select.=",date_format(t.hiduke,'%c') as tuki";
+  $this->select.=",count(t.hiduke) as cnt";
+  $this->from ="(select hiduke from ".TB_CAL;
+  $this->from.=" where hiduke>'".date("Y-m-01")."'";
+  $this->from.=" group by hiduke) as t";
+  $this->where  ="";
+  $this->group =" date_format(t.hiduke,'%Y')";
+  $this->group.=",date_format(t.hiduke,'%c')";
+  $this->order  =$this->group;
+
   $this->items["data"]=$this->getArray();
   $this->items["local"]=array("年","月","データ数");
   $this->items["status"]=true;
@@ -211,30 +223,27 @@ class CL extends DB{
  //---------------------------------------------------------//
  public function getHtmlCalList($data,$nen=null,$tuki=null){
   //ulのクラス名をセット
-  $ulcls="";
+  $ulcls="grouplist";
 
   //リンク先URLをセット
-  $url="calendar.php?";
+  $motourl="calendar.php?";
 
   //リスト作成
   foreach($data["data"] as $key=>$val){
-   //年表示
-   if($n!=$val["nen"]){
-    $li.="<li>".$val["nen"]."年</li>\n";
-   }//if
 
-   //月表示
-   $seturl=$url."nen=".$val["nen"]."&tuki=".$val["tuki"];
+   //リンク先作成
+   $url=$motourl."nen=".$val["nen"]."&tuki=".$val["tuki"];
+
+   //リスト作成
    $li.="<li>";
    if($val["nen"]!=$nen && $val["tuki"]!=$tuki){
-    $li.="<a href='".$seturl."'>";
-   }
-   $li.=$val["tuki"]."月(".$val["cnt"].")";
-   if($val["nen"]!=$nen && $val["tuki"]!=$tuki) $li.="</a>";
+    $li.="<a href='".$url."'>";
+   }//if
+   $li.=$val["nen"]."年".$val["tuki"]."月(".$val["cnt"].")";
+   if($val["nen"]!=$nen && $val["tuki"]!=$tuki){
+    $li.="</a>";
+   }//if
    $li.="</li>\n";
-
-   //年更新
-   $n=$val["nen"];
   }//foreach
 
   $ul="<ul class='".$ulcls."'>\n".$li."</ul>\n";
@@ -282,10 +291,16 @@ class CL extends DB{
     if($i==strtotime($val["hiduke"])){
      //item.phpへのリンク生成
      $url ="item.php?lincode=".$val["lincode"]."&clscode=".$val["clscode"];
-     $url.="&hiduke=".$val["hiduke"];
+     //$url.="&hiduke=".$val["hiduke"];
 
      $html.="<a href='".$url."'>";
-     $html.="<div class='calimg'><img src=''></div>";
+     $html.="<div class='calimg'>";
+     $img=IMGDIR."cal_".$val["clscode"].".jpg";
+     if(file_exists($img)){
+      $html.="<img src='".$img."'>";
+     }
+     $html.="</div>";
+
      $html.="<div class='caltitle'>".$val["title"]."(".$val["cnt"].")"."</div>";
      //英数字と日本語を分離
      preg_match("/[0-9A-z]+/",$val["rate"],$match);
