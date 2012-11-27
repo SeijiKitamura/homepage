@@ -580,6 +580,43 @@ class JANMAS extends DB{
   //$ul.="<div class='clr'></div>";
   return $ul;
  }//getHtmlLinList
+
+ //---------------------------------------------------------//
+ // アイテム画像を追加するHTMLを作成
+ // 返り値:<a>
+ //---------------------------------------------------------//
+ public function getHtmlImageList($data,$datanum=null){
+  $imgdir="../../img/";
+  $html="";
+  $i=0;
+  foreach($data["data"] as $key=>$val){
+   //大枠作成
+   $html.="<div class='itemdiv'>\n";
+
+   //imgタグ作成
+   $imgpath=$imgdir.$val["jcode"].".jpg";
+   $html.="<div class='itemimgdiv'>";
+   if(file_exists($imgpath)){
+    $html.="<img src=".$imgpath.">\n";
+    //$html.="<input name='sakujyo' type='button' value='削除'>\n";
+   }//if
+   $html.="</div>\n";
+
+   //商品情報生成
+   $html.="<div class='itemclscode'>".$val["clscode"]."</div>\n";
+   $html.="<div class='itemjcode'>".$val["jcode"]."</div>\n";
+   $html.="<div class='itemsname'>".$val["sname"]."</div>\n";
+   if($val["price"]){
+    $html.="<div class='itemprice'><span>".$val["price"]."</span>円</div>\n";
+   }
+   $html.="<div class='itemlast'>".$val["lastsale"]."</div>\n";
+   $html.="<input class='a' name='jan_".$val["jcode"]."' type='button' value='ファイルから'>\n";
+   $html.="<input name='del_".$val["jcode"]."' type='button' value='削除'>\n";
+   $html.="<input class='b' name='upload_".$val["jcode"]."' type='file' type='button'>\n";
+   $html.="</div>\n";
+  }//foreach
+  return $html;
+ }// getHtmlImageList
 }//JANMAS
 
 function SEARCHWORD($word){

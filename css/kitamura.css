@@ -838,6 +838,40 @@ ul.grouplist li a{
  padding:3px;
 }
 
+/*商品画像入力用*/
+div.itemdiv{
+ width:120px;
+ height:250px;
+ border:solid 1px #F5F5F5;
+ float:left;
+ font-size:12px;
+}
+
+div.itemimgdiv{
+ width:120px;
+ height:110px;
+}
+
+div.itemsname{
+ width:100%;
+ height:2.5em;
+ overflow:hidden;
+}
+
+div.itemprice{
+ height:2.5em;
+ text-align:right;
+ color:red;
+}
+
+div.itemprice span{
+ font-size:20px;
+}
+
+input.b{
+ width:0px;
+ height:0px;
+}
 div.clr{
  clear:both;
 }
