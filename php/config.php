@@ -15,6 +15,7 @@ define("JSDIR"  ,SITEDIR."js/");   //JavaScript Jquery保存場所
 define("PHPDIR" ,SITEDIR."php/");  //PHP
 define("CSSDIR" ,SITEDIR."css/");  //css
 define("DATADIR",PHPDIR."data/"); //更新データ
+define("LOGDIR" ,DATADIR."log/"); //ログデータ
 //---------------------------------------------------//
 
 //----------------------------------------------------------//
@@ -43,6 +44,7 @@ define("JANCSV"     ,DATADIR.JANMAS.".csv");   //単品マスタ
 define("CLSCSV"     ,DATADIR.CLSMAS.".csv");   //クラスマスタ
 define("LINCSV"     ,DATADIR.LINMAS.".csv");   //部門マスタ
 define("RESERVECSV" ,DATADIR.RESERVE.".csv");   //ご予約商品マスタ
+define("MAILITEMSCSV",DATADIR.MAILITEMS.".csv");//メールアイテム
 //---------------------------------------------------//
 
 
@@ -418,7 +420,7 @@ $TABLES=array(TB_TITLES=>array(
                                                ,"default"=>0
                                                ,"primary"=>""
                                                ,"local"  =>"クラスコード"
-                                              )//jcode
+                                              )//clscode
                                ,"jcode"=>array( "type"   =>"varchar(14)"
                                                ,"null"   =>"not null"
                                                ,"extra"  =>""
@@ -601,6 +603,13 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"primary"=>""
                                                  ,"local"  =>"販売タイプ"
                                                 )//hiduke    
+                             ,"clscode"=>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>0
+                                               ,"primary"=>""
+                                               ,"local"  =>"クラスコード"
+                                              )//clscode
                              ,"jcode"    =>array( "type"   =>"varchar(14)"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
@@ -608,6 +617,20 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"primary"=>""
                                                  ,"local"  =>"JANコード"
                                                 )//jcode   
+                             ,"maker"    =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"メーカー"
+                                                )//maker   
+                               ,"sname"=>array(   "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"商品名"
+                                                 )//sname   
                              ,"tani"     =>array( "type"   =>"varchar(255)"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
@@ -615,6 +638,13 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"primary"=>""
                                                  ,"local"  =>"販売単位"
                                                 )//tani    
+                             ,"strprice" =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"通常売価"
+                                                )//baika   
                              ,"baika"    =>array( "type"   =>"varchar(255)"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
@@ -644,6 +674,17 @@ $CSVCOLUMNS=array( TB_CAL   =>array( "hiduke"
                                     ,"notice"
                                     ,"clscode"
                                    )//TB_CAL
+               ,TB_MAILITEMS=>array( "hiduke"
+                                    ,"saletype"
+                                    ,"clscode"
+                                    ,"jcode"
+                                    ,"maker"
+                                    ,"sname"
+                                    ,"tani"
+                                    ,"strprice"
+                                    ,"baika"
+                                    ,"notice"
+                                   )//TB_MAILITEMS
                   ,TB_TITLES=>array( "tirasi_id"
                                     ,"hiduke"
                                     ,"title"

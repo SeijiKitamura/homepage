@@ -38,6 +38,8 @@ function GETARRAYCSV($csvfilepath,$tablename){
  //配列へCSVデータを追加
  while($line=fgets($fl)){
   $line=str_replace("\n","",$line);
+  $line=str_replace("\r","",$line);
+  $line=mb_convert_encoding($line,"UTF-8","SJIS");
   $csvdata[]=explode(",",$line);
  }//while
  if(! $csvdata) throw new exception("CSVデータがありません");
@@ -296,6 +298,7 @@ function CHKCD($jcode){
  $wc=substr($j,0,$l-1);
  $l=strlen($wc);
  //CD計算
+ $chk=0;
  for($i=0;$i<$l;$i++){
   $keta=$i+2;
   $s=$l-$i-1;//全体桁数からループ回数を引くと右側の桁になる。
@@ -322,10 +325,12 @@ function ADDCD($jcode){
  $j=(string) $jcode;
 
  //CD抜き
+ $l=0;
  $wc=substr($j,0,$l-1);
  $l=strlen($wc);
 
  //CD計算
+ $chk=0;
  for($i=0;$i<$l;$i++){
   $keta=$i+2;
   $s=$l-$i-1;//全体桁数からループ回数を引くと右側の桁になる。
@@ -362,6 +367,7 @@ function ADDZERO($jcode){
  $j=(string) $jcode;
 
  $l=strlen($j);
+ $a=0;
  $b="";
  if($l===2 || $l===3 || $l===4){
   $a=13-$l;

@@ -68,8 +68,9 @@ class CL extends DB{
   //データ登録
   try{
    $this->BeginTran();
+   $tuki=0;
    foreach($this->items["data"] as $rownum=>$row){
-    //エラーチェック
+    //エラーチェック(エラーならDB登録しない）
     if($row["err"]!=="OK"){
      $row["rownum"]=$rownum;
      $this->items["errdata"][]=$row;

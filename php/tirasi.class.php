@@ -145,7 +145,6 @@ class TIRASI extends DB{
    throw new exception($msg);
   }
 
-  //CSVファイルをゲット
   //$this->items["data"]=CHKDATA(ITEMCSV,TB_ITEMS);//function.php内参照
   $this->items=GETARRAYCSV(ITEMCSV,TB_ITEMS);//function.php内参照
   
@@ -169,6 +168,7 @@ class TIRASI extends DB{
   
   //データ登録
   try{
+   $tirasi_id=0;
    $this->BeginTran();
    foreach($this->items["data"] as $rownum=>$row){
     //既存チラシを一括削除
@@ -189,7 +189,10 @@ class TIRASI extends DB{
     }
     $this->items["data"][$rownum]["jcode"]=$jcode;
 
-    //SQL生成(err列を除く)
+    //err列を除く
+    if($this->items["data"][$rownum]["err"]!=="OK") continue;
+
+    //SQL生成
     foreach($this->csvcol as $colnum=>$colname){
      $this->updatecol[$colname]=$this->items["data"][$rownum][$colname];
     }
@@ -329,17 +332,19 @@ class TIRASI extends DB{
   $col.=",t.baika";
   $col.=",t.notice";
   $col.=",t.specialflg";
-  $col.=",t1.clscode";
+  //$col.=",t1.clscode";
+  $col.=",t.clscode";
   $col.=",t3.lincode";
   $col.=",t.tirasi_id";
 
   $grpcol =",min(t.hiduke) as startday";
   $grpcol.=",max(t.hiduke) as endday";
   $this->select=$col.$grpcol;
-  $this->from =TB_ITEMS." as t inner join ".TB_JANMAS." as t1 on ";
-  $this->from.=" t.jcode=t1.jcode";
+  $this->from =TB_ITEMS." as t";
+  //$this->from.=" inner join ".TB_JANMAS." as t1 on ";
+  //$this->from.=" t.jcode=t1.jcode";
   $this->from.=" inner join ".TB_CLSMAS." as t2 on";
-  $this->from.=" t1.clscode=t2.clscode";
+  $this->from.=" t.clscode=t2.clscode";
   $this->from.=" inner join ".TB_LINMAS." as t3 on";
   $this->from.=" t2.lincode=t3.lincode";
 
@@ -370,7 +375,8 @@ class TIRASI extends DB{
   $this->order.=",t.saletype";    //通常、イベント
   $this->order.=",t.subtitle";    //タイトル
   $this->order.=",t.specialflg desc";  //目玉、通常
-  $this->order.=",t1.clscode";    //TB_JANMASのクラスコード
+  //$this->order.=",t1.clscode";    //TB_JANMASのクラスコード
+  $this->order.=",t.clscode";    //TB_ITEMのクラスコード
   $this->order.=",t.jcode";
 
   $this->items["data"]  =$this->getArray();
@@ -787,6 +793,74 @@ class TIRASI extends DB{
   $html.="<div class='clr'></div>\n";
   return $html;
  }//getHtmlItem
+
+ public function getHtmlImage($data,$path,$tanpin=null){
+  //リセット
+  $startday=null;
+  $endday=null;
+  $html="";
+  foreach($data["data"] as $key=>$val){
+   //終了日が変われば期間を表示
+   if($val["startday"]!==$startday || $val["endday"]!==$endday){
+    if($val["startday"]===$val["endday"]){
+     $msg=date("n月j日",strtotime($val["endday"]))."限り";
+    }
+    else{
+    $msg =date("n月j日",strtotime($val["startday"]))."から";
+    $msg.=date("n月j日",strtotime($val["endday"]))."まで";
+    }
+    $html.="<div class='clr'></div>\n";
+    $html.="<h3>".$msg."</h3>\n";
+   }//if
+
+   //subtitleが変更すればタイトル表示
+   if($val["subtitle"] && $val["subtitle"]!==$subtitle){
+    $html.="<div class='clr'></div>\n";
+    $html.="<h4>".$val["subtitle"]."</h4>\n";
+   }//if
+
+   //商品表示(目玉なら特別表示)
+   //$url =$path."?tirasi_id=".$val["tirasi_id"];
+   //$url.="&hiduke=".$val["startday"];
+   //$url.="&lincode=".$val["lincode"];
+   //$url.="&jcode=".$val["jcode"];
+   //if(! $path) $html.="<a>\n";
+   //else $html.="<a href='".$url."'>\n"; //単品画面へリンク
+   $html.="<a>\n";
+
+   //画像表示
+   $html.="<div class='imgdiv'>\n";
+   if(file_exists("./img/".$val["jcode"].".jpg")){
+    $html.="<img src='./img/".$val["jcode"].".jpg' alt='".$val["sname"]."'>\n";
+   }
+   $html.="</div>\n";
+
+   //商品情報表示
+   $html.="<div class='makerdiv'>".$val["maker"]."</div>\n";
+   $html.="<div class='snamediv'>".$val["sname"]."</div>\n";
+   $html.="<div class='tanidiv'>".$val["tani"]."</div>\n";
+   $html.="<div class='baikadiv'><span>".$val["baika"]."</span>円</div>\n";
+   $html.="<div class='noticediv'>".$val["notice"]."</div>\n";
+   $html.="<div class='jcodediv'>JAN:".$val["jcode"]."</div>\n";
+   $html.="<div class='kikandiv'>".$msg."</div>\n";
+
+   //ボタン表示
+   $html.="<input class='a' name='jan_".$val["jcode"]."' type='button' value='ファイルから'>\n";
+   $html.="<input name='del_".$val["jcode"]."' type='button' value='削除'>\n";
+   $html.="<input class='b' name='upload_".$val["jcode"]."' type='file' type='button'>\n";
+
+   $html.="</a>\n";
+
+   //現在の値をセット
+   $startday=$val["startday"];
+   $endday=$val["endday"];
+   $subtitle=$val["subtitle"];
+  }//foreach
+
+  $html.="<div class='clr'></div>\n";
+  return $html;
+
+ }// getHtmlImage
 }//TIRASI
 
 ?>
