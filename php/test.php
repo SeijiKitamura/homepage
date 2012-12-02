@@ -1,11 +1,11 @@
 <?php
-require_once("janmas.class.php");
+require_once("maillist.class.php");
 try{
  //インスタンス
  echo "success";
- $db=new JANMAS();
+ $db=new MAILLIST();
  echo "success2";
- $db->getNewItem();
+ $db->getItemList(1,$_GET["hiduke"]);
  echo "<pre>";
  print_r($db->items);
  echo "</pre>";
