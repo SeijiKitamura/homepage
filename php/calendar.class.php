@@ -11,7 +11,7 @@
 //  getItemList()        指定月のカレンダー情報を返す
 //  getLinItem($lincode) 指定月、指定ラインのカレンダー情報を返す
 //  getClsItem($clscode) 指定月、指定クラスのカレンダー情報を返す
-//  getCalendar($jcode)  指定日のカレンダー情報を返す
+//  getCalendar()        指定日のカレンダー情報を返す
 //  getMonthCount()      指定月に何回カレンダー情報があるかを返す
 //----------------------------------------------------------//
 require_once("db.class.php");
