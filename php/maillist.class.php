@@ -1,181 +1,113 @@
 <?php
+//----------------------------------------------------------//
+//  maillist.class.php
+//  (db.class.phpをスーパークラス)
+//  このクラスを使用するときは必ずtry catchを使用すること
+//----------------------------------------------------------//
+//メソッド一覧
+//----------------------------------------------------------//
+// set2mail()       表示する商品を「メール商品」にする
+// set2osusume()    表示する商品を「おすすめ商品」にする
+// getDayList()     指定月に送信した日付を返す
+// getItemList()    指定月のアイテムを返す
+// getMailItem()    指定日の商品を返す
+//----------------------------------------------------------//
 require_once("db.class.php");
 require_once("function.php");
 
-class MAILLIST extends db{
- public  $items;   //データを格納
- private $columns;//テーブル情報
- private $csvcol; //CSV列情報
+class ML extends DB{
+ public $items;   //データを格納
+ public $saleday; //表示したい日(指定した月のアイテムが表示される）
 
+ protected $saletype;//セールタイプ番号
+ protected $andwhere;//where句
+ 
  function __construct(){
   parent::__construct();
 
-  //テーブル列情報ゲット
-  $this->columns=$GLOBALS["TABLES"][TB_MAILITEMS];
-  if(! $this->columns){
-   $msg="テーブル情報がありません。設定を見なおしてください";
-   throw new exception($msg);
-  }//if
+  //表示したい日
+  $this->saleday=date("Y-m-d");
+  
+  //セールタイプ番号ゲット
+  $this->saletype="1";
 
-  //CSV列情報をゲット
-  $this->csvcol=$GLOBALS["CSVCOLUMNS"][TB_MAILITEMS];
-  if(! $this->csvcol){
-   $msg="CSV列情報がありません。設定を見なおしてください";
-   throw new exception($msg);
-  }//if
  }//__construct
+ 
+ public function set2mail(){
+  $this->saletype="1";
+ }
 
- //------------------------------------------------------//
- // CSV値チェックして配列へ格納する
- //------------------------------------------------------//
- public function checkData(){
-  //データ初期化
+ public function set2osusume(){
+  $this->saletype="2";
+ }
+
+ protected function setwhere(){
+  $uk=strtotime($this->saleday);
+  $sday=date("Y-m-1",$uk);
+  $eday=date("Y-m-d",mktime(0,0,0,(date("m",$uk)+1),0,date("Y",$uk)));
+  $this->andwhere =" saleday between '".$sday."' and '".$eday."'";
+  $this->andwhere.=" and saletype=".$this->saletype;
+  //echo $this->andwhere."\n";
+ }
+
+//----------------------------------------------------------//
+// 指定月のメールを送信した日付を返す
+//----------------------------------------------------------//
+ public function getDayList(){
   $this->items=null;
 
-  //CSVファイルをゲット(function.php)
-  $this->items=GETARRAYCSV(MAILITEMSCSV,TB_MAILITEMS);
+  $this->setwhere();
 
-  return true;
- }//checkData
+  $this->select =" t.saleday,count(t.jcode) as cnt";
+  $this->from =TB_SALEITEMS;
+  $this->from.=" as t";
+  $this->where=$this->andwhere;
+  $this->group=" t.saleday";
+  $this->order=" t.saleday";
+  $this->items=$this->getArray();
+ }//public function getDayList(){
 
- //------------------------------------------------------//
- // CSVデータインポート
- //------------------------------------------------------//
- public function setData(){
-  //データ初期化
+//----------------------------------------------------------//
+// 指定月のアイテムを返す
+//----------------------------------------------------------//
+ public function getItemList(){
   $this->items=null;
 
-  //CSVファイルをゲット
-  $this->checkData();
+  $this->setwhere();
 
-  //データ存在チェック
-  if(! $this->items["data"]) throw new exception("データがありません");
-
-  try{
-   $this->BeginTran();
-
-   //既存データを削除
-   $hiduke="";
-   foreach($this->items["data"] as $rownum=>$row){
-    if ($row["hiduke"]!==$hiduke){
-     $this->from=TB_MAILITEMS;
-     $this->where="hiduke='".$row["hiduke"]."'";
-     $this->delete();
-    }//if
-    $hiduke=$row["hiduke"];
-   }//foreach
-
-   //SQL生成(エラーデータを除く)
-   foreach ($this->items["data"] as $rownum=>$row){
-    //エラーチェック
-    if($row["err"]!=="OK"){
-     $row["rownum"]=$rownum;
-     $this->items["errdata"][]=$row;
-     continue;
-    }//if
-
-    foreach($this->csvcol as $colnum=>$colname){
-     $this->updatecol[$colname]=$this->items["data"][$rownum][$colname];
-    }//foreach
-    $this->from=TB_MAILITEMS;
-    $this->where="id=0";
-    $this->update();
-   }//foreach
-   $this->Commit();
-  }//try
-  catch(Exception $e){
-   $this->items["status"]=false;
-   $this->RollBack();
-   throw $e;
-  }//catch
- }//setData
-
- //------------------------------------------------------//
- // メール商品のLinリストを返す
- //------------------------------------------------------//
- public function getLinList($hiduke=null){
-  if($hiduke && ! CHKDATE($hiduke)){
-   throw new exception ($hiduke." 日付が不正です");
-  }//if 
-  
-  if (! $hiduke) $hiduke=date("Y-m-d");
-
-  //メンバリセット
-  $this->items=null;
-  $this->columns=null;
-
-  //SQL生成
-  $this->select="t2.lincode,t2.linname,count(t.jcode) as cnt";
-  $this->from =TB_MAILITEMS." as t";
-  $this->from.=" inner join ".TB_CLSMAS." as t1 on";
-  $this->from.=" t.clscode=t1.clscode";
-  $this->from.=" inner join ".TB_LINMAS." as t2 on";
-  $this->from.=" t1.lincode=t2.lincode";
-  $this->where=" hiduke='".$hiduke."'";
-  $this->group=" t2.lincode,t2.linname";
-  $this->order=" t2.lincode";
-
-  //データセット
-  $this->items["data"]=$this->getArray();
-  $this->items["status"]=true;
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_LINMAS]["lincode"]["local"];
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_LINMAS]["linname"]["local"];
-  $this->items["local"][]="データ数";
- }//public function getLinList($hiduke=null){
-
- //------------------------------------------------------//
- // メール商品リストを返す(saletype 1:メール 2:おすすめ)
- //------------------------------------------------------//
- public function getItemList($saletype,$hiduke=null,$lincode=null,$clscode=null,$jcode=null){
-  if($hiduke && ! CHKDATE($hiduke)){
-   throw new exception ($hiduke." 日付が不正です");
-  }//if 
-  
-  if (! $hiduke) $hiduke=date("Y-m-d");
-
-  if(! is_numeric($saletype)){
-   throw new exception($saletype." セールタイプが不正です");
-  }//if
-
-  //メンバリセット
-  $this->items=null;
-  $this->columns=null;
-
-  //SQL生成
-  $this->select =" t.hiduke,t.saletype";
+  $this->select =" t.saleday,t.clscode,t.sname";
+  $this->select.=",t.tani,t.price,t.notice,t.flg0";
+  $this->select.=",t1.clsname";
   $this->select.=",t2.lincode,t2.linname";
-  $this->select.=",t1.clscode,t1.clsname";
-  $this->select.=",t.jcode,t.maker";
-  $this->select.=",t.sname,t.tani";
-  $this->select.=",t.strprice,t.baika";
-  $this->select.=",t.notice";
-  $this->from =TB_MAILITEMS." as t";
+  $this->from =TB_SALEITEMS;
+  $this->from.=" as t";
   $this->from.=" inner join ".TB_CLSMAS." as t1 on";
   $this->from.=" t.clscode=t1.clscode";
   $this->from.=" inner join ".TB_LINMAS." as t2 on";
   $this->from.=" t1.lincode=t2.lincode";
-  $this->where =" t.hiduke='".$hiduke."'";
-  $this->where.=" and t.saletype=".$saletype;
-  if($lincode) $this->where.=" and t2.lincode=".$lincode; 
-  if($clscode) $this->where.=" and t1.clscode=".$clscode; 
-  if($jcode)   $this->where.=" and t.jcode=".$jcode; 
-  $this->order="t2.lincode,t1.clscode,t.jcode";
+  $this->where =$this->andwhere;
+  $this->order =" t.saleday,t.clscode,t.jcode";
 
-  //データセット
   $this->items["data"]=$this->getArray();
-  $this->items["status"]=true;
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_LINMAS]["lincode"]["local"];
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_LINMAS]["linname"]["local"];
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_CLSMAS]["clscode"]["local"];
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_CLSMAS]["clsname"]["local"];
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_MAILITEMS]["jcode"]["local"];
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_MAILITEMS]["maker"]["local"];
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_MAILITEMS]["sname"]["local"];
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_MAILITEMS]["tani"]["local"];
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_MAILITEMS]["strprice"]["local"];
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_MAILITEMS]["baika"]["local"];
-  $this->items["local"][]=$GLOBALS["TABLES"][TB_MAILITEMS]["notice"]["local"];
+ }//public function getItemList(){
 
- }//public function getItemList($hiduke=null){
-}//class
+//----------------------------------------------------------//
+// 指定日のメール商品を返す
+//----------------------------------------------------------//
+ public function getMailItem(){
+  $this->items=null;
+
+  $this->getItemList();
+
+  foreach($this->items["data"] as $rownum=>$rowdata){
+   if(strtotime($rowdata["saleday"])==strtotime($this->saleday)){
+    $items[]=$rowdata;
+   }//if
+  }//foeach
+
+  $this->items["data"]=$items;
+ }// public function getMailItem(){
+
+}//ML
+
 ?>

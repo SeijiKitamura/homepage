@@ -6,12 +6,31 @@
 <?php
 require_once("tirasi.class.php");
 require_once("calendar.class.php");
+require_once("maillist.class.php");
 
 try{
  echo "<pre>";
  echo "success";
 
  //インスタンス
+ $db=new ML();
+ $db->saleday="2012/11/02";
+ $db->set2osusume();
+ $db->getMailItem();
+ print_r($db->items);
+
+ $db=new ML();
+ $db->saleday="2012/11/02";
+ $db->getMailItem();
+ print_r($db->items);
+
+ $db->getDayList();
+ print_r($db->items);
+
+ $db->getItemList();
+ print_r($db->items);
+
+ 
  $db=new CL();
  $db->saleday="2012/11/16";
  $db->getMonthCount();
