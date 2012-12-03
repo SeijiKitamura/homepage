@@ -1,326 +1,204 @@
 <?php
 //----------------------------------------------------------//
-//  calendar.class.php 
-//  カレンダー系クラス(db.class.phpをスーパークラス)
+//  tirasi.class.php 
+//  広告系クラス(db.class.phpをスーパークラス)
 //  このクラスを使用するときは必ずtry catchを使用すること
 //----------------------------------------------------------//
-//  メソッド一覧
-//  checkData()     CSVファイルのデータ整合性をチェック
-//  setData()       CSVファイルをDBへ登録
+//メソッド一覧
 //----------------------------------------------------------//
-
+//  getLinList()         指定月のラインリストを返す
+//  getClsList()         指定月、指定ラインのクラスリストを返す
+//  getItemList()        指定月のカレンダー情報を返す
+//  getLinItem($lincode) 指定月、指定ラインのカレンダー情報を返す
+//  getClsItem($clscode) 指定月、指定クラスのカレンダー情報を返す
+//  getCalendar($jcode)  指定日のカレンダー情報を返す
+//  getMonthCount()      指定月に何回カレンダー情報があるかを返す
+//----------------------------------------------------------//
 require_once("db.class.php");
 require_once("function.php");
 
 class CL extends DB{
- public  $items;   //データを格納
- public  $item;   //データを格納
- private $columns;//テーブル情報
- private $csvcol; //CSV列情報
+ public $items;   //データを格納
+ public $saleday; //表示したい日(この日付以降が表示される）
 
+ protected $saletype;//セールタイプ番号
+ protected $andwhere;//where句
+ 
  function __construct(){
   parent::__construct();
 
-  $this->columns=$GLOBALS["TABLES"][TB_CAL];
-  $this->csvcol =$GLOBALS["CSVCOLUMNS"][TB_CAL];
-  if(! $this->columns){
-   throw new exception("テーブル情報がありません。設定を見なおしてください。config TABLES");
-  }
-  if(! $this->csvcol){
-   throw new exception("CSV列情報がありません。設定を見なおしてください。config CSVCOLUMNS");
-  }
- }//__construct
- //---------------------------------------------------------//
- // CSVファイルの整合性をチェック
- // 返り値:true false
- //       :$this->items[data]   CSVデータを格納
- //       :$this->items[local]  列名を格納
- //       :$this->items[status] データの状態を格納(true false)
- //---------------------------------------------------------//
- public function checkData(){
-  //データ初期化
-  $this->items=null;
-
-  //CSVファイルを配列へ格納
-  //$this->items=CHKDATA(CALCSV,TB_CAL);//function.php内参照
-  $this->items=GETARRAYCSV(CALCSV,TB_CAL);//function.php内参照
-
-  return true;
- }//checkData
-
- //---------------------------------------------------------//
- // CSVファイルをDBへ登録
- // 返り値:true false
- //       :$this->items[data]   CSVデータを格納
- //       :$this->items[local]  列名を格納
- //       :$this->items[status] データの状態を格納(true false)
- //---------------------------------------------------------//
- public function setData(){
-  //データ初期化
-  $this->items=null;
-
-  //CSVファイルを配列へ格納
-  $this->checkData();
+  //表示したい日
+  $this->saleday=date("Y-m-d");
   
-  //データ存在チェック
-  if(! $this->items["data"]) throw new exception("データがありません。");
+  //セールタイプ番号ゲット
+  $this->saletype=3;
 
-  //データ登録
-  try{
-   $this->BeginTran();
-   $tuki=0;
-   foreach($this->items["data"] as $rownum=>$row){
-    //エラーチェック(エラーならDB登録しない）
-    if($row["err"]!=="OK"){
-     $row["rownum"]=$rownum;
-     $this->items["errdata"][]=$row;
-     continue;
-    }
-
-    //既存月を削除
-    if($tuki!==date("m",strtotime($row["hiduke"]))){
-     $ut=strtotime($row["hiduke"]);
-     $s=date("Y-m-d",mktime(0,0,0,date("m",$ut),1,date("Y",$ut)));
-     $e=date("Y-m-d",mktime(0,0,0,date("m",$ut)+1,0,date("Y",$ut)));
-     $this->from=TB_CAL;
-     $this->where="hiduke between '".$s."' and '".$e."'";
-     $this->delete();
-    }
-
-    //SQL生成(err列を除く)
-    foreach($this->csvcol as $colnum=>$colname){
-     $this->updatecol[$colname]=$row[$colname];
-    }//foreach
-    $this->from=TB_CAL;
-    $this->where =" hiduke='".$row["hiduke"]."'";
-    $this->where.=" and clscode=".$row["clscode"];
-    $this->update();
-
-    //カレンダー月を更新
-    $tuki=date("m",strtotime($row["hiduke"]));
-   }//foreach
-   $this->Commit();
-  }//try
-  catch(Exception $e){
-   $this->RollBack();
-   $this->items["status"]=false;
-   throw $e;
-  }//catch
- }// setData
-
- //---------------------------------------------------------//
- // カレンダーリストをゲット
- // 返り値:true false
- //       :$this->items[data]   本日以降のカレンダーデータ(年月）
- //       :$this->items[local]  列名を格納
- //       :$this->items[status] データの状態を格納(true false)
- //---------------------------------------------------------//
- public function getCalendarList(){
-  //アイテムリセット
-  $this->items=null;
-
-  //年月リストを作成
-  $this->select =" date_format(hiduke,'%Y') as nen";
-  $this->select.=",date_format(hiduke,'%c') as tuki";
-  $this->select.=",count(hiduke) as cnt";
-  $this->from   =TB_CAL;
-  $this->where  =" hiduke>'".date("Y-m-01")."'";
-  $this->group  =" date_format(hiduke,'%Y')";
-  $this->group .=",date_format(hiduke,'%c')";
-  $this->order  =$this->group;
-
-  $this->select =" date_format(t.hiduke,'%Y') as nen";
-  $this->select.=",date_format(t.hiduke,'%c') as tuki";
-  $this->select.=",count(t.hiduke) as cnt";
-  $this->from ="(select hiduke from ".TB_CAL;
-  $this->from.=" where hiduke>'".date("Y-m-01")."'";
-  $this->from.=" group by hiduke) as t";
-  $this->where  ="";
-  $this->group =" date_format(t.hiduke,'%Y')";
-  $this->group.=",date_format(t.hiduke,'%c')";
-  $this->order  =$this->group;
-
-  $this->items["data"]=$this->getArray();
-  $this->items["local"]=array("年","月","データ数");
-  $this->items["status"]=true;
+ }//__construct
+ 
+ protected function setwhere(){
+  $uk=strtotime($this->saleday);
+  $sday=date("Y-m-1",$uk);
+  $eday=date("Y-m-d",mktime(0,0,0,(date("m",$uk)+1),0,date("Y",$uk)));
+  $this->andwhere =" saleday between '".$sday."' and '".$eday."'";
+  $this->andwhere.=" and saletype=".$this->saletype;
+  echo $this->andwhere."\n";
  }
 
- //---------------------------------------------------------//
- // カレンダーアイテムをゲット
- // 返り値:true false
- //       :$this->items[data]   選択月のカレンダーアイテム
- //       :$this->items[local]  列名を格納
- //       :$this->items[status] データの状態を格納(true false)
- //---------------------------------------------------------//
- public function getCalendarItem($nen,$tuki){
-  //引数チェック
-  if(! CHKDATE($nen."-".$tuki."-01")) throw new exception("日付が不正です");
+//----------------------------------------------------------//
+// 指定月のラインリストを返す
+// (cntは指定月に何回特売があるかを示す）
+//----------------------------------------------------------//
+ public function getLinList(){
+  $this->items=null;
 
-  //開始日,終了日セット
-  $s=date("Y-m-d",mktime(0,0,0,$tuki  ,1,$nen));
-  $e=date("Y-m-d",mktime(0,0,0,$tuki+1,0,$nen));
-  
-  //テーブル配列ゲット
-  $table=$GLOBALS["TABLES"];
+  $this->setwhere();
 
-  //メンバーリセット
+  $this->select ="t3.lincode,t3.linname,count(t3.saleday) as cnt";
+  $this->from =" (select t2.lincode,t2.linname,t.saleday from ";
+  $this->from.=" (select saleday,clscode from ".TB_SALEITEMS;
+  $this->from.=" where ".$this->andwhere;
+  $this->from.=" ) as t";
+  $this->from.=" inner join ".TB_CLSMAS." as t1 on";
+  $this->from.=" t.clscode=t1.clscode";
+  $this->from.=" inner join ".TB_LINMAS." as t2 on";
+  $this->from.=" t1.lincode=t2.lincode";
+  $this->from.=" group by t2.lincode,t2.linname,t.saleday ) as t3";
+  $this->group =" t3.lincode,t3.linname";
+  $this->order =" t3.lincode";
+  $this->items["data"]=$this->getArray();
+ }//public function getLinList(){
+
+//----------------------------------------------------------//
+// 指定月、指定ラインのクラスリストを返す
+// (cntはそのクラスに何アイテムあるかを示す）
+//----------------------------------------------------------//
+ public function getClsList($lincode){
+  $this->items=null;
+
+  $this->setwhere();
+
+  $this->select =" t2.clscode,t2.clsname,t1.cnt ";
+  $this->from =" (select clscode from ".TB_SALEITEMS;
+  $this->from.=" where ".$this->andwhere;
+  $this->from.=" group by clscode ";
+  $this->from.=" ) as t";
+  $this->from.=" inner join ";
+  $this->from.=" (select clscode,count(jcode) as cnt from ".TB_JANMAS;
+  $this->from.="  group by clscode) as t1 on ";
+  $this->from.=" t.clscode=t1.clscode";
+  $this->from.=" inner join ".TB_CLSMAS." as t2 on";
+  $this->from.=" t1.clscode=t2.clscode ";
+  $this->from.=" inner join ".TB_LINMAS." as t3 on";
+  $this->from.=" t2.lincode=t3.lincode";
+  $this->where=" t2.lincode=".$lincode;
+  $this->order =" t1.clscode";
+  $this->items["data"]=$this->getArray();
+
+ }//public function getClsList(){
+
+//----------------------------------------------------------//
+// 指定月のカレンダー情報を返す
+//----------------------------------------------------------//
+ public function getItemList(){
+  $this->items=null;
+
+  $this->setwhere();
+
+  $this->select =" t.saleday,t.clscode,t.sname";
+  $this->select.=",t.tani,t.price,t.notice";
+  $this->select.=",t1.clsname";
+  $this->select.=",t2.lincode,t2.linname";
+  $this->from =" (select * from ".TB_SALEITEMS;
+  $this->from.=" where ".$this->andwhere;
+  $this->from.=" ) as t";
+  $this->from.=" inner join ".TB_CLSMAS." as t1 on";
+  $this->from.=" t.clscode=t1.clscode";
+  $this->from.=" inner join ".TB_LINMAS." as t2 on";
+  $this->from.=" t1.lincode=t2.lincode";
+  $this->where =$this->andwhere;
+  $this->order =" t.saleday,t.clscode";
+
+  $this->items["data"]=$this->getArray();
+ }//public function getItemList(){
+
+//----------------------------------------------------------//
+//指定月の特定ラインの商品を抽出
+//----------------------------------------------------------//
+ public function getLinItem($lincode){
   $this->items=null;
 
   //データゲット
-  $this->select="t.hiduke,t.title,t.rate";
-  $this->select.=",count(t1.jcode) as cnt";
-  $this->select.=",min(t2.lincode) as lincode";
-  $this->select.=",min(t1.clscode) as clscode";
-  $this->from =TB_CAL." as t";
-  $this->from.=" inner join ".TB_JANMAS." as t1 on";
-  $this->from.=" t.clscode=t1.clscode";
-  $this->from.=" inner join ".TB_CLSMAS." as t2 on";
-  $this->from.=" t1.clscode=t2.clscode";
-  $this->where=" t.hiduke between '".$s."' and '".$e."'";
-  $this->where.=" and t1.lastsale>'".date("Y-m-d",strtotime("-60days"))."'";
-  $this->group="t.hiduke,t.title,t.rate";
-  $this->order=$this->group;
-  $this->items["data"]=$this->getArray();
-  $this->items["status"]=true;
-  $this->items["local"]=array( $table[TB_CAL]["hiduke"]["local"]
-                              ,$table[TB_CAL]["title"] ["local"]
-                              ,$table[TB_CAL]["rate"]  ["local"]
-                              ,$table[TB_LINMAS]["lincode"]["local"]
-                              ,$table[TB_CAL]["clscode"]["local"]
-                              ,"データ数");
- }//getCalendarItem
-
- //---------------------------------------------------------//
- // 単日カレンダーアイテムをゲット
- // 返り値:true false
- //       :$this->items[data]   選択月のカレンダーアイテム
- //       :$this->items[local]  列名を格納
- //       :$this->items[status] データの状態を格納(true false)
- //---------------------------------------------------------//
- public function getItem($hiduke){
-  //引数チェック
-  if(! CHKDATE($hiduke)) throw new exception("日付が不正です");
-
-  //メンバーリセット
-  $this->items=null;
+  $this->getItemList();
   
-  //月データをゲット
-  $this->getCalendarItem(date("Y",strtotime($hiduke)),date("m",strtotime($hiduke)));
-
-  //該当データゲット
-  foreach($this->items["data"] as $key=>$val){
-   if(strtotime($val["hiduke"])===strtotime($hiduke)){
-    $this->item["data"]  =$this->items["data"][$key];
-    $this->item["status"]=true;
-    $this->item["local"] =$this->items["local"];
-    break;
+  //該当商品抽出
+  foreach($this->items["data"] as $rownum=>$rowdata){
+   if($rowdata["lincode"]==$lincode){
+    $item[]=$rowdata;
    }//if
   }//foreach
- }//getItem
- 
- //---------------------------------------------------------//
- // ラインリストのHTMLを返す
- // 返り値:<ul>
- //---------------------------------------------------------//
- public function getHtmlCalList($data,$nen=null,$tuki=null){
-  //ulのクラス名をセット
-  $ulcls="grouplist";
 
-  //リンク先URLをセット
-  $motourl="calendar.php?";
+  $this->items["data"]=$item;
+ }//public function LinItem($lincode){
 
-  //リスト作成
-  foreach($data["data"] as $key=>$val){
+//----------------------------------------------------------//
+//指定月の特定クラスの商品を抽出
+//----------------------------------------------------------//
+ public function getClsItem($clscode){
+  $this->items=null;
 
-   //リンク先作成
-   $url=$motourl."nen=".$val["nen"]."&tuki=".$val["tuki"];
-
-   //リスト作成
-   $li.="<li>";
-   if($val["nen"]!=$nen && $val["tuki"]!=$tuki){
-    $li.="<a href='".$url."'>";
+  //データゲット
+  $this->getItemList();
+  
+  //該当商品抽出
+  foreach($this->items["data"] as $rownum=>$rowdata){
+   if($rowdata["clscode"]==$clscode){
+    $item[]=$rowdata;
    }//if
-   $li.=$val["nen"]."年".$val["tuki"]."月(".$val["cnt"].")";
-   if($val["nen"]!=$nen && $val["tuki"]!=$tuki){
-    $li.="</a>";
-   }//if
-   $li.="</li>\n";
   }//foreach
 
-  $ul="<ul class='".$ulcls."'>\n".$li."</ul>\n";
-  return $ul;
- }//getHtmlLinList
+  $this->items["data"]=$item;
+ }//public function getClsItem($clscode){
 
- //---------------------------------------------------------//
- // ラインリストのHTMLを返す
- // 返り値:<ul>
- //---------------------------------------------------------//
- public function getHtmlCalItem($data,$nen,$tuki){
-  //引数チェック
+//----------------------------------------------------------//
+//指定日の商品を抽出
+//----------------------------------------------------------//
+ public function getCalendar(){
+  $this->items=null;
 
-  //開始日セット
-  $s=mktime(0,0,0,$tuki,1,$nen);
-  $y=date("w",$s);
-  $s=$s-($y*60*60*24);
+  //データゲット
+  $this->getItemList();
+  
+  //該当商品抽出
+  foreach($this->items["data"] as $rownum=>$rowdata){
+   if(strtotime($rowdata["saleday"])==strtotime($this->saleday)){
+    $item[]=$rowdata;
+   }//if
+  }//foreach
 
-  //終了日セット
-  $e=mktime(0,0,0,$tuki+1,0,$nen);
-  $y=date("w",$e);
-  $e=$e+(6-$y)*60*60*24;
+  $this->items["data"]=$item;
+ }//public function getClsItem($clscode){
 
-  $html="";
-  $youbi=array("日","月","火","水","木","金","土");
 
-  //曜日をセット
-  for($i=0;$i<count($youbi);$i++){
-   $html.="<div class='youbi ";
-   if($i==(count($youbi)-1)) $html.=" colend";
-   $html.="'>".$youbi[$i]."</div>\n";
-  }//for
+//----------------------------------------------------------//
+//指定月に何回カレンダー情報があるかを返す
+//----------------------------------------------------------//
+ public function getMonthCount(){
+  $this->items=null;
 
-  //開始日から終了日まで繰り返し
-  $youbicnt=1;
-  for($i=$s;$i<=$e;$i=$i+60*60*24){
-   //枠と日付表示
-   $html.="<div class='dayitem ";
-   if($youbicnt%count($youbi)==0) $html.="colend ";
-   if(($youbicnt/7)>4) $html.=" rowend ";
+  //データゲット
+  $this->getItemList();
 
-   $html.="'>";
-   $html.="<h6>".date("j",$i)."</h6>";
-   foreach($data["data"] as $key=>$val){
-    if($i==strtotime($val["hiduke"])){
-     //item.phpへのリンク生成
-     $url ="item.php?lincode=".$val["lincode"]."&clscode=".$val["clscode"];
-     //$url.="&hiduke=".$val["hiduke"];
+  $saleday=0;
+  $cnt=0;
+  foreach($this->items["data"] as $rownum=>$rowdata){
+   if(strtotime($saleday)!==strtotime($rowdata["saleday"])){
+    $cnt++;
+   }//if
+   $saleday=$rowdata["saleday"];
+  }//foreach
 
-     $html.="<a href='".$url."'>";
-     $html.="<div class='calimg'>";
-     $img=IMGDIR."cal_".$val["clscode"].".jpg";
-     if(file_exists($img)){
-      $html.="<img src='".$img."'>";
-     }
-     $html.="</div>";
-
-     $html.="<div class='caltitle'>".$val["title"]."(".$val["cnt"].")"."</div>";
-     //英数字と日本語を分離
-     preg_match("/[0-9A-z]+/",$val["rate"],$match);
-     if($match){
-      preg_match("/[^0-9A-z]+/",$val["rate"],$match2);
-      $html.="<div class='calrate'>".$match[0]."<span>".$match2[0]."</span></div>";
-     }
-     else{
-      $html.="<div class='calrate'>".$val["rate"]."</div>";
-     }
-     $html.="</a>";
-    }//if
-   }//foreach
-   $html.="</div>";
-   $youbicnt++;
-  }//for
-
-  return $html;
- } //getHtmlCalItem
-}// CL
+  $this->items=$cnt;
+ }//public function getMonthCount(){
+}//TIRASI
 
 ?>
