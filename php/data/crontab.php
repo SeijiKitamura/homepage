@@ -17,6 +17,14 @@ try{
  $cmd="scp kennpin1@172.16.0.12:/home/kennpin1/samba/dps/99その他/ホームページ用/*.csv ./";
  exec($cmd);
 
+ //メールデータ更新
+ echo MAILITEMSCSV." ".MAILITEMS."\n";
+ $items=GETARRAYCSV(MAILITEMSCSV,TB_MAILITEMS);
+ print_r($items);
+
+ $items=GETARRAYCSV(TITLECSV,TB_TITLES);
+ print_r($items);
+return;
 //-------------------------------------------------------------//
 MAILDATA:
 $log="mailitem.csv 更新処理開始";
@@ -119,6 +127,7 @@ WRITELOG($log);
  }//foreach
 
 //-------------------------------------------------------------//
+
 //メール更新(ここから)
 }//try
 catch(Exception $e){

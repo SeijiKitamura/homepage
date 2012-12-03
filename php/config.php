@@ -31,6 +31,7 @@ define("RESERVE"  ,"reserve");           //ご予約商品マスタ
 define("USER"     ,"usermas");           //ご客様マスタ
 define("MAILLIST" ,"maillist");          //メール
 define("MAILITEMS","mailitems");         //メールアイテム
+define("SALEITEMS","saleitems");         //アイテム
 //---------------------------------------------------//
 
 //---------------------------------------------------//
@@ -60,16 +61,17 @@ define("MAILITEMSCSV",DATADIR.MAILITEMS.".csv");//メールアイテム
 // DB テーブル名定数
 //---------------------------------------------------//
 define("TABLE_PREFIX"   ,"he_");                  //プレフィックス
-define("TB_CAL"         ,TABLE_PREFIX.CAL);       //カレンダー
+define("TB_CAL"         ,TABLE_PREFIX.CAL);       //カレンダー(削除予定)
 define("TB_TITLES"      ,TABLE_PREFIX.TITLES);    //チラシタイトル
-define("TB_ITEMS"       ,TABLE_PREFIX.ITEMS);     //チラシデータ
+define("TB_ITEMS"       ,TABLE_PREFIX.ITEMS);     //チラシデータ(削除予定)
 define("TB_JANMAS"      ,TABLE_PREFIX.JANMAS);    //単品マスタ
 define("TB_CLSMAS"      ,TABLE_PREFIX.CLSMAS);    //クラスマスタ
 define("TB_LINMAS"      ,TABLE_PREFIX.LINMAS);    //部門マスタ
-define("TB_RESERVE"     ,TABLE_PREFIX.RESERVE);   //ご予約商品マスタ
+define("TB_RESERVE"     ,TABLE_PREFIX.RESERVE);   //ご予約(削除予定)
 define("TB_USER"        ,TABLE_PREFIX.USER);      //お客様マスタ
-define("TB_MAILLIST"    ,TABLE_PREFIX.MAILLIST);  //メール
-define("TB_MAILITEMS"   ,TABLE_PREFIX.MAILITEMS); //メールアイテム
+define("TB_MAILLIST"    ,TABLE_PREFIX.MAILLIST);  //メール(削除予定)
+define("TB_MAILITEMS"   ,TABLE_PREFIX.MAILITEMS); //メール(削除予定）
+define("TB_SALEITEMS"   ,TABLE_PREFIX.SALEITEMS); //アイテム
 
 //---------------------------------------------------//
 // DB テーブル列系定数
@@ -85,41 +87,55 @@ define("CDATESQL"," ".CDATE." timestamp     null");
 //---------------------------------------------------//
 
 $TABLES=array(TB_TITLES=>array(
-                              "tirasi_id"=>array( "type"   =>"int"
+                              "flg0"     =>array( "type"   =>"int"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"0"
                                                  ,"primary"=>1
                                                  ,"local"  =>"チラシ番号"
-                                                )//tirasi_id
-                             ,"hiduke"   =>array( "type"   =>"date"
+                                                )//flg0
+                             ,"saleday"  =>array( "type"   =>"date"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"'0000-00-00'"
                                                  ,"primary"=>""
                                                  ,"local"  =>"投函日"
-                                                )//hiduke    
-                             ,"title"    =>array( "type"   =>"varchar(255)"
+                                                )//saleday   
+                             ,"saletype" =>array( "type"   =>"int"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"'0000-00-00'"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"セールタイプ"
+                                                )//saleday   
+                             ,"sname"    =>array( "type"   =>"varchar(255)"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"''"
                                                  ,"primary"=>""
                                                  ,"local"  =>"タイトル"
-                                                )//title    
-                            ,"view_start"=>array( "type"   =>"date"
+                                                )//sname    
+                             ,"notice"   =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"コメント"
+                                                )//notice  
+                            ,"flg1"      =>array( "type"   =>"date"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"'0000-00-00'"
                                                  ,"primary"=>""
                                                  ,"local"  =>"開始日"
-                                                )//view_start
-                            ,"view_end"  =>array( "type"   =>"date"
+                                                )//flg1
+                            ,"flg2"      =>array( "type"   =>"date"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"'0000-00-00'"
                                                  ,"primary"=>""
                                                  ,"local"  =>"終了日"
-                                                )//view_end  
+                                                )//flg2  
                             )//TB_TITLES
             ,TB_ITEMS=>array(
                               "id"       =>array( "type"   =>"int"
@@ -129,7 +145,7 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"primary"=>1
                                                  ,"local"  =>"番号"
                                                 )//id
-                             ,"tirasi_id"=>array( "type"   =>"int"
+                             ,"flg0"     =>array( "type"   =>"int"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"0"
@@ -144,14 +160,14 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"idxnum" =>""
                                                  ,"local"  =>"セールタイプ"
                                                 )//saletype
-                             ,"subtitle" =>array( "type"   =>"varchar(255)"
+                             ,"flg1"     =>array( "type"   =>"varchar(255)"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"''"
                                                  ,"primary"=>""
                                                  ,"local"  =>"サブタイトル"
-                                                )//saletype
-                             ,"hiduke"   =>array( "type"   =>"date"
+                                                )//flg1
+                             ,"saleday"  =>array( "type"   =>"date"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"'0000-00-00'"
@@ -200,7 +216,7 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"primary"=>""
                                                  ,"local"  =>"販売単位"
                                                 )//tani    
-                             ,"baika"    =>array( "type"   =>"varchar(255)"
+                             ,"price"    =>array( "type"   =>"varchar(255)"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"''"
@@ -214,7 +230,7 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"primary"=>""
                                                  ,"local"  =>"コメント"
                                                 )//notice  
-                            ,"specialflg"=>array( "type"   =>"int"
+                            ,"flg2"      =>array( "type"   =>"int"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"0"
@@ -230,21 +246,21 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"primary"=>1
                                                  ,"local"  =>"番号"
                                                 )//id
-                             ,"hiduke"   =>array( "type"   =>"date"
+                             ,"saleday"  =>array( "type"   =>"date"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"'0000-00-00'"
                                                  ,"primary"=>""
                                                  ,"local"  =>"日付"
-                                                )//hiduke  
-                             ,"title"    =>array( "type"   =>"varchar(255)"
+                                                )//saleday 
+                             ,"sname"    =>array( "type"   =>"varchar(255)"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"''"
                                                  ,"primary"=>""
                                                  ,"local"  =>"タイトル"
                                                 )//title    
-                             ,"rate"     =>array( "type"   =>"varchar(255)"
+                             ,"price"    =>array( "type"   =>"varchar(255)"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"''"
@@ -589,20 +605,20 @@ $TABLES=array(TB_TITLES=>array(
                                                ,"primary"=>1
                                                ,"local"  =>"番号"
                                               )//id
-                             ,"hiduke"   =>array( "type"   =>"date"
+                             ,"saleday"  =>array( "type"   =>"date"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"'0000-00-00'"
                                                  ,"primary"=>""
                                                  ,"local"  =>"販売日"
-                                                )//hiduke    
+                                                )//saleday   
                              ,"saletype" =>array( "type"   =>"int"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"0"
                                                  ,"primary"=>""
-                                                 ,"local"  =>"販売タイプ"
-                                                )//hiduke    
+                                                 ,"local"  =>"セールタイプ"
+                                                )//saletype  
                              ,"clscode"=>array( "type"   =>"int"
                                                ,"null"   =>"not null"
                                                ,"extra"  =>""
@@ -638,14 +654,14 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"primary"=>""
                                                  ,"local"  =>"販売単位"
                                                 )//tani    
-                             ,"strprice" =>array( "type"   =>"varchar(255)"
+                             ,"flg0"     =>array( "type"   =>"varchar(255)"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"''"
                                                  ,"primary"=>""
                                                  ,"local"  =>"通常売価"
                                                 )//baika   
-                             ,"baika"    =>array( "type"   =>"varchar(255)"
+                             ,"price"    =>array( "type"   =>"varchar(255)"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""
                                                  ,"default"=>"''"
@@ -661,6 +677,99 @@ $TABLES=array(TB_TITLES=>array(
                                                 )//notice  
 
                             )//TB_MAILITEMS
+              ,TB_SALEITEMS=>array(
+                               "id"    =>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>"auto"
+                                               ,"default"=>"0"
+                                               ,"primary"=>1
+                                               ,"local"  =>"番号"
+                                              )//id
+                             ,"saleday"  =>array( "type"   =>"date"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"'0000-00-00'"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"販売日"
+                                                )//saleday   
+                             ,"saletype" =>array( "type"   =>"int"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"0"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"セールタイプ"
+                                                )//saletype  
+                             ,"clscode"=>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>""
+                                               ,"default"=>0
+                                               ,"primary"=>""
+                                               ,"local"  =>"クラスコード"
+                                              )//clscode
+                             ,"jcode"    =>array( "type"   =>"varchar(14)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"0"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"JANコード"
+                                                )//jcode   
+                             ,"maker"    =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"メーカー"
+                                                )//maker   
+                              ,"sname"   =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"商品名"
+                                                 )//sname   
+                             ,"tani"     =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"販売単位"
+                                                )//tani    
+                             ,"price"    =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"売価"
+                                                )//price   
+                             ,"notice"   =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"コメント"
+                                                )//notice  
+                             ,"flg0"     =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"フラグ0"
+                                                )//flg0  
+                             ,"flg1"     =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"フラグ1"
+                                                )//flg1  
+                             ,"flg2"     =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"フラグ2"
+                                                )//flg2  
+                                  )//TB_SALEITEMS
             );//TABLES
 
 //---------------------------------------------------//
@@ -668,42 +777,44 @@ $TABLES=array(TB_TITLES=>array(
 //---------------------------------------------------//
 // CSV並び順配列
 //---------------------------------------------------//
-$CSVCOLUMNS=array( TB_CAL   =>array( "hiduke"
-                                    ,"title"
-                                    ,"rate"
+$CSVCOLUMNS=array(   CAL   =>array( "saleday"
+                                    ,"saletype"
+                                    ,"sname"
+                                    ,"price"
                                     ,"notice"
                                     ,"clscode"
                                    )//TB_CAL
-               ,TB_MAILITEMS=>array( "hiduke"
+               ,MAILITEMS   =>array( "saleday"
                                     ,"saletype"
                                     ,"clscode"
                                     ,"jcode"
                                     ,"maker"
                                     ,"sname"
                                     ,"tani"
-                                    ,"strprice"
-                                    ,"baika"
+                                    ,"flg0"
+                                    ,"price"
                                     ,"notice"
-                                   )//TB_MAILITEMS
-                  ,TB_TITLES=>array( "tirasi_id"
-                                    ,"hiduke"
-                                    ,"title"
-                                    ,"view_start"
-                                    ,"view_end"
+                                   )//MAILITEMS
+                     ,TITLES=>array( "flg0"
+                                    ,"saleday"
+                                    ,"saletype"
+                                    ,"sname"
+                                    ,"notice"
+                                    ,"flg1"
+                                    ,"flg2"
                                    )//TB_TITLES
-                  ,TB_ITEMS =>array( "tirasi_id"
-                                    ,"hiduke"
-                                    ,"lincode"
+                     ,ITEMS =>array( "flg0" //tirasi_id
+                                    ,"saleday"
+                                    ,"saletype"
                                     ,"clscode"
                                     ,"jcode"
                                     ,"maker"
                                     ,"sname"
                                     ,"tani"
-                                    ,"baika"
+                                    ,"price"
                                     ,"notice"
-                                    ,"subtitle"
-                                    ,"saletype"
-                                    ,"specialflg"
+                                    ,"flg1" //subtitle
+                                    ,"flg2" //specialflg
                                    )//TB_ITEMS
                   ,TB_JANMAS=>array(
                                      "jcode"
@@ -742,6 +853,17 @@ $CSVCOLUMNS=array( TB_CAL   =>array( "hiduke"
                  );//CSVCOLUMNS
 //---------------------------------------------------//
 
+//---------------------------------------------------//
+// SALETYPE
+//---------------------------------------------------//
+$SALETYPE=array(
+                 0=>"広告の品"
+                ,1=>"メール商品"
+                ,2=>"おすすめ品"
+                ,3=>"ギフト商品"
+                ,4=>"早期ご予約"
+                ,5=>"オードブル・お弁当注文"
+                );
 //---------------------------------------------------//
 // メール系定数
 //---------------------------------------------------//
