@@ -1,13 +1,15 @@
 #!/usr/bin/php 
 <?php
+//----------------------------------------------------------------//
+// データインポート用クラス
+// エクセルで作成したCSVファイルをDBへ取り込むプログラム。
+// (新1階検品室 - 99その他 - ホームページ用 - ホームページ更新.xls)
+//----------------------------------------------------------------//
 //ファイル存在場所へ移動
 $d=dirname(__FILE__);
 chdir($d);
 
-require_once("../config.php");
-require_once("../tirasi.class.php");
-require_once("../calendar.class.php");
-require_once("../maillist.class.php");
+require_once("import.class.php");
 try{
  //
  $log="自動更新プログラム　処理開始!!!";
@@ -17,118 +19,66 @@ try{
  $cmd="scp kennpin1@172.16.0.12:/home/kennpin1/samba/dps/99その他/ホームページ用/*.csv ./";
  exec($cmd);
 
- //メールデータ更新
- echo MAILITEMSCSV." ".MAILITEMS."\n";
- $items=GETARRAYCSV(MAILITEMSCSV,TB_MAILITEMS);
- print_r($items);
-
- $items=GETARRAYCSV(TITLECSV,TB_TITLES);
- print_r($items);
-return;
+ //インスタンス生成
+ $db=new ImportData();
 //-------------------------------------------------------------//
-MAILDATA:
-$log="mailitem.csv 更新処理開始";
-WRITELOG($log);
- $db=new MAILLIST();
+ WriteLog("チラシタイトル更新");
+ try{
+  //データ更新
+  $db->setTitle();
 
- //ファイル存在をチェック
- if(! file_exists(MAILITEMSCSV)){
-  $log=MAILITEMSCSV."がありません";
-  WRITELOG($log);
-  goto CALENDAR;
- }//if
+  //ログ書き込み
+  WriteLog(TITLES,$db->items["data"]);
 
- $db->setData();
-
- //エラーデータ抽出
- foreach($db->items["data"] as $row=>$val){
-  if($val["err"]!=="OK"){
-   $log =MAILITEMSCSV." ".($row+1)."行 ";
-   $log.=$val["err"];
-   WRITELOG($log);
-  }//if
- }//foreach
-
- //-------------------------------------------------------------//
-CALENDAR:
-$log="calendar.csv 更新処理開始";
-WRITELOG($log);
- $db=new CL();
-
- //ファイル存在チェック
- if(! file_exists(CALCSV)){
-  //throw new exception(ITEMCSV."がありません");
-  $log=CALCSV."がありません";
-  WRITELOG($log);
-  goto TIRAITITLE;
- }//if
-  
- $db->setData();
-
- //エラーデータ抽出
- foreach($db->items["data"] as $row=>$val){
-  if($val["err"]!=="OK"){
-   $log =CALCSV." ".($row+1)."行 ";
-   $log.=$val["hiduke"]." ".$val["err"];
-   WRITELOG($log);
-  }//if
- }//foreach
+ }//try
+ catch (Exception $e){
+  WriteLig($e->getMessage());
+  goto TIRASI_ITEM;
+ }//catch
 
 //-------------------------------------------------------------//
-TIRAITITLE:
-$log="tirasititle.csv 更新処理開始";
-WRITELOG($log);
+TIRASI_ITEM:
+ WriteLog("チラシアイテム更新");
+ try{
+  //データ更新
+  $db->setItem();
 
- $db=new TIRASI();
- //ファイル存在チェック
- if(! file_exists(TITLECSV)){
-  //throw new exception(ITEMCSV."がありません");
-  $log=TITLECSV."がありません";
-  WRITELOG($log);
-  goto TIRASIITEM;
- }//if
- 
- //CSVをDBへ格納
- $db->setDataTitle();
-
- //エラーデータ抽出
- foreach($db->items["data"] as $row=>$val){
-  if($val["err"]!=="OK"){
-   $log =ITEMCSV." ".($row+1)."行 ";
-   $log.=$val["hiduke"]." ".$val["jcode"]." ".$val["err"];
-   WRITELOG($log);
-  }//if
- }//foreach
+  //ログ書き込み
+  WriteLog(ITEMS,$db->items["data"]);
+ }//try
+ catch (Exception $e){
+  WriteLig($e->getMessage());
+  goto CAL_ITEM;
+ }//catch
 
 //-------------------------------------------------------------//
-TIRASIITEM:
-$log="tirasiitem.csv 更新処理開始";
-WRITELOG($log);
+CAL_ITEM:
+ WriteLog("カレンダーアイテム更新");
+ try{
+  //データ更新
+  $db->setCal();
 
- $db=new TIRASI();
- //ファイル存在チェック
- if(! file_exists(ITEMCSV)){
-  //throw new exception(ITEMCSV."がありません");
-  $log=ITEMCSV."がありません";
-  WRITELOG($log);
-  //goto NEXT;
- }//if
- 
- //CSVをDBへ格納
- $db->setDataItem();
-
- //エラーデータ抽出
- foreach($db->items["data"] as $row=>$val){
-  if($val["err"]!=="OK"){
-   $log =ITEMCSV." ".($row+1)."行 ";
-   $log.=$val["hiduke"]." ".$val["jcode"]." ".$val["err"];
-   WRITELOG($log);
-  }//if
- }//foreach
+  //ログ書き込み
+  WriteLog(CAL,$db->items["data"]);
+ }//try
+ catch (Exception $e){
+  WriteLig($e->getMessage());
+  goto CAL_ITEM;
+ }//catch
 
 //-------------------------------------------------------------//
+MAIL_ITEM:
+ WriteLog("メールアイテム更新");
+ try{
+  //データ更新
+  $db->setMailItem();
 
-//メール更新(ここから)
+  //ログ書き込み
+  WriteLog(MAILITEMS,$db->items["data"]);
+ }//try
+ catch (Exception $e){
+  WriteLig($e->getMessage());
+ }//catch
 }//try
 catch(Exception $e){
  echo $e->getMessage();
@@ -136,7 +86,7 @@ catch(Exception $e){
  WRITELOG($log);
 }//catch
 
-function WRITELOG($log){
+function WriteLog($log,$data=null){
  //ファイル名セット
  $path=LOGDIR.date("Ymd").".log";
  if(! file_exists($path)){
@@ -146,8 +96,20 @@ function WRITELOG($log){
   $fp=fopen($path,"a");
  }//else
 
- $log=date("Y-m-d H:i:s")." ".$log."\n";
- fwrite($fp,$log);
+ //ファイル名なし、データなし
+ if(! $data){
+  $log=date("Y-m-d H:i:s")." ".$log."\n";
+  fwrite($fp,$log);
+ }//if
+
+ if($data){
+  //エラーデータ抽出
+  foreach($data as $rownum=>$rowdata){
+   if($rowdata["status"]) continue;
+   $l=$log." ".($rownum+1)."行 ".$rowdata["err"];
+   fwrite($fp,$l);
+  }//foreach
+ }//if
 
  fclose($fp);
 }

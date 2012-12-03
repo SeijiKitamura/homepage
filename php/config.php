@@ -253,6 +253,14 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"primary"=>""
                                                  ,"local"  =>"日付"
                                                 )//saleday 
+                             ,"saletype" =>array( "type"   =>"int"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"0"
+                                                 ,"primary"=>""
+                                                 ,"idxnum" =>""
+                                                 ,"local"  =>"セールタイプ"
+                                                )//saletype
                              ,"sname"    =>array( "type"   =>"varchar(255)"
                                                  ,"null"   =>"not null"
                                                  ,"extra"  =>""

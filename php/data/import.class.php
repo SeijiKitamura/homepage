@@ -157,13 +157,13 @@ class ImportData extends db{
     if (! $rowdata["status"]) continue;  //エラーデータを除く
 
     //既存データ削除
-    if($flg0!==$rowdata["flg0"]){
+    if($flg!==$rowdata["flg0"]){
      $this->from=TB_SALEITEMS;
      $this->where="flg0='".$rowdata["flg0"]."'";
      $this->where.=" and saletype=".$rowdata["saletype"];
      $this->delete();
     }//if
-    $flg0=$rowdata["flg0"];
+    $flg=$rowdata["flg0"];
 
     foreach($rowdata as $col=>$val){
      //ステータス列、エラー列を除く
