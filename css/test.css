@@ -1,0 +1,166 @@
+body{
+        font-family:'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,Verdana,'ＭＳ Ｐゴシック',sans-serif;
+}
+/*group系CSS*/
+ul.group{
+ list-style:none;
+ margin:0;
+ padding:0;
+}
+
+ul.group li {
+}
+ul.group li a{
+ display:block;
+ width:150px;
+ height:1.2em;
+ text-decoration:none;
+ color:#4169E1;
+ font-size:14px;
+ margin-bottom:5px;
+ overflow:hidden;
+}
+
+ul.group li a:hover{
+ color:#FF4500;
+ text-decoration:underline;
+}
+
+/* item系CSS */
+div.item{
+ width:180px;
+ height:240px;
+ border:solid 1px #A9A9A9;
+ margin:3px;
+ float:left;
+}
+
+div.item  div.imgdiv{
+ width:170px;
+ height:120px;
+ margin:5px;
+}
+
+div.item  div.imgdiv img{
+ width:100%;
+ height:100%;
+ border:0px;
+}
+
+div.item div.datadiv{
+ width:170px;
+ height:100px;
+ margin:5px;
+}
+
+div.item div.datadiv h3.sname{
+ width:170px;
+ height:3em;
+ margin:0;
+ word-break:break-all;
+ overflow:hidden;
+ font-size:16px;
+}
+
+div.item  div.datadiv  h3.sname a{
+ text-decoration:none;
+ color:#4169E1;
+}
+div.item div.datadiv h3.sname a:hover{
+ text-decoration:underline;
+ color:#FF4500;
+}
+
+div.item  div.datadiv  div.tani{
+ width:50%;
+ float:left;
+}
+
+div.item  div.datadiv  div.price{
+ width:50%;
+ float:left;
+ font-size:18px;
+ color:#DC143C;
+ text-align:right;
+}
+
+div.item  div.datadiv  div.price span{
+ font-size:8px;
+}
+
+div.item  div.datadiv  div.notice{
+ font-size:12px;
+ width:100%;
+ overflow:hidden;
+ text-align:right;
+}
+
+div.item  div.datadiv  div.lastsale{
+ font-size:12px;
+ width:100%;
+ overflow:hidden;
+ text-align:right;
+}
+
+/* 単品系*/
+div.tanpin{
+ width:700px;
+ height:300px;
+ border:solid 1px #A9A9A9;
+}
+
+div.tanpin div.imgdiv{
+ width:340px;
+ height:190px;
+ margin:5px;
+ float:left;
+}
+div.tanpin div.imgdiv img{
+ width:100%;
+ height:100%;
+ border:0px;
+}
+
+div.tanpin div.datadiv{
+ width:330px;
+ height:190px;
+ margin:5px;
+ float:left;
+}
+
+div.tanpin div.datadiv h3.sname{
+ width:340px;
+ height:3em;
+ margin:10px;
+ word-break:break-all;
+ overflow:hidden;
+ font-size:16px;
+}
+div.tanpin div.datadiv  div.tani{
+ width:170px;
+ float:left;
+}
+
+div.tanpin div.datadiv  div.price{
+ width:100px;
+ float:right;
+ font-size:24px;
+ color:#DC143C;
+ text-align:right;
+}
+
+div.tanpin div.datadiv  div.price span{
+ font-size:8px;
+}
+
+div.tanpin div.datadiv  div.notice{
+ font-size:12px;
+ width:100%;
+ height:2.5em;
+ overflow:hidden;
+ text-align:left;
+}
+
+div.clr{
+ clear:both;
+}

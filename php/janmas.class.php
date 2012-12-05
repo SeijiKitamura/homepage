@@ -42,7 +42,7 @@ class JANMAS extends DB{
 
   $this->setwhere();
   
-  $this->select =" t2.lincode,t2.linname ";
+  $this->select =" t2.lincode,t2.linname";
   $this->select.=",count(t.jcode) as cnt";
   $this->from =TB_JANMAS." as t ";
   $this->from.=" inner join ".TB_CLSMAS." as t1 on";
@@ -68,7 +68,7 @@ class JANMAS extends DB{
 
   $this->setwhere();
 
-  $this->select =" t1.clscode,t1.clsname ";
+  $this->select =" t1.clscode,t1.clsname";
   $this->select.=",count(t.jcode) as cnt";
   $this->from =TB_JANMAS." as t ";
   $this->from.=" inner join ".TB_CLSMAS." as t1 on";
