@@ -200,6 +200,7 @@ EOF;
 EOF;
   return $html;
  }//private static function calendar(){
+
 //----------------------------------------------------------//
 // カレンダー用
 //----------------------------------------------------------//
@@ -298,5 +299,74 @@ EOF;
 
   return $html;
  }//private static function calendar(){
+
+//----------------------------------------------------------//
+// チラシアイテム一覧用
+//----------------------------------------------------------//
+ public static function setitemTirasi($data){
+  $html="";
+  $sday=0;//開始日
+  $eday=0;//終了日
+  $flg1="";//サブタイトル
+
+  $html="<div class='tirasiitem'>\n";
+  foreach($data as $rownum=>$rowdata){
+   //開始日、終了日が変更なら日付表示
+   if($sday!=strtotime($rowdata["sday"]) || $eday!=strtotime($rowdata["eday"])){
+    $kaisi=date("n月j日",strtotime($rowdata["sday"]));
+    $owari=date("n月j日",strtotime($rowdata["eday"]));
+    if($kaisi==$owari) $kikan=$kaisi."限り";
+    else $kikan=$kaisi." から ".$owari." まで";
+    $html.="<div class='clr'></div>\n";
+    $html.="<h2>".$kikan."</h2>\n";
+   }//if
+
+   //サブタイトル変更なら表示
+   if($flg1!=$rowdata["flg1"]){
+    $title=$rowdata["flg1"];
+    $html.="<div class='clr'></div>\n";
+    $html.="<h3>".$title."</h3>\n";
+   }//if
+
+   //アイテム表示
+   $base=self::item();
+
+   //画像がなければ非表示
+   $img=IMGDIR.$rowdata["jcode"].".jpg";
+   if(! file_exists($img)){
+    $pattern="/<img.*/";
+    $base=preg_replace($pattern,"",$base);
+   }//if
+
+   $base=str_replace("__MAKER__",$rowdata["maker"],$base);
+   $base=str_replace("__SNAME__",$rowdata["sname"],$base);
+   $base=str_replace("__TANI__",$rowdata["tani"],$base);
+   $pattern="/(^[Pp]?[0-9]+|半額)(割引|倍)?/";
+   preg_match($pattern,$rowdata["price"],$match);
+   $base=str_replace("__PRICE__",$match[1],$base);
+   if($match[2]){
+    $base=str_replace("__EN__",$match[2],$base);
+   }
+   else{
+    if(preg_match("/^[0-9]+$/",$match[1])){
+     $base=str_replace("__EN__","円",$base);
+    }
+    else{
+     $base=str_replace("__EN__","",$base);
+    }
+   }
+   $base=str_replace("__NOTICE__",$rowdata["notice"],$base);
+   $base=str_replace("__LASTSALE__",$kikan,$base);
+   $html.=$base;
+ 
+   //変数更新
+   $sday=strtotime($rowdata["sday"]);
+   $eday=strtotime($rowdata["eday"]);
+   $flg1=$rowdata["flg1"];
+  }//foreach
+  $html.="<div class='clr'></div>\n";
+  $html.="</div>\n";
+  return $html;
+ }//public static function setitemTirasi($data){
 }//class html{
 ?>

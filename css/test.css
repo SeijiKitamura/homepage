@@ -242,6 +242,19 @@ div.calendar  div.datadiv  div.notice{
  font-size:12px;
 }
 
+div.tirasiitem div.item div.datadiv div.tani{
+ font-size:12px;
+}
+div.tirasiitem div.item div.datadiv div.notice{
+ font-size:8px;
+ text-align:left;
+ height:2.5em;
+}
+
+div.tirasiitem div.item div.datadiv div.lastsale{
+ font-size:8px;
+ text-align:center;
+}
 div.clr{
  clear:both;
 }

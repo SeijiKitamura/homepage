@@ -13,6 +13,32 @@ require_once("janmas.class.php");
 require_once("html.class.php");
 
 try{
+ $db=new TIRASI();
+ $db->flg0=734;
+ $db->saleday="2012/11/29";
+ $db->getItemList();
+ echo html::setitemTirasi($db->items["data"]);
+ echo "<pre>";
+ print_r($db->items);
+ return;
+ $db->getJanItem(4979754557176);
+ $db->getClsItem(10108);
+ print_r($db->items);
+
+ $db->getLinItem(1);
+ print_r($db->items);
+
+ $db->getLinList();
+ print_r($db->items);
+
+ $db->getClsList(1);
+ print_r($db->items);
+
+ $db->getItemList();
+ print_r($db->items);
+
+ echo "</pre>";
+ return;
  $db=new CL();
  $db->saleday="2012/11/16";
  $db->getItemList();
@@ -125,28 +151,6 @@ return;
  print_r($db->items);
 
 
-
- $db=new TIRASI();
- $db->flg0=734;
- $db->saleday="2012/11/29";
-
- $db->getJanItem(4979754557176);
- print_r($db->items);
-
- $db->getClsItem(10108);
- print_r($db->items);
-
- $db->getLinItem(1);
- print_r($db->items);
-
- $db->getLinList();
- print_r($db->items);
-
- $db->getClsList(1);
- print_r($db->items);
-
- $db->getItemList();
- print_r($db->items);
 
  echo "</pre>";
  echo "success2";

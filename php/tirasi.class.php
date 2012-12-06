@@ -127,6 +127,7 @@ class TIRASI extends DB{
   $this->group.=",t2.lincode,t2.linname";
   $this->order =" min(t.saleday)";
   $this->order.=",max(t.saleday)";
+  $this->order.=",t.flg1,t.flg2";
   $this->order.=",t.clscode,t.jcode";
   $this->items["data"]=$this->getArray();
  }//public function getItemList(){
