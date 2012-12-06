@@ -16,12 +16,14 @@
 
 //----------------------------------------------------------//
 require_once("db.class.php");
+require_once("html.class.php");
 require_once("function.php");
 
 class JANMAS extends DB{
  public $items;   //データを格納
  public $flg0;    //チラシ番号
  public $saleday; //表示したい日(最終販売日がこの日付以降が表示される）
+ public $html;   //表示するHTML(html.class.php）
 
  function __construct(){
   parent::__construct();
@@ -57,7 +59,6 @@ class JANMAS extends DB{
   for($i=0;$i<count($this->items["data"]);$i++){
    $this->items["data"][$i]["rownum"]=$i;
   }//for
-
  }//public function getLinList(){
 
 //----------------------------------------------------------//
@@ -112,6 +113,7 @@ class JANMAS extends DB{
   }//for
 
   $this->setSaleItem();
+  $this->html=html::setitem($this->items["data"]);
  }//public function LinItem($lincode){
 
 //----------------------------------------------------------//
@@ -141,6 +143,7 @@ class JANMAS extends DB{
   }//for
 
   $this->setSaleItem();
+  $this->html=html::setitem($this->items["data"]);
 
  }//public function getClsItem($clscode){
 
@@ -192,6 +195,7 @@ class JANMAS extends DB{
   $this->items["data"]=$this->getArray();
 
   $this->setSaleItem();
+  $this->html=html::setitem($this->items["data"]);
 
 
  }//public function getNewItem(){

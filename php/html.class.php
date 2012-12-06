@@ -44,11 +44,13 @@ EOF;
 $html=<<<EOF
 <div class='item'>
  <div class='imgdiv'>
-  <a href='__LINK__' target="_blank">
-   <img src='__IMGLINK__' alt='__SNAME__' title='__SNAME__'>
-  </a>
+  <div class='saleday'>__SALEDAY__</div>
+   <a href='__LINK__' target="_blank">
+    <img src='__IMGLINK__' alt='__SNAME__' title='__SNAME__'>
+   </a>
  </div> 
  <div class='datadiv'>
+  <div class='saletype'>__SALETYPE__</div>
   <h3 class='sname'>   
    <a href='__LINK__' target="_blank">
     __MAKER__ __SNAME__
@@ -59,6 +61,7 @@ $html=<<<EOF
   <div class='price'>__PRICE__<span>__EN__</span></div>
   <div class='clr'></div>
   <div class='notice'>__NOTICE__&nbsp;</div>
+  <div class='jcode'>__JCODE__</div>
   <div class='lastsale'>__LASTSALE__&nbsp;</div>
  </div>
 </div>
@@ -82,6 +85,11 @@ EOF;
     $base=preg_replace($pattern,"",$base);
    }//if
 
+   $base=str_replace("__SALEDAY__","",$base);
+   if(! preg_match("/^[0-9]+$/",$rowdata["saletype"])){
+    $base=str_replace("saletype","saletype_blank",$base);
+    $base=str_replace("__SALETYPE__","",$base);
+   }//if
    $base=str_replace("__MAKER__",$rowdata["maker"],$base);
    $base=str_replace("__SNAME__",$rowdata["sname"],$base);
    $base=str_replace("__TANI__",$rowdata["tani"],$base);
@@ -100,6 +108,7 @@ EOF;
     }
    }
    $base=str_replace("__NOTICE__",$rowdata["notice"],$base);
+   $base=str_replace("__JCODE__","",$base);
    $base=str_replace("__LASTSALE__",$rowdata["lastsale"],$base);
    $html.=$base;
   }//foreach
@@ -118,12 +127,13 @@ $html=<<<EOF
   <img src='__IMGLINK__' alt='__SNAME__' title='__SNAME__'>
  </div> 
  <div class='datadiv'>
+  <div class='saletype'>__SALETYPE__</div>
   <h3 class='sname'>__MAKER__ __SNAME__</h3>
   <div class='tani' >__TANI__&nbsp;</div>
   <div class='price'>__PRICE__<span>__EN__</span></div>
   <div class='clr'></div>
   <div class='notice'>__NOTICE__&nbsp;</div>
-  <div class='jcode'>JAN:__JCODE__</div>
+  <div class='jcode'>__JCODE__</div>
   <div class='lastsale'>__LASTSALE__&nbsp;</div>
  </div>
 </div>
@@ -147,6 +157,7 @@ EOF;
     $base=preg_replace($pattern,"",$base);
    }//if
  
+   $base=str_replace("__SALEDAY__","",$base);
    $base=str_replace("__MAKER__",$rowdata["maker"],$base);
    $base=str_replace("__SNAME__",$rowdata["sname"],$base);
    $base=str_replace("__TANI__",$rowdata["tani"],$base);
@@ -164,7 +175,7 @@ EOF;
      $base=str_replace("__EN__","",$base);
     }
    }
-   $base=str_replace("__JCODE__",$rowdata["jcode"],$base);
+   $base=str_replace("__JCODE__","JAN:".$rowdata["jcode"],$base);
    $base=str_replace("__NOTICE__",$rowdata["notice"],$base);
    $base=str_replace("__LASTSALE__",$rowdata["lastsale"],$base);
    $html.=$base;
@@ -180,12 +191,7 @@ EOF;
   $html="";
   $html=<<<EOF
 <div class='calitem'>
- <div class='imgdiv'>
-  <div class='saleday'>__SALEDAY__</div>
-  <a href='__LINK__' target="_blank">
-   <img src='__IMGLINK__' alt='__SNAME__' title='__SNAME__'>
-  </a>
- </div> 
+ <div class='saleday'>__SALEDAY__</div>
  <div class='datadiv'>
   <h3 class='sname'>
    <a href='__LINK__' target="_blank">
@@ -291,6 +297,8 @@ EOF;
     $base=str_replace("__EN__","",$base);
     $base=str_replace("__NOTICE__","",$base);
    }//if
+   $base=str_replace("__JCODE__","",$base);
+   $base=str_replace("__LASTSALE__","",$base);
    $html.=$base;
    if(date("w",$i)==6) $html.="<div class='clr'></div>\n";
    $daycnt++;
@@ -316,7 +324,7 @@ EOF;
     $kaisi=date("n月j日",strtotime($rowdata["sday"]));
     $owari=date("n月j日",strtotime($rowdata["eday"]));
     if($kaisi==$owari) $kikan=$kaisi."限り";
-    else $kikan=$kaisi." から ".$owari." まで";
+    else $kikan=$kaisi."から".$owari."まで";
     $html.="<div class='clr'></div>\n";
     $html.="<h2>".$kikan."</h2>\n";
    }//if
@@ -338,6 +346,7 @@ EOF;
     $base=preg_replace($pattern,"",$base);
    }//if
 
+   $base=str_replace("__SALEDAY__","",$base);
    $base=str_replace("__MAKER__",$rowdata["maker"],$base);
    $base=str_replace("__SNAME__",$rowdata["sname"],$base);
    $base=str_replace("__TANI__",$rowdata["tani"],$base);
@@ -355,7 +364,9 @@ EOF;
      $base=str_replace("__EN__","",$base);
     }
    }
+   $base=str_replace("__SALETYPE__",$GLOBALS["SALETYPE"][0],$base);
    $base=str_replace("__NOTICE__",$rowdata["notice"],$base);
+   $base=str_replace("__JCODE__","",$base);
    $base=str_replace("__LASTSALE__",$kikan,$base);
    $html.=$base;
  

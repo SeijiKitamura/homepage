@@ -13,12 +13,49 @@ require_once("janmas.class.php");
 require_once("html.class.php");
 
 try{
+ $db=new JANMAS();
+ $db->getNewItem();
+ echo $db->html;
+ echo "<pre>";
+ print_r($db->items);
+ echo "</pre>";
+ echo "success";
+ return;
+ $html=html::settanpin($db->items["data"]);
+ echo $html;
+ return;
+ $html=html::setitem($db->items["data"]);
+ echo $html;
+ $db=new CL();
+ $db->saleday="2012/11/16";
+ $db->getItemList();
+ $html= html::setcalendar($db->items["data"]);
+ echo $html;
+ echo "<pre>";
+ print_r($db->items)."\n";
+ echo "</pre>";
+return;
+
+
  $db=new TIRASI();
  $db->flg0=734;
  $db->saleday="2012/11/29";
  $db->getItemList();
  echo html::setitemTirasi($db->items["data"]);
- echo "<pre>";
+ return;
+
+
+  //インスタンス
+ $db->getLinList();
+ $html=html::setgroup($db->items["data"],"#","lincode","linname");
+ echo $html;
+
+ $db->getClsList(1);
+ $html=html::setgroup($db->items["data"],"#","clscode","clsname");
+ echo $html;
+
+
+echo "<pre>";
  print_r($db->items);
  return;
  $db->getJanItem(4979754557176);
@@ -39,36 +76,11 @@ try{
 
  echo "</pre>";
  return;
- $db=new CL();
- $db->saleday="2012/11/16";
- $db->getItemList();
- $html= html::setcalendar($db->items["data"]);
- echo $html;
- echo "<pre>";
- print_r($db->items)."\n";
- echo "</pre>";
-return;
  $test=" <img src='' >";
  $pattern="/<img.*/";
  echo preg_replace($pattern,"",$test);
 
- //インスタンス
- $db=new JANMAS();
- $db->getLinList();
- $html=html::setgroup($db->items["data"],"#","lincode","linname");
- echo $html;
 
- $db->getClsList(1);
- $html=html::setgroup($db->items["data"],"#","clscode","clsname");
- echo $html;
-
- $db->getNewItem();
- $html=html::setitem($db->items["data"]);
- echo $html;
-
- $html=html::settanpin($db->items["data"]);
- echo $html;
- 
 // foreach($db->items["data"] as $rownum =>$rowdata){
 //  echo $rowdata["price"];
 //  $pattern="/[Pp]?[0-9]*(半額)*/";

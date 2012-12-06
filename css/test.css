@@ -28,33 +28,51 @@ ul.group li a:hover{
 
 /* item系CSS */
 div.item{
- width:180px;
+ width:150px;
  height:240px;
  border:solid 1px #A9A9A9;
  margin:3px;
  float:left;
 }
 
-div.item  div.imgdiv{
- width:170px;
- height:120px;
+div.imgdiv{
+ width:90%;
+ height:40%;
  margin:5px;
 }
 
-div.item  div.imgdiv img{
+div.imgdiv img{
  width:100%;
  height:100%;
  border:0px;
 }
 
-div.item div.datadiv{
- width:170px;
- height:100px;
+div.datadiv{
+ width:90%;
+ height:55%;
  margin:5px;
 }
 
-div.item div.datadiv h3.sname{
- width:170px;
+div.datadiv div.saletype{
+ /* background-color:red; */
+ /* color:#FFFFFF; */
+ border:solid 1px #FF6347;
+ color:#FF4500;
+ width:50%;
+ height:1.4em;
+ overflow:hidden;
+ font-size:12px;
+ text-align:center;
+}
+div.datadiv div.saletype_blank{
+ border:solid 0px #FFFFFF;
+ width:50%;
+ height:1em;
+
+}
+
+div.datadiv h3.sname{
+ width:95%;
  height:3em;
  margin:0;
  word-break:break-all;
@@ -62,21 +80,23 @@ div.item div.datadiv h3.sname{
  font-size:16px;
 }
 
-div.item  div.datadiv  h3.sname a{
+div.datadiv  h3.sname a{
  text-decoration:none;
  color:#4169E1;
 }
-div.item div.datadiv h3.sname a:hover{
+
+div.datadiv h3.sname a:hover{
  text-decoration:underline;
  color:#FF4500;
 }
 
-div.item  div.datadiv  div.tani{
+div.datadiv  div.tani{
  width:50%;
+ height:2.5em;
  float:left;
 }
 
-div.item  div.datadiv  div.price{
+div.datadiv  div.price{
  width:50%;
  float:left;
  font-size:18px;
@@ -84,83 +104,65 @@ div.item  div.datadiv  div.price{
  text-align:right;
 }
 
-div.item  div.datadiv  div.price span{
+div.datadiv  div.price span{
  font-size:8px;
 }
 
-div.item  div.datadiv  div.notice{
+div.datadiv  div.notice{
  font-size:12px;
  width:100%;
  overflow:hidden;
  text-align:right;
 }
 
-div.item  div.datadiv  div.lastsale{
+div.datadiv  div.lastsale{
  font-size:12px;
  width:100%;
+ height:1.2em;
  overflow:hidden;
  text-align:right;
 }
 
-/* 単品系*/
+/* 単品系 */
 div.tanpin{
- width:700px;
- height:300px;
+ width:500px;
+ height:250px;
  border:solid 1px #A9A9A9;
+ margin:3px;
 }
 
 div.tanpin div.imgdiv{
- width:340px;
- height:190px;
- margin:5px;
+ width:45%;
+ height:95%;
  float:left;
-}
-div.tanpin div.imgdiv img{
- width:100%;
- height:100%;
- border:0px;
+ border:solid 1px ;
 }
 
 div.tanpin div.datadiv{
- width:330px;
- height:190px;
- margin:5px;
+ width:45%;
+ height:95%;
  float:left;
 }
 
-div.tanpin div.datadiv h3.sname{
- width:340px;
- height:3em;
- margin:10px;
- word-break:break-all;
- overflow:hidden;
- font-size:16px;
-}
-div.tanpin div.datadiv  div.tani{
- width:170px;
- float:left;
-}
-
-div.tanpin div.datadiv  div.price{
- width:100px;
- float:right;
- font-size:24px;
- color:#DC143C;
- text-align:right;
-}
-
-div.tanpin div.datadiv  div.price span{
- font-size:8px;
-}
-
-div.tanpin div.datadiv  div.notice{
- font-size:12px;
+div.tanpin div.datadiv div.tani{
+ clear:both;
  width:100%;
- height:2.5em;
- overflow:hidden;
+ height:1.5em;
+}
+
+div.tanpin div.datadiv div.price{
+ clear:both;
  text-align:left;
 }
 
+div.tanpin div.datadiv div.notice{
+ text-align:left;
+ height:4.5em;
+}
+
+div.tanpin div.datadiv div.lastsale{
+ text-align:left;
+}
 /* カレンダー系*/
 div.calendar{
  width:600px;
@@ -178,7 +180,7 @@ div.calendar div.youbi{
 
 div.calendar div.calitem{
  width:83px;
- height:105px;
+ height:110px;
  float:left;
  border-top :solid 1px #A9A9A9;
  border-left:solid 1px #A9A9A9;
