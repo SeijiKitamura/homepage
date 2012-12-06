@@ -161,6 +161,87 @@ div.tanpin div.datadiv  div.notice{
  text-align:left;
 }
 
+/* カレンダー系*/
+div.calendar{
+ width:600px;
+}
+
+div.calendar div.youbi{
+ width:83px;
+ height:1.5em;
+ float:left;
+ text-align:center;
+ font-size:12px;
+ border-top :solid 1px #A9A9A9;
+ border-left:solid 1px #A9A9A9;
+}
+
+div.calendar div.calitem{
+ width:83px;
+ height:105px;
+ float:left;
+ border-top :solid 1px #A9A9A9;
+ border-left:solid 1px #A9A9A9;
+}
+
+div.calendar div.colend{
+ border-right:solid 1px #A9A9A9;
+}
+
+div.rowend{
+ border-bottom:solid 1px #A9A9A9;
+}
+
+div.calendar div.imgdiv div.saleday{
+ font-size:12px;
+}
+
+div.calendar div.datadiv h3.sname{
+ width:90%;
+ height:2.5em;
+ font-size:14px;
+ overflow:hidden;
+ margin:4px;
+}
+
+div.calendar div.datadiv h3.sname a{
+ text-decoration:none;
+ color:#4169E1;
+}
+
+div.calendar div.datadiv h3.sname a:hover{
+ color:#FF4500;
+ text-decoration:underline;
+
+}
+div.calendar div.datadiv div.tani{
+ font-size:8px;
+ float:left;
+ width:40%;
+ height:1.5em;
+}
+
+
+div.calendar div.datadiv  div.price{
+ width:50%;
+ height:1.5em;
+ overflow:hidden;
+ font-size:18px;
+ color:#DC143C;
+ text-align:right;
+}
+
+div.calendar  div.datadiv  div.price span{
+ font-size:8px;
+}
+
+div.calendar  div.datadiv  div.notice{
+ width:90%;
+ height:1.5em;
+ overflow:hidden;
+ font-size:12px;
+}
+
 div.clr{
  clear:both;
 }

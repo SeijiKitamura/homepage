@@ -13,6 +13,15 @@ require_once("janmas.class.php");
 require_once("html.class.php");
 
 try{
+ $db=new CL();
+ $db->saleday="2012/11/16";
+ $db->getItemList();
+ $html= html::setcalendar($db->items["data"]);
+ echo $html;
+ echo "<pre>";
+ print_r($db->items)."\n";
+ echo "</pre>";
+return;
  $test=" <img src='' >";
  $pattern="/<img.*/";
  echo preg_replace($pattern,"",$test);
@@ -95,10 +104,6 @@ try{
  print_r($db->items);
 
  
- $db=new CL();
- $db->saleday="2012/11/16";
- $db->getMonthCount();
- echo $db->items."\n";
 
  $db->saleday="2012/11/16";
  $db->getCalendar();
