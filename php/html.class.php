@@ -57,7 +57,7 @@ $html=<<<EOF
    </a>
   </h3>
 
-  <div class='tani' >__TANI__&nbsp;</div>
+  <div class='tani'>__TANI__&nbsp;</div>
   <div class='price'>__PRICE__<span>__EN__</span></div>
   <div class='clr'></div>
   <div class='notice'>__NOTICE__&nbsp;</div>
@@ -90,6 +90,7 @@ EOF;
     $base=str_replace("saletype","saletype_blank",$base);
     $base=str_replace("__SALETYPE__","",$base);
    }//if
+   $base=str_replace("__SALETYPE__",$GLOBALS["SALETYPE"][$rowdata["saletype"]],$base);
    $base=str_replace("__MAKER__",$rowdata["maker"],$base);
    $base=str_replace("__SNAME__",$rowdata["sname"],$base);
    $base=str_replace("__TANI__",$rowdata["tani"],$base);
@@ -326,7 +327,7 @@ EOF;
     if($kaisi==$owari) $kikan=$kaisi."限り";
     else $kikan=$kaisi."から".$owari."まで";
     $html.="<div class='clr'></div>\n";
-    $html.="<h2>".$kikan."</h2>\n";
+    $html.="<h4>".$kikan."</h4>\n";
    }//if
 
    //サブタイトル変更なら表示

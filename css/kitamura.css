@@ -7,13 +7,10 @@ body{
         font-family:'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,Verdana,'ＭＳ Ｐゴシック',sans-serif;
 }
 
-/*
-div{
- border-top: solid 1px #000000;
- border-left: solid 1px #000000;
- border-right: solid 1px #000000;
+/* イニシャライズ */
+img{
+ border:0;
 }
-*/
 
 /* wrapper */
 div#wrapper{
@@ -30,7 +27,7 @@ div#navi{
 /*leftside*/
 div#leftside{
  width:160px;
- margin-right:20px;
+ margin-right:5px;
  float:left;
  /*padding-left:10px;*/
  padding:10px;
@@ -107,781 +104,264 @@ div#header ul li{
  margin-right:10px;
 }
 
-div#allcate{
- width:180px;
- height:35px;
- padding-top:5px;
- padding-left:2px;
- float:left;
- color:#FFFFFF;
- background-color:#146EB4;
- background-color:#3CB371;
+div.clr{
+ clear:both;
 }
 
-div#search{
- width:780px;
- height:35px;
- padding-top:5px;
- float:left;
- color:#FFFFFF;
- background-color:#146EB4;
- background-color:#3CB371;
+/*group系CSS*/
+ul.group{
+ list-style:none;
+ margin:0;
+ padding:0;
 }
 
-div#search > ul.dayslist{
- list-style-type:none;
-}
-
-div#search > ul.dayslist > li{
+ul.group li a{
+ display:block;
  width:150px;
- float:left;
-}
-div#search > ul.dayslist > li > a{
- display:block;
- margin-right:2px;
- border:solid 1px #F5F5F5;
- text-decoration:none;
- background-color :#FFFFFF;
- height:1.5em;
- padding-top:2px;
- text-align:center;
-}
-
-ul.itemnavi{
- width:600px;
- list-style-type:none;
- float:left;
-}
-
-ul.itemnavi > li{
- float:left;
- margin:0 10px;
-}
-
-ul.itemnavi > li >a{
- display:block;
- text-decoration:none;
-}
-
-input[name='searchitem']{
- border:0;
- width:100px;
-}
-/*div#leftside ul,*/
-/*
-div#rightside ul{
- list-style-type:none;
-}
-*/
-
-/*div#leftside ul li,*/
-/*
-div#rightside ul li{
- margin:0 0 2px 0;
- padding:3px 5px;
- font-size:15px;
-}
-*/
-/*div#leftside ul li a ,*/
-/*
-div#rightside ul li a{
- display:block;
- text-decoration:none;
- color:#000000;
- border:solid 2px #F5F5F5;
- padding:10px;
-}
-*/
-div#leftside ul li a img{
- /*
- width:96px;
- height:72px;
- */
-}
-div#leftside ul li a div.item_sname{
  height:1.2em;
+ text-decoration:none;
+ color:#4169E1;
+ font-size:14px;
+ margin-bottom:5px;
  overflow:hidden;
 }
 
-div#main div.event{
- width:100%;
- height:200px;
- border-bottom:1px solid #000000;
- padding:5px; 
+ul.group li a:hover{
+ color:#FF4500;
+ text-decoration:underline;
 }
 
-div#main dl.dtgroup {
- height:5em;
-}
-div#main dl.dtgroup dt{
- float:left;
- width:200px;
-}
-
-div#main dl.dtgroup dd{
- width:400px;
- float:left;
-}
-
- div#main h3
-,div#rightside h3{
- margin:10px;
-}
-
-/*
-div#main img{
- float:left;
- width:200px;
- height:150px;
- margin:10px;
-}
-*/
-div#main h4{
- margin:10px 0px;
-}
-
-div#main div ul{
- list-style:none;
- margin:10px;
-}
-
-div#main div dl{
- margin:10px;
-}
-
-div#main ul{
- list-style:none;
-}
-
-/*
-div#main ul li{
- float:left;
-}
-*/
-div.endcolumn{
- border-right:solid 1px #000000;
-}
-
-div.daily{
- width:80px;
- height:120px;
- border-bottom:solid 1px #000000;
- border-left:solid 1px #000000;
- float:left;
-}
-
-div.calendartitle{
- height:40px;
- overflow:hidden;
- font-size:16px;
- padding:5px;
-}
-
-div.baika{
- text-align:right;
-}
-span.rate{
- font-size:32px;
-}
-
-span.tani{
-}
-
+/* item系CSS */
 div.item{
- margin:10px;
-}
-
-div.item a{
- text-decoration:none;
- color:#000000;
-}
-div#rightside div.event{
- width:100%;
- height:250px;
- border-bottom:1px solid #000000;
- padding:5px; 
-}
-div#rightside a{
- text-decoration:none;
- color:#000000;
-}
-
-div.calendarright{
- height:130px;
-}
-
-div.caltitle_r{
- width:100%;
- height:40px;
- font-size:24px;
- overflow:hidden;
-
-}
-
-div.calbaika_r{
- text-align:center;
-}
-span.calrate_r{
- font-size:36px;
-}
-
-div.tirasi_kikan{
- font-size:11px;
-}
-div.tirasiitem ul.dayslist {
- list-style:none;
-}
-
-div.tirasiitem ul.dayslist li{
+ width:130px;
+ /*height:250px;*/
+ border:solid 1px #A9A9A9;
+ margin:3px;
  float:left;
-}
-
-div.tirasiitem ul.dayslist li a{
- display:block;
- border:solid 2px #F5F5F5;
- width :130px;
- height:2em;
- margin-right:3px;
- padding-top :0.8em;
- padding-right:6px;
- text-align:center;
-}
-
-/* tiras.php、tirasiitem.phpで表示するアイテム */
- div.tirasiitem > a
-,div#tanpin     > a
-,div.janmas     > a{
- float:left;
- display:block;
- border:solid 2px #F5F5F5;
- width :130px;
- height:200px;
- margin-bottom:10px;
- margin-right:3px;
- padding-left:6px;
- padding-top:6px;
- overflow:hidden;
- text-decoration:none;
- color:black;
- font-size:12px;
 }
 
 div.imgdiv{
- width:120px;
- height:90px;
- overflow:hidden;
+ width:90%;
+ height:70px;
+ margin:5px;
 }
 
-div.makerdiv{
+div.imgdiv img{
  width:100%;
- height:1.5em;
- font-size:0.8em;
- overflow:hidden;
+ border:0px;
 }
 
-
-div.snamediv{
- width :100%;
- height:1.2em;
- font-size:1.5em;
- overflow:hidden;
+div.datadiv{
+ width:90%;
+ /*height:55%;*/
+ margin:5px;
 }
 
-div.tanidiv{
- width :100%;
+div.datadiv div.saletype{
+ /* background-color:red; */
+ /* color:#FFFFFF; */
+ border:solid 1px #FF6347;
+ color:#FF4500;
+ width:60%;
+ height:1.4em;
+ overflow:hidden;
+ font-size:12px;
+ text-align:center;
+}
+div.datadiv div.saletype_blank{
+ border:solid 0px #FFFFFF;
+ width:50%;
  height:1em;
- font-size:1.2em;
+
+}
+
+div.datadiv h3.sname{
+ width:95%;
+ height:2.5em;
+ margin:0;
+ word-break:break-all;
  overflow:hidden;
-}
-
-div.baikadiv{
- font-size:1em;
- width :95%;
- height:3.5em;
- font-size:0.8em;
- text-align:right;
- color:#DC143C;
-}
-
-div.baikadiv span{
- font-size:3.5em;
-}
-
-div.noticediv{
- width:100%;
- height:1.2em;
- font-size:0.8em;
-}
-
-div.jcodediv{
- width:100%;
- height:0;
- font-size:0.8em;
- overflow:hidden;
- text-align:right;
-}
-
-div.kikandiv{
- width:100%;
- height:0;
- font-size:0.8em;
- overflow:hidden;
- text-align:left;
-}
-div#rightside > div.tirasiitem > a >div.kikandiv{
- height:1.2em;
-}
-div#tanpin > a{
- width:580px;
- height:230px;
  font-size:16px;
 }
 
-div#tanpin > a >div.imgdiv{
- width:42%;
- height:100%;
- overflow:hidden;
- float:left;
- margin-right:10px;
+div.datadiv  h3.sname a{
+ text-decoration:none;
+ color:#4169E1;
 }
 
-div#tanpin > a >div.imgdiv>img{
- width:100%;
+div.datadiv h3.sname a:hover{
+ text-decoration:underline;
+ color:#FF4500;
 }
 
-div#tanpin > a > div.makerdiv{
+div.datadiv  div.tani{
  width:50%;
- height:1.4em;
- font-size:1.2em;
-}
-
-div#tanpin > a > div.snamediv{
- width:50%;
- height:2.4em;
- font-size:1.5em;
-}
-
-div#tanpin > a > div.tanidiv{
- width:50%;
- height:1.4em;
- font-size:1.2em;
-}
-div#tanpin > a > div.baikadiv{
- width:50%;
- height:1.2em;
- float:right;
-}
-div#tanpin > a > div.baikadiv>span{
- font-size:6em;
-}
-div#tanpin > a > div.jcodediv{
- width:50%;
- height:1.4em;
- font-size:0.8em;
- text-align:left;
-}
-
-div.janmas >a{
- width:100px;
- height:140px;
- font-size:8px;
-}
-
-div.janmas > a > div.baikadiv{
- height:2em;
-}
-
-div.janmas > a > div.kikandiv{
- height:1.2em;
- margin-top:4%;
-}
-/*
-div#tanpin > a{
- display:block;
- width:95%;
- height:250px;
- border:solid 2px #F5F5F5;
-}
-
-div#tanpin > a> div.imgdiv{
- width:240px;
- height:100%;
- overflow:hidden;
+ height:2.5em;
  float:left;
- margin-right:10px;
-}
-div#tanpin > a > div.imgdiv > img{
- width:240px;
-
-}
-div#tanpin > a > div.makerdiv{
- font-size:14px;
- margin:10px 0;
- width: 300px
- height:1.2em;
- overflow:hidden;
-}
-
-div#tanpin > a > div.snamediv{
- font-size:18px;
- margin:10px 0;
- width: 300px
- height:2.2em;
- overflow:hidden;
-}
-
-div#tanpin > a > div.baikadiv{
- float:left;
- font-size:32px;
- width:260px;
- margin:10px;
- color:#DC143C;
-}
-
-div#tanpin > a > div.baikadiv span{
- font-size:56px;
-}
-*/
-div.tanpin img.tanpin_img{
- /*
- width:280px;
- height:210px;
- */
- float:left;
- margin:10px;
-}
-
-div.tanpin_meisai {
- width:240px;
- height:210px;
- float:left;
- margin:10px;
-}
-
-div.tanpin_maker{
- width:100%;
- height:1.4em;
- overflow:hidden;
-}
-
-div.tanpin_tani{
- width:40%;
- height:2.4em;
- float:left;
-}
-div.tanpin_baika{
- width:60%;
- float:left;
- text-align:right;
- color:#DC143C;
-}
-
-div.tanpin_baika span{
- font-size:48px;
-}
-
-div.notice p{
  font-size:10px;
 }
 
-div.test{
- width:280px;
- height:210px;
- overflow:hidden;
- float:left;
+div.datadiv  div.price{
+ width:50%;
+ height:1.5em;
+ float:right;
+ font-size:18px;
+ color:#DC143C;
+ text-align:right;
 }
 
-div.col1{
- float        :left;
- width        :85px;
- height       :2.4em;
- border-top   :solid 2px #F5F5F5;
- border-right :solid 2px #F5F5F5;
- text-align   :center;
- font-size    :12px;
- overflow     :hidden;
+div.datadiv  div.price span{
+ font-size:8px;
 }
 
-div.col1start{
- border-left  :solid 2px #F5F5F5;
-}
-
-div.row1end{
- border-bottom:solid 2px #F5F5F5;
-}
-
-
-div.col2block{
- width        :120px;
- height       :90px;
- border-top   :solid 2px #F5F5F5;
- border-right :solid 2px #F5F5F5;
- overflow     :hidden;
- float:left;
-}
-
-div.col3block{
- width        :230px;
- height       :90px;
- border-top   :solid 2px #F5F5F5;
- border-right :solid 2px #F5F5F5;
- overflow     :hidden;
- float:left;
-}
-
-div.col2img{
- width        :200px;
- height       :150px;
- border-top   :solid 2px #F5F5F5;
- border-right :solid 2px #F5F5F5;
- overflow     :hidden;
- float        :left;
-}
-
-
-div#main div.datazone ul{
- width:800px;
- height:600px;
- overflow:scroll;
-}
-
-div#main div.datazone ul li{
- width:1500px;
-}
-
-div.calendaritem{
- width:750px;
- margin-top:10px;
-}
-
-div.calendaritem h2{
- /*color:#DC143C;*/
+div.datadiv  div.notice{
  font-size:12px;
+ width:100%;
+ height:2.5em;
+ overflow:hidden;
+ text-align:right;
 }
 
-div.calendaritem h2 span{
- font-size:24px;
+div.datadiv  div.lastsale{
+ font-size:12px;
+ width:100%;
+ height:1.2em;
+ overflow:hidden;
+ text-align:right;
 }
 
-div.youbi{
- width        :13%;
- border-top   :solid 1px #F5F5F5;
- border-left  :solid 1px #F5F5F5;
- float        :left;
- text-align   :center;
- font-size    :0.5em;
+/* 単品系 */
+div.tanpin{
+ width:500px;
+ height:250px;
+ border:solid 1px #A9A9A9;
+ margin:3px;
 }
 
-div.colend{
- border-right :solid 1px #F5F5F5;
+div.tanpin div.imgdiv{
+ width:45%;
+ height:95%;
+ float:left;
+ border:solid 1px ;
+}
+
+div.tanpin div.datadiv{
+ width:45%;
+ height:95%;
+ float:left;
+}
+
+div.tanpin div.datadiv div.tani{
+ clear:both;
+ width:100%;
+ height:1.5em;
+}
+
+div.tanpin div.datadiv div.price{
+ clear:both;
+ text-align:left;
+}
+
+div.tanpin div.datadiv div.notice{
+ text-align:left;
+ height:4.5em;
+}
+
+div.tanpin div.datadiv div.lastsale{
+ text-align:left;
+}
+/* カレンダー系*/
+div.calendar{
+ width:600px;
+}
+
+div.calendar div.youbi{
+ width:83px;
+ height:1.5em;
+ float:left;
+ text-align:center;
+ font-size:12px;
+ border-top :solid 1px #A9A9A9;
+ border-left:solid 1px #A9A9A9;
+}
+
+div.calendar div.calitem{
+ width:83px;
+ height:110px;
+ float:left;
+ border-top :solid 1px #A9A9A9;
+ border-left:solid 1px #A9A9A9;
+}
+
+div.calendar div.colend{
+ border-right:solid 1px #A9A9A9;
 }
 
 div.rowend{
- border-bottom:solid 1px #F5F5F5;
+ border-bottom:solid 1px #A9A9A9;
 }
 
-div.dayitem{
- width        :13%;
- height       :130px;
- text-align   :left;
- border-top   :solid 1px #F5F5F5;
- border-left  :solid 1px #F5F5F5;
- float        :left;
- text-decoration:none;
-}
-
-div.dayitem > a{
- text-decoration:none;
- color:black;
-}
-
-div.calimg{
- height:3em;
- overflow:hidden;
-}
-
-div.caltitle{
- height:2.6em;
- font-size:0.8em;
- overflow:hidden;
-}
-
-div.calrate{
- color:#DC143C;
- font-size:2em;
- text-align:right;
-}
-
-div.calrate > span{
- font-size:0.6em;
-}
-
-div.reservelist ul{
- list-style:none;
-}
-
-div.reservelist li{
- height:90px;
- border-top:solid 1px #F5F5F5;
- border-left:solid 1px #F5F5F5;
- border-right:solid 1px #F5F5F5;
-}
-
-div.reservelist li div.imgdiv{
- display:block;
- border-right:solid 1px #F5F5F5;
- width:120px;
- height:100%;
- float:left;
-
-}
-
-div.reservelist li div.snamediv{
- display:block;
- border-right:solid 1px #F5F5F5;
- width:140px;
- padding-top:35px;
- height:55px;
- font-size:1em;
- float:left;
- overflow:hidden;
-}
-
-div.reservelist li div.pricediv{
- display:block;
- border-right:solid 1px #F5F5F5;
- width:60px;
- padding-top:35px;
- height:55px;
- float:left;
- text-align:right;
- }
-
-div.reservelist li div.itemdiv{
- display:block;
- width:60px;
- padding-top:35px;
- height:55px;
- border-right:solid 1px #F5F5F5;
- float:left;
- text-align:right;
-}
-
-div.reservelist li span.goukei{
- text-align:right;
-}
-
-div.reservelist li input{
- width:100%;
- border:0px solid #F5F5F5;
- text-align:right;
-}
-
-div.entry dl {
- border :2px solid #F5F5F5;
- padding:30px 30px 30px 30px;
-}
-div.entry dl dt{
- font-size:0.8em;
- float:left;
- width:100px;
- height:2em;
- padding-top:8px;
- text-align:right;
-}
-
-div.entry dl dd{
- margin:0 0 20px 0;
-}
-
-div.entry dl dd div{
- padding-top:6px;
-}
-div.entry dl dd input[type='text'],
-div.entry dl dd input[type='password']{
- width:400px;
- height:2em;
- border :3px solid #F5F5F5;
-}
-
-div.entry dl dd input[type='submit']{
- width:300px;
- height:2em;
- text-align:center;
-}
-
-div.entry dl dd textarea{
- width:400px;
- height:20em;
- border :3px solid #F5F5F5;
-}
-/*
-div.entry dl dd a{
- display:block;
- width:100px;
- border:1px solid #F5F5F5;
- text-align:center;
- padding:5px;
- float:right;
-}
-*/
-
-ul.grouplist{
- list-style:none;
-}
-
-ul.grouplist li{
- height:1.5em;
- width:100%;
- overflow:hidden;
-}
-
-ul.grouplist li a{
- display:block;
- border:solid 1px #F5F5F5;
- font-size:small;
- text-decoration:none;
- color:#000000;
- /*background-color:#AFEEEE;*/
- background-color:#FFFFF0;
- padding:3px;
-}
-
-/*商品画像入力用*/
-div.itemdiv{
- width:120px;
- height:250px;
- border:solid 1px #F5F5F5;
- float:left;
+div.calendar div.imgdiv div.saleday{
  font-size:12px;
 }
 
-div.itemimgdiv{
- width:120px;
- height:110px;
-}
-
-div.itemsname{
- width:100%;
+div.calendar div.datadiv h3.sname{
+ width:90%;
  height:2.5em;
+ font-size:14px;
  overflow:hidden;
+ margin:4px;
 }
 
-div.itemprice{
- height:2.5em;
+div.calendar div.datadiv h3.sname a{
+ text-decoration:none;
+ color:#4169E1;
+}
+
+div.calendar div.datadiv h3.sname a:hover{
+ color:#FF4500;
+ text-decoration:underline;
+
+}
+div.calendar div.datadiv div.tani{
+ font-size:8px;
+ float:left;
+ width:40%;
+ height:1.5em;
+}
+
+
+div.calendar div.datadiv  div.price{
+ width:50%;
+ height:1.5em;
+ overflow:hidden;
+ font-size:18px;
+ color:#DC143C;
  text-align:right;
- color:red;
 }
 
-div.itemprice span{
- font-size:20px;
+div.calendar  div.datadiv  div.price span{
+ font-size:8px;
 }
 
-input.b{
- width:0px;
- height:0px;
+div.calendar  div.datadiv  div.notice{
+ width:90%;
+ height:1.5em;
+ overflow:hidden;
+ font-size:12px;
 }
-div.clr{
- clear:both;
+
+div.tirasiitem div.item div.datadiv div.tani{
+ font-size:12px;
+}
+div.tirasiitem div.item div.datadiv div.notice{
+ font-size:8px;
+ text-align:left;
+ height:2.5em;
+}
+
+div.tirasiitem div.item div.datadiv div.lastsale{
+ font-size:8px;
+ text-align:center;
 }
 

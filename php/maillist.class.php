@@ -75,8 +75,8 @@ class ML extends DB{
 
   $this->setwhere();
 
-  $this->select =" t.saleday,t.clscode,t.sname";
-  $this->select.=",t.tani,t.price,t.notice,t.flg0";
+  $this->select =" t.saleday,t.saleday as lastsale,t.clscode,t.sname";
+  $this->select.=",t.tani,t.price,t.notice,t.flg0,t.saletype";
   $this->select.=",t1.clsname";
   $this->select.=",t2.lincode,t2.linname";
   $this->from =TB_SALEITEMS;
@@ -107,7 +107,6 @@ class ML extends DB{
 
   $this->items["data"]=$items;
  }// public function getMailItem(){
-
 }//ML
 
 ?>

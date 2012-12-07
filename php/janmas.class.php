@@ -191,7 +191,7 @@ class JANMAS extends DB{
   $this->from.=" inner join ".TB_LINMAS." as t2 on";
   $this->from.=" t1.lincode=t2.lincode";
   $this->where =$this->andwhere;
-  $this->order =" t2.lincode,t1.clscode,t.jcode";
+  $this->order =" t.lastsale desc,t2.lincode,t1.clscode,t.jcode";
   $this->items["data"]=$this->getArray();
 
   $this->setSaleItem();

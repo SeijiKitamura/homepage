@@ -1,45 +1,38 @@
 <?php
 require_once("./php/janmas.class.php");
-require_once("./php/auth.class.php");
 require_once("./php/calendar.class.php");
 require_once("./php/tirasi.class.php");
+require_once("./php/maillist.class.php");
+require_once("./php/html.class.php");
 try{
  //分類グループゲット
  $db=new JANMAS();
- $db->getLinMas();
- $grp=$db->items;
+ $db->getLinList();
+ $grp=$db->items["data"];
 
  //新商品データゲット
  $db->getNewItem();
- $newitems=$db->items;
-
- //Cookieチェック
- if($_COOKIE["kitamura"]){
-  $c=explode(":",$_COOKIE["kitamura"]);
-  $mail=$c[0];
-  $pass=$c[1];
- }//if
+ $newitem=$db->items["data"];
  
- //ユーザー名ゲット
- if($mail && $pass){
-  $db=new AUTH();
-  $db->getAuth($mail,$pass);
-  $username=$db->items[0]["name"];
- }//if
-
- //カレンダーゲット
- //$hiduke=date("Y-m-d",strtotime("2012/10/5"));
- $hiduke=date("Y-m-d");
- $db=new CL();
- $db->getItem($hiduke);
- $cal=$db->item;
-
- //チラシゲット
+ //チラシ商品ゲット
  $db=new TIRASI();
- $db->getTitleList($hiduke);
- $title=$db->items["data"][0]; //直近のチラシタイトル
- $db->getItemList($title["tirasi_id"],null,null,null);
- $items=count($db->items["data"]); //チラシ掲載商品数
+ $db->flg0="734";
+ $db->saleday="2012/11/29";
+ $db->getItemList();
+ $tirasi=$db->items["data"];
+
+ //メール商品ゲット
+ $db=new ML();
+ $db->saleday="2012/11/02";
+ $db->getMailItem();
+ $mailitem=$db->items["data"];
+
+//カレンダーゲット
+ $db=new CL();
+ $db->saleday="2012/11/21";
+ $db->getCalendar();
+ $cal=$db->items["data"];
+
  
 }//try
 catch(Exception $e){
@@ -76,46 +69,41 @@ catch(Exception $e){
   </script>
  </head>
  <body>
-  <!-- wrapper -->
+
+<!--=======================wrapper start===============================-->
   <div id="wrapper">
 
-   <!-- header -->
+<!--=======================header  start===============================-->
    <div id="header">
 
-    <!-- logo -->
+<!--=======================logo    start===============================-->
     <div class="logo">
      <a href="index.html">
       <img src="./img/logo2.jpg" alt="スーパーキタムラ">
      </a>
     </div>
-    <!-- logo -->
+<!--=======================logo    end  ===============================-->
 
-    <!-- hello -->
+<!--=======================hello   start===============================-->
     <div class="hello">
      <p>
 
      </p>
     </div>
-    <!-- hello -->
+<!--=======================hello   end  ===============================-->
 
-    <!-- mininavi -->
+<!--=======================mininavi start==============================-->
     <div class="mininavi">
      <ul>
-      <li><a href="login.php">
-<?php
- if($username) echo $username."さん";
- else echo "ログイン";
-?>
-       </a></li>
       <li><a href="about.html">会社概要</a></li>
       <li><a href="access.html">アクセス</a></li>
       <li><a href="#">求人</a></li>
       <li><a href="sinsotu.html"> 新卒採用</a></li>
      </ul>
     </div>
-    <!-- mininavi -->
+<!--=======================mininavi end  ==============================-->
 
-    <!-- timesale -->
+<!--=======================timesale start==============================-->
     <div class="timesale">
      <ul>
       <li>ホーム</li>
@@ -131,120 +119,122 @@ catch(Exception $e){
       <li>サービス</li>
      </ul>
     </div>
-    <!-- timesale -->
+<!--=======================timesale end  ==============================-->
      
    <div class="clr"></div>
    </div>
-   <!-- header -->
+<!--=======================header  end  ===============================-->
 
-   <!-- navi -->
+<!--=======================navi start    ==============================-->
    <div id="navi">
    </div>
-   <!-- navi -->
+<!--=======================navi end      ==============================-->
 
-   <!-- leftside -->
+<!--=======================leftside start==============================-->
    <div id="leftside">
 <?php
-$db=new JANMAS();
-$html=$db->getHtmlLinList($grp,$lincode);
+$html=html::setgroup($grp,"item.php?lincode=","lincode","linname");
+//taniとnoticeを除外
 echo $html;
 ?>
    </div>
-   <!-- leftside -->
+<!--=======================leftside end  ==============================-->
 
-   <!-- rightside -->
-   <div id="rightside">
-    <!-- koukoku -->
-    <div class="event">
-     <h4>広告のご案内</h4>
+<!--=======================rightside start=============================-->
+<!--=======================rightside end  =============================-->
+
+<!--=======================main      start=============================-->
+   <div id="main" style="width:780px;">
 <?php
-//ここに広告のページへtirasi_idを引数にしたリンクを挿入
-
-$sday=date("n月j日",strtotime($title["hiduke"]));
-$eday=date("n月j日",strtotime($title["view_end"]));
-echo "<div class='tirasi_kikan'>".$sday."から".$eday."まで</div>\n";
-echo "<div class='tirasi_title'>".$title["title"]."</div>\n";
-echo "<div class='tirasi_items'>合計".$items."点掲載</div>\n";
-?>
-    </div>
-    <!-- koukoku -->
-
-
-    <!-- calendar -->
-    <div class="event">
-    <a href="calendar.php" target="_blank">
-<?php
-if($cal["data"]){
- $h=date("m月d日",strtotime($cal["data"]["hiduke"]));
- preg_match("/([^円倍割引]+)([円倍割引]+)/",$cal["data"]["rate"],$rate);
- echo "<h4>".$h."限り</h4>";
- echo "<div class='snamediv'>".$cal["data"]["title"]."</div>";
- echo "<div class='baikadiv'><span>".$rate[1]."</span>".$rate[2]."</div>";
- echo "<div class='noticediv'>".$cal["data"]["notice"]."</div>";
+//----------------------------------------------------------------//
+// カレンダー情報
+//----------------------------------------------------------------//
+if($cal){
+ echo "<h4>本日のカレンダー情報:\n";
+ $j=0;
+ $item=null;
+ $html=$cal[0]["sname"]." ".$cal[0]["price"]."</h4>\n";
+ echo $html;
 }//if
-?>
-    </a>
-    </div>
-    <!-- calendar -->
 
-   </div>
-   <!-- rightside -->
 
-   <!-- main -->
-   <div id="main">
-    <div class="janmas">
-     <h3>新商品のご案内</h3>
-<?php
-//新商品(NEWITEM :confing.php内に記述)
-$i=0;
-if(count($newitems["data"])>NEWITEM){
- for($i=0;$i<NEWITEM;$i++){
-  $nitems["data"][$i]=$newitems["data"][$i];
+//----------------------------------------------------------------//
+// 広告の品表示
+//----------------------------------------------------------------//
+if($tirasi){
+ echo "<h3>広告の品</h3>";
+
+ //5アイテムに絞る
+ $item=null;
+ $j=0;
+ for($i=0;$i<count($tirasi);$i++){
+  $j++;
+  if($j>5) break;
+  $item[]=$tirasi[$i];
+ }
+ $html=html::setitemTirasi($item);
+ echo $html;
+
+ if(count($newitem)>5){
+  echo "and more!";
+ }//if
+}//if
+
+//----------------------------------------------------------------//
+// メール表示
+//----------------------------------------------------------------//
+if($mailitem){
+ echo "<h3> 本日のメール商品</h3>\n";
+ //5アイテムに絞る
+ $item=null;
+ $j=0;
+ for($i=0;$i<count($mailitem);$i++){
+  $j++;
+  if($j>5) break;
+  $item[]=$mailitem[$i];
+ }
+ $html=html::setitem($item);
+ echo $html;
+
+ if(count($newitem)>5){
+  echo "and more!";
+ }//if
+}//if
+
+//----------------------------------------------------------------//
+// 新商品表示
+//----------------------------------------------------------------//
+if($newitem){
+ echo "<h3>新商品のご案内</h3>\n";
+ $j=0;
+ $item=null;
+ //10アイテムに絞る
+ for($i=0;$i<count($newitem);$i++){
+  $j++;
+  if($j>10) break;
+  $item[]=$newitem[$i];
  }//for
+ $html=html::setitem($item);
+ $html=preg_replace("/<div class='tani'>.*<\/div>/","",$html);
+ $html=preg_replace("/<div class='notice'>.*<\/div>/","",$html);
+ echo $html;
+ 
+ if(count($newitem)>10){
+  echo "and more!";
+ }//if
 }//if
-else $nitems["data"]=$newitems["data"];
-$nitems["status"]=$newitems["status"];
-$items["local"]=$newitems["local"];
 
-$db=new JANMAS();
-$html=$db->getHtmlJanMas($nitems,0);
-echo $html;
 ?>
-    </div>
-    <!-- event -->
-    <div class="event">
-     event1
-    </div>
-    <!-- event -->
-
-    <!-- event -->
-    <div class="event">
-     event2
-    </div>
-    <!-- event -->
-
-    <!-- event -->
-    <div class="event">
-     event3
-    </div>
-    <!-- event -->
-
-    <!-- event -->
-    <div class="event">
-     event4
-    </div>
-    <!-- event -->
    </div>
-   <!-- main -->
-
+<!--=======================main      end  =============================-->
    <div class="clr"></div>
-   <!-- footer -->
+<!--=======================footer    start=============================-->
    <div id="footer">
     <h1>footer</h1>
    </div>
-   <!-- footer -->
+<!--=======================footer    end  =============================-->
 
   </div>
-  <!-- wrapper -->
+<!--=======================wrapper end =================================-->
  </body>
 </html>

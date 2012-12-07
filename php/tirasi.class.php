@@ -12,6 +12,7 @@
 //  getLinItem($lincode) 指定ラインの商品リストを返す
 //  getClsItem($clscode) 指定クラスの商品リストを返す
 //  getJanItem($jcode)   指定商品を返す
+//  getTitle()           指定チラシのタイトル、アイテム数を表示(未完)
 //----------------------------------------------------------//
 require_once("db.class.php");
 require_once("function.php");
@@ -20,6 +21,7 @@ class TIRASI extends DB{
  public $items;   //データを格納
  public $flg0;    //チラシ番号
  public $saleday; //表示したい日(この日付以降が表示される）
+ public $title;
 
  protected $saletype;//セールタイプ番号
  protected $andwhere;//where句
@@ -108,7 +110,7 @@ class TIRASI extends DB{
   $this->setwhere();
 
   $this->select =" t.flg0,t.clscode,t.jcode,t.sname";
-  $this->select.=",t.tani,t.price,t.notice,t.flg1,t.flg2";
+  $this->select.=",t.tani,t.price,t.notice,t.flg1,t.flg2,t.saletype";
   $this->select.=",t1.clsname";
   $this->select.=",t2.lincode,t2.linname";
   $this->select.=",min(t.saleday) as sday";
@@ -122,7 +124,7 @@ class TIRASI extends DB{
   $this->from.=" t1.lincode=t2.lincode";
   $this->where =$this->andwhere;
   $this->group =" t.flg0,t.clscode,t.jcode,t.sname";
-  $this->group.=",t.tani,t.price,t.notice,t.flg1,t.flg2";
+  $this->group.=",t.tani,t.price,t.notice,t.flg1,t.flg2,t.saletype";
   $this->group.=",t1.clsname";
   $this->group.=",t2.lincode,t2.linname";
   $this->order =" min(t.saleday)";
@@ -189,6 +191,11 @@ class TIRASI extends DB{
 
   $this->items["data"]=$item;
  }//public function getJanItem($jcode){
+
+//----------------------------------------------------------//
+// 指定チラシのタイトル、イベント、アイテム数を返す
+//----------------------------------------------------------//
+
 }//TIRASI
 
 ?>

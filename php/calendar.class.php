@@ -41,7 +41,6 @@ class CL extends DB{
   $eday=date("Y-m-d",mktime(0,0,0,(date("m",$uk)+1),0,date("Y",$uk)));
   $this->andwhere =" saleday between '".$sday."' and '".$eday."'";
   $this->andwhere.=" and saletype=".$this->saletype;
-  echo $this->andwhere."\n";
  }
 
 //----------------------------------------------------------//
