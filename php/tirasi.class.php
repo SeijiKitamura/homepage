@@ -7,7 +7,7 @@
 //メソッド一覧
 //----------------------------------------------------------//
 //  getLinList()         指定ラインリストを返す
-//  getClsList()         指定ラインのクラスリストを返す
+//  getClsList($lincode) 指定ラインのクラスリストを返す
 //  getItemList()        商品リストを返す
 //  getLinItem($lincode) 指定ラインの商品リストを返す
 //  getClsItem($clscode) 指定クラスの商品リストを返す

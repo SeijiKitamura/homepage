@@ -1,44 +1,40 @@
 <?php
-require_once("./php/tirasi.class.php");
 require_once("./php/janmas.class.php");
+require_once("./php/calendar.class.php");
+require_once("./php/tirasi.class.php");
+require_once("./php/maillist.class.php");
+require_once("./php/html.class.php");
 try{
-//------------------------------------------------------------//
-// データゲット
-//------------------------------------------------------------//
-
-
- //引数セット
- $tirasi_id=$_GET["tirasi_id"];
- $hiduke=$_GET["hiduke"];
- $jcode=$_GET["jcode"];
  $lincode=$_GET["lincode"];
+ $clscode=$_GET["clscode"];
+ $jcode=$_GET["jcode"];
 
  //引数チェック
- if(! $tirasi_id ||! is_numeric($tirasi_id)){
-  throw new exception("チラシ番号は数字で入力してください");
- }
-
- if(! $hiduke ||! CHKDATE($hiduke)){
-  throw new exception("日付が不正です");
- }
-
- if(! $jcode ||! is_numeric($jcode)){
-  throw new exception("JANコードが不正です");
- }
-
-//チラシ系データ
+ 
+ //チラシ商品ゲット
  $db=new TIRASI();
- $data=$db->getData($tirasi_id,$hiduke,$lincode,$jcode);
+ $db->flg0="734";
+ $db->saleday="2012/11/29";
+ $db->getItemList();
+ $tirasiitem=$db->items["data"];
+ $db->getLinList();
+ $linlist=$db->items["data"];
 
-//単品マスタ系データ
- $db2=new JANMAS();
- $db2->getJanMas($lincode,$clscode,0,0);
- $data["jlinitems"]=$db2->items;
+ if($lincode){
+  $db->getLinItem($lincode);
+  $linitem=$db->items["data"];
 
+  $db->getClsList($lincode);
+  $clslist=$db->items["data"];
+ }//if
+ if($clscode){
+  $db->getClsItem($clscode);
+  $clsitem=$db->items["data"];
+ }//if
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
-}//catch
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -56,7 +52,7 @@ catch(Exception $e){
   <meta name="keywords" content="キタムラ,スーパーキタムラ,スーパーきたむら,スーパー北村,シェノール,惣菜,パン,お酒,日本酒,焼酎,ワイン,配達">
 
   <!-- タイトル(ページごとに変更) -->
-  <title>今週のチラシ:食品スーパーマーケット　</title>
+  <title>スーパーキタムラ:食品スーパーマーケット　</title>
 
   <!-- link(ページごとに変更) -->
   <link rel="icon" href="./img/kitamura.ico" type="type/ico" sizes="16x16" /> 
@@ -70,186 +66,150 @@ catch(Exception $e){
   </script>
  </head>
  <body>
-  <!-- wrapper -->
+
+<!--=======================wrapper start===============================-->
   <div id="wrapper">
 
-   <!-- header -->
+<!--=======================header  start===============================-->
    <div id="header">
 
-    <!-- logo -->
+<!--=======================logo    start===============================-->
     <div class="logo">
      <a href="index.html">
       <img src="./img/logo2.jpg" alt="スーパーキタムラ">
      </a>
     </div>
-    <!-- logo -->
+<!--=======================logo    end  ===============================-->
 
-    <!-- hello -->
+<!--=======================hello   start===============================-->
     <div class="hello">
-     <h1></h1>
-    </div>
-    <!-- hello -->
+     <p>
 
-    <!-- mininavi -->
+     </p>
+    </div>
+<!--=======================hello   end  ===============================-->
+
+<!--=======================mininavi start==============================-->
     <div class="mininavi">
      <ul>
       <li><a href="about.html">会社概要</a></li>
       <li><a href="access.html">アクセス</a></li>
-      <li>求人</li>
+      <li><a href="#">求人</a></li>
       <li><a href="sinsotu.html"> 新卒採用</a></li>
      </ul>
     </div>
-    <!-- mininavi -->
+<!--=======================mininavi end  ==============================-->
 
-    <!-- timesale -->
+<!--=======================timesale start==============================-->
     <div class="timesale">
      <ul>
-      <li>本日のおすすめ</li>
+      <li><a href='index.php'>ホーム</a></li>
       <li> | </li>
       <li>今週のチラシ</li>
       <li> | </li>
-      <li>今月のお買得品</li>
+      <li><a href="calendar.php">カレンダー</a></li>
+      <li> | </li>
+      <li><a href='item.php'>商品のご案内</a></li>
       <li> | </li>
       <li>ご注文承り中</li>
       <li> | </li>
       <li>サービス</li>
      </ul>
     </div>
-    <!-- timesale -->
+<!--=======================timesale end  ==============================-->
      
    <div class="clr"></div>
    </div>
-   <!-- header -->
+<!--=======================header  end  ===============================-->
 
-   <!-- navi -->
+<!--=======================navi start    ==============================-->
    <div id="navi">
-    <!-- allcate -->
-    <div id="allcate">
-      広告一覧
-    </div>
-    <!-- allcate -->
-
-    <!-- search -->
-    <div id="search">
-<?PHP
-/*
-try{
- //単一チラシの日別掲載日を表示
- $html=$db->getHtmlDaysList($data["days"],$tirasi_id,$hiduke,$lincode);
- echo $html;
-}
-catch(Exception $e){
- $err[]=$e->getMessage();
-}//catch
-*/
-?>
-    </div>
-    <!-- search -->
    </div>
-   <!-- navi -->
-   <!-- leftside -->
+<!--=======================navi end      ==============================-->
+
+<!--=======================leftside start==============================-->
    <div id="leftside">
-    <ul class="grouplist">
-     <li><a href="tirasi.php">すべて</a></li>
 <?php
-foreach ($data["linlist"]["data"] as $rows=>$col){
- echo "<li>";
- echo "<a href='tirasi.php?lincode=".$col["lincode"]."'>";
- echo $col["linname"]."(".$col["cnt"].")"."</a>";
- echo "</li>\n";
-}//foreach
-
-//try{
-// $html=$db->getHtmlLinList($data["linlist"],$tirasi_id,$hiduke,$lincode);
-// echo $html;
-//}//try
-//catch(Exception $e){
-// $err[]=$e->getMessage();
-//}//catch
-
-?>
-    </ul>
-   </div>
-   <!-- leftside -->
-
-   <!-- rightside -->
-   <div id="rightside">
-    <div class="tirasiitem">
-<?php
-$html=$db->getHtmlItem($data["nextitems"],"tirasiitem.php");
-echo $html;
-try{
-}//try
-catch(Exception $e){
- $err[]="エラー:".$e->getMessage();
-}//catch
-?>
-    </div>
-    <!-- tirasiitem -->
-   </div>
-   <!-- rightside -->
-
-   <!-- main -->
-   <div id="main">
-   
-    <!-- tirasiitem -->
-    <div class="tirasiitem">
-<?php
-//エラーがあれば処理終了
-if($err && DEBUG){
- echo "<pre>";
- print_r($err);
- echo "</pre>";
- return false;
+$html="";
+$html="<ul class='group'>\n";
+if(! $clslist){
+ foreach($linlist as $rownum=>$rowdata){
+  $html.="<li>";
+  $html.="<a href='?lincode=".$rowdata["lincode"]."'>";
+  $html.=$rowdata["linname"]." "."(".$rowdata["cnt"].")";
+  $html.="</a>";
+  $html.="</li>\n";
+ }//foreach
 }//if
+elseif($clslist){
+ foreach($clslist as $rownum=>$rowdata){
+  $html.="<li>";
+  if($rowdata["clscode"]!=$clscode){
+   $html.="<a href='?lincode=".$lincode."&clscode=".$rowdata["clscode"]."'>";
+   $html.=$rowdata["clsname"]." "."(".$rowdata["cnt"].")";
+   $html.="</a>";
+  }
+  else{
+   $html.=$rowdata["clsname"]." "."(".$rowdata["cnt"].")";
+  }
+  $html.="</li>\n";
+ }//foreach
+}//elseif
+$html.="</ul>\n";
+echo $html;
 
-try{
- $html="";
- 
- //単品表示
- $html.="<div id='tanpin'>";
- echo $html;
- 
- $html=$db->getHtmlItem($data["item"],"");
- echo $html;
- echo "</div>\n";
- 
- //同日、同一Lin商品
- $html=$db->getHtmlItem($data["linitems"],"tirasiitem.php");
- echo $html;
- 
- //その他アイテム
- echo "<div class='janmas'>\n";
- echo "<h4>こんな商品も売れています</h4>\n";
- $html=$db2->getHtmlJanMas($data["jlinitems"]);
- echo $html;
- echo "</div>\n";
-
- //デバック用データ
- if(DBBUG){
-  echo "<pre>";
-  print_r($data);
-  echo "</pre>";
- }//if
-}//try
-catch(Exception $e){
- echo "エラー:".$e->getMessage();
-}
 ?>
-    </div>
-    <!-- tirasiitem -->
-
    </div>
-   <!-- main -->
+<!--=======================leftside end  ==============================-->
 
+<!--=======================rightside start=============================-->
+<!--=======================rightside end  =============================-->
+
+<!--=======================main      start=============================-->
+   <div id="main" style="width:780px;">
+<?php
+//ナビゲーター表示
+$html="";
+$html.="<ul class='pagenavi'>\n";
+$html.="<li><a href='tirasiitem.php'>今週のチラシ</a> > </li>\n";
+if($clscode){
+ $html.="<li><a href='tirasiitem.php?lincode=".$lincode."'>";
+ $html.=$clsitem[0]["linname"];
+ $html.="</a> > </li>\n";
+ $html.="<li>";
+ $html.=$clsitem[0]["clsname"];
+ $html.="</li>\n";
+}//if
+elseif( ! $clscode){
+ $html.="<li>";
+ $html.=$linitem[0]["linname"];
+ $html.="</li>\n";
+}
+$html.="</ul>\n";
+echo $html;
+
+//アイテム表示
+if($linitem && $clsitem){
+ $html=html::setitemTirasi($clsitem);
+}
+else if($linitem && ! $clsitem){
+ $html=html::setitemTirasi($linitem);
+}
+else{
+ $html=html::setitemTirasi($tirasiitem);
+}
+echo $html;
+?>
+   </div>
+<!--=======================main      end  =============================-->
    <div class="clr"></div>
-   <!-- footer -->
+<!--=======================footer    start=============================-->
    <div id="footer">
     <h1>footer</h1>
    </div>
-   <!-- footer -->
+<!--=======================footer    end  =============================-->
 
   </div>
-  <!-- wrapper -->
+<!--=======================wrapper end =================================-->
  </body>
 </html>
