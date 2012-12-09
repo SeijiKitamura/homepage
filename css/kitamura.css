@@ -365,3 +365,39 @@ div.tirasiitem div.item div.datadiv div.lastsale{
  text-align:center;
 }
 
+/* カテゴリナビ系*/
+ul.pagenavi{
+ list-style:none;
+ margin:5px;
+}
+
+ul.pagenavi li{
+ float:left;
+ font-size:12px;
+}
+
+ul.pagenavi li a{
+ text-decoration:none;
+}
+ul.pagenavi li a:hover{
+ color:#FF4500;
+ text-decoration:underline;
+}
+/* ページナビ系 */
+ul.itemnavi{
+ list-style:none;
+}
+
+ul.itemnavi li{
+ float:left;
+ width:30px;
+ text-align:center;
+}
+
+ul.itemnavi li a{
+ display:block;
+ text-decoration:none;
+ border:solid 1px;
+ margin:2px;
+ text-align:center;
+}
