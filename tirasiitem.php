@@ -31,6 +31,11 @@ try{
   $db->getClsItem($clscode);
   $clsitem=$db->items["data"];
  }//if
+
+ if($jcode){
+  $db->getJanItem($jcode);
+  $item=$db->items["data"];
+ }//if
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
@@ -186,16 +191,31 @@ elseif( ! $clscode){
  $html.="</li>\n";
 }
 $html.="</ul>\n";
+$html.="<div class='clr'></div>\n";
 echo $html;
 
+//単品表示
+if($item){
+ $html=html::settanpin($item);
+ echo $html;
+}//if
 //アイテム表示
 if($linitem && $clsitem){
+ if($jcode){
+  $clsitem=html::outJan($clsitem,$jcode);
+ }
  $html=html::setitemTirasi($clsitem);
 }
 else if($linitem && ! $clsitem){
+ if($jcode){
+  $linitem=html::outJan($linitem,$jcode);
+ }
  $html=html::setitemTirasi($linitem);
 }
 else{
+ if($jcode){
+  $tirasiitem=html::outJan($tirasiitem,$jcode);
+ }
  $html=html::setitemTirasi($tirasiitem);
 }
 echo $html;

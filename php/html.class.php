@@ -45,14 +45,14 @@ $html=<<<EOF
 <div class='item'>
  <div class='imgdiv'>
   <div class='saleday'>__SALEDAY__</div>
-   <a href='__LINK__' target="_blank">
+   <a href='__LINK__' target="">
     <img src='__IMGLINK__' alt='__SNAME__' title='__SNAME__'>
    </a>
  </div> 
  <div class='datadiv'>
   <div class='saletype'>__SALETYPE__</div>
   <h3 class='sname'>   
-   <a href='__LINK__' target="_blank">
+   <a href='__LINK__' target="">
     __MAKER__ __SNAME__
    </a>
   </h3>
@@ -79,12 +79,13 @@ EOF;
    $base=self::item();
 
    //画像がなければ非表示
-   $img=IMGDIR.$rowdata["jcode"].".jpg";
+   $img="./img/".$rowdata["jcode"].".jpg";
    if(! file_exists($img)){
     $pattern="/<img.*/";
     $base=preg_replace($pattern,"",$base);
    }//if
 
+   $base=str_replace("__IMGLINK__",$img,$base);
    $base=str_replace("__SALEDAY__","",$base);
    if(! preg_match("/^[0-9]+$/",$rowdata["saletype"])){
     $base=str_replace("saletype","saletype_blank",$base);
@@ -152,12 +153,13 @@ EOF;
    $base=self::tanpin();
  
    //画像がなければ非表示
-   $img=IMGDIR.$rowdata["jcode"].".jpg";
+   $img="./img/".$rowdata["jcode"].".jpg";
    if(! file_exists($img)){
     $pattern="/<img.*/";
     $base=preg_replace($pattern,"",$base);
    }//if
  
+   $base=str_replace("__IMGLINK__",$img,$base);
    $base=str_replace("__SALEDAY__","",$base);
    $base=str_replace("__MAKER__",$rowdata["maker"],$base);
    $base=str_replace("__SNAME__",$rowdata["sname"],$base);
@@ -176,9 +178,21 @@ EOF;
      $base=str_replace("__EN__","",$base);
     }
    }
+   $base=str_replace("__SALETYPE__",$GLOBALS["SALETYPE"][$rowdata["saletype"]],$base);
    $base=str_replace("__JCODE__","JAN:".$rowdata["jcode"],$base);
    $base=str_replace("__NOTICE__",$rowdata["notice"],$base);
-   $base=str_replace("__LASTSALE__",$rowdata["lastsale"],$base);
+   if(! $rowdata["sday"] && ! $rowdata["eday"]){
+    $base=str_replace("__LASTSALE__",$rowdata["lastsale"],$base);
+   }//if
+   else{
+    if($rowdata["sday"]==$rowdata["eday"]){
+     $kikan=date("m月d日",strtotime($rowdata["sday"]))."限り";
+    }//if
+    else{
+     $kikan=date("m月d日",strtotime($rowdata["sday"]))."から".date("m月d日",strtotime($rowdata["eday"]))."まで";
+    }//else
+    $base=str_replace("__LASTSALE__",$kikan,$base);
+   }//else
    $html.=$base;
   }//foreach
   return $html;
@@ -257,12 +271,13 @@ EOF;
     if($i==strtotime($rowdata["saleday"])){
      $url="";//リンク先URLをセット
      //画像がなければ非表示
-     $img=IMGDIR.$rowdata["jcode"].".jpg";
+     $img="./img/".$rowdata["jcode"].".jpg";
      if(! file_exists($img)){
       $pattern="/<img.*/";
       $base=preg_replace($pattern,"",$base);
      }//if
 
+     $base=str_replace("__IMGLINK__",$img,$base);
      $base=str_replace("__LINK__",$url,$base);
      $base=str_replace("__MAKER__",$rowdata["maker"],$base);
      $base=str_replace("__SNAME__",$rowdata["sname"],$base);
@@ -341,12 +356,16 @@ EOF;
    $base=self::item();
 
    //画像がなければ非表示
-   $img=IMGDIR.$rowdata["jcode"].".jpg";
+   $img="./img/".$rowdata["jcode"].".jpg";
    if(! file_exists($img)){
     $pattern="/<img.*/";
     $base=preg_replace($pattern,"",$base);
    }//if
-
+   $base=str_replace("__IMGLINK__",$img,$base);
+   //単品用URLをセット
+   $url ="?lincode=".$rowdata["lincode"]."&clscode=".$rowdata["clscode"];
+   $url.="&jcode=".$rowdata["jcode"];
+   $base=str_replace("__LINK__",$url,$base);
    $base=str_replace("__SALEDAY__","",$base);
    $base=str_replace("__MAKER__",$rowdata["maker"],$base);
    $base=str_replace("__SNAME__",$rowdata["sname"],$base);
@@ -381,5 +400,13 @@ EOF;
   return $html;
  }//public static function setitemTirasi($data){
 
+ public static function outJan($data,$jcode){
+  foreach($data as $rownum=>$rowdata){
+   if($rowdata["jcode"]!=$jcode){
+    $item[]=$rowdata;
+   }//if
+  }//foreach
+  return $item;
+ }//public static function outJan($data,$jcode){
 }//class html{
 ?>
