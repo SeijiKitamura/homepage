@@ -911,9 +911,9 @@ EOF;
 //---------------------------------------------------//
 // データ表示系定数                                  //
 //---------------------------------------------------//
-define("JANMASLIMIT",20);//tirasiitem.php,item.php 「こんな商品･･」表示数 
-define("NAVISTART",5);   //item.php 「こんな商品･･」表示数 
-define("NAVISPAN",10);     //item.php 「こんな商品･･」表示数 
+define("JANMASLIMIT",15);//1画面に表示させるアイテム数 
+define("NAVISTART",5);   //ナビ表示開始ページ(現在ページより前ページ）
+define("NAVISPAN",10);   //ナビ表示ページ数 
 define("SALESTART",30); //新商品の抽出基準。本日より何日前までを新商品とするか
 define("NEWITEM",20);  //新商品の表示件数。
 ?>

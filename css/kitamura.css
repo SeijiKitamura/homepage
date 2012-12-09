@@ -365,3 +365,20 @@ div.tirasiitem div.item div.datadiv div.lastsale{
  text-align:center;
 }
 
+ul.itemnavi{
+ list-style:none;
+}
+
+ul.itemnavi li{
+ float:left;
+ width:30px;
+ text-align:center;
+}
+
+ul.itemnavi li a{
+ display:block;
+ text-decoration:none;
+ border:solid 1px;
+ margin:2px;
+ text-align:center;
+}

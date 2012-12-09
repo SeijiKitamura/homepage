@@ -380,5 +380,6 @@ EOF;
   $html.="</div>\n";
   return $html;
  }//public static function setitemTirasi($data){
+
 }//class html{
 ?>
