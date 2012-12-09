@@ -196,7 +196,12 @@ class CL extends DB{
    $saleday=$rowdata["saleday"];
   }//foreach
 
-  $this->items=$cnt;
+  $this->items=null;
+  $nen=date("Y",strtotime($this->saleday));
+  $tuki=date("m",strtotime($this->saleday));
+  $this->items["data"]["nen"]=$nen;
+  $this->items["data"]["tuki"]=$tuki;
+  $this->items["data"]["cnt"]=$cnt;
  }//public function getMonthCount(){
 }//TIRASI
 

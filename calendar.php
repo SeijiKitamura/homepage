@@ -1,40 +1,37 @@
 <?php
+require_once("./php/janmas.class.php");
 require_once("./php/calendar.class.php");
+require_once("./php/tirasi.class.php");
+require_once("./php/maillist.class.php");
+require_once("./php/html.class.php");
 try{
-//------------------------------------------------------------//
-// データゲット
-// $data
-//      ["item"]  ["data"]    JANコード指定時の単品データ
-//                ["status"]  true false
-//                ["local"]   日本語列名
-//------------------------------------------------------------//
+ $saleyear =$_GET["saleyear"];
+ $salemonth=$_GET["salemonth"];
 
- //引数セット
- $nen=$_GET["nen"];
- $tuki=$_GET["tuki"];
-
- //引数チェック
- if($nen  && ! is_numeric($nen))  throw new exception("年が無効です");
- if($tuki && ! is_numeric($tuki)) throw new exception("月が無効です");
-
- //引数していなければ当月を表示
- if(! $nen)  $nen=date("Y");
- if(! $tuki) $tuki=date("n");
-
- //単品マスタ系データゲット
- $db=new CL();
- $db->getCalendarList();
- $data["lists"]=$db->items;
-
- $db->getCalendarItem($nen,$tuki);
- $data["items"]=$db->items;
+//引数チェック
  
- //ナビ表示
+//カレンダーゲット
+ $db=new CL();
+ if($saleyear && $salemonth){
+  $db->saleday=$saleyear."-".$salemonth."-1";
+ }
+ //$db->saleday="2012/11/21";
+ $db->getCalendar();
+ $cal=$db->items["data"];
+ $db->getItemList();
+ $calitem=$db->items["data"];
+ //当月のカレンダー日数
+ $db->getMonthCount();
+ $monthcal[]=$db->items["data"];
 
+ //翌月のカレンダー日数
+ $db->saleday=date("Y-m-d",strtotime("1month",strtotime($db->saleday)));
+ $db->getMonthCount();
+ $monthcal[]=$db->items["data"];
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
-}//catch
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -52,7 +49,7 @@ catch(Exception $e){
   <meta name="keywords" content="キタムラ,スーパーキタムラ,スーパーきたむら,スーパー北村,シェノール,惣菜,パン,お酒,日本酒,焼酎,ワイン,配達">
 
   <!-- タイトル(ページごとに変更) -->
-  <title><?php echo $nen; ?>年<?php echo $tuki;?>月 お買得カレンダー:食品スーパーマーケット　</title>
+  <title>スーパーキタムラ:食品スーパーマーケット　</title>
 
   <!-- link(ページごとに変更) -->
   <link rel="icon" href="./img/kitamura.ico" type="type/ico" sizes="16x16" /> 
@@ -66,160 +63,118 @@ catch(Exception $e){
   </script>
  </head>
  <body>
-  <!-- wrapper -->
+
+<!--=======================wrapper start===============================-->
   <div id="wrapper">
 
-   <!-- header -->
+<!--=======================header  start===============================-->
    <div id="header">
 
-    <!-- logo -->
+<!--=======================logo    start===============================-->
     <div class="logo">
      <a href="index.php">
       <img src="./img/logo2.jpg" alt="スーパーキタムラ">
      </a>
     </div>
-    <!-- logo -->
+<!--=======================logo    end  ===============================-->
 
-    <!-- hello -->
+<!--=======================hello   start===============================-->
     <div class="hello">
-     <h2></h2>
-    </div>
-    <!-- hello -->
+     <p>
 
-    <!-- mininavi -->
+     </p>
+    </div>
+<!--=======================hello   end  ===============================-->
+
+<!--=======================mininavi start==============================-->
     <div class="mininavi">
      <ul>
       <li><a href="about.html">会社概要</a></li>
       <li><a href="access.html">アクセス</a></li>
-      <li>求人</li>
+      <li><a href="#">求人</a></li>
       <li><a href="sinsotu.html"> 新卒採用</a></li>
      </ul>
     </div>
-    <!-- mininavi -->
+<!--=======================mininavi end  ==============================-->
 
-    <!-- timesale -->
+<!--=======================timesale start==============================-->
     <div class="timesale">
      <ul>
-      <li><a href="index.php">ホーム</a></li>
+      <li><a href='index.php'>ホーム</a></li>
       <li> | </li>
-      <li><a href='tirasi.php'>今週のチラシ</a></li>
+      <li><a href='tirasiitem.php'>今週のチラシ</a></li>
       <li> | </li>
-      <li>カレンダー</li>
+      <li>カレンダー</a></li>
       <li> | </li>
-      <li><a href="item.php">商品のご案内</a></li>
+      <li><a href='item.php'>商品のご案内</a></li>
       <li> | </li>
       <li>ご注文承り中</li>
       <li> | </li>
       <li>サービス</li>
      </ul>
     </div>
-    <!-- timesale -->
+<!--=======================timesale end  ==============================-->
      
    <div class="clr"></div>
    </div>
-   <!-- header -->
+<!--=======================header  end  ===============================-->
 
-   <!-- navi -->
+<!--=======================navi start    ==============================-->
    <div id="navi">
-    <!-- allcate -->
-    <div id="allcate">
-      <h2>一覧</h2>
-    </div>
-    <!-- allcate -->
-
-    <!-- search -->
-    <div id="search">
-<?php
-?>
-    </div>
-    <!-- search -->
    </div>
-   <!-- navi -->
-   <!-- leftside -->
+<!--=======================navi end      ==============================-->
+
+<!--=======================leftside start==============================-->
    <div id="leftside">
 <?php
-$html=$db->getHtmlCalList($data["lists"],$nen,$tuki);
-echo $html;
-?>
-   </div>
-   <!-- leftside -->
-
-   <!-- rightside -->
-   <div id="rightside">
-<?php
-?>
-    <!-- tirasiitem-->
-    <div class="tirasiitem">
-    </div>
-    <!-- tirasiitem-->
-
-   </div>
-   <!-- rightside -->
-
-   <!-- main -->
-   <div id="main">
-<?php
-//エラーがあれば処理終了
-if($err && DEBUG){
- echo "<pre>";
- print_r($err);
- echo "</pre>";
- return false;
+$html="";
+$html ="<ul class='group'>";
+$html.="<li>";
+$html.=$monthcal[0]["nen"]."年".$monthcal[0]["tuki"]."月";
+$html.="(".$monthcal[0]["cnt"].")";
+$html.="</li>\n";
+if($monthcal[1]["cnt"]>0){
+ $html.="<li><a href='?saleyear=".$monthcal[1]["nen"]."&salemonth=".$monthcal[1]["tuki"]."'>\n";
+ $html.=$monthcal[1]["nen"]."年".$monthcal[1]["tuki"]."月";
+ $html.="(".$monthcal[1]["cnt"].")";
+ $html.="</a></li>\n";
 }
-
-?>
-
-    <!-- calendaritem -->
-    <div class="calendaritem">
-    <h2><?php echo $nen."年".($tuki*1)."月"; ?>のお買得情報！！</h2>
-<?php
-$html=$db->getHtmlCalItem($data["items"],$nen,$tuki);
+$html.="</ul>";
+$html.="<div class='clr'></div>\n";
 echo $html;
 ?>
-     <div class='clr'></div>
-    </div>
-    <!-- calendaritem -->
-
-    <!-- tirasiitem -->
-    <div class="tirasiitem">
-     <!-- tanpin -->
-     <div id="tanpin">
-<?php
-?>
-     </div>
-     <!-- tanpin -->
-
-
-     <!-- janmas -->
-     <div class='janmas'>
-      <div class='clr'></div>
-     </div>
-     <!-- janmas -->
-
-    </div>
-    <!-- tirasiitem -->
-   <p>
-   ご注意:<br />
-   表示しているセールにつきましては予告なく変更、中止となる場合がございます。表示されておりますセールが当日実施されなかった場合、誠に恐れ入りますが店頭で販売しております価格を優先とさせていただきます。
-   </p>
    </div>
-   <!-- main -->
+<!--=======================leftside end  ==============================-->
 
+<!--=======================rightside start=============================-->
+<!--=======================rightside end  =============================-->
+
+<!--=======================main      start=============================-->
+   <div id="main" style="width:780px;">
+<?php
+//----------------------------------------------------------------//
+// カレンダー情報
+//----------------------------------------------------------------//
+if($cal){
+ echo "<h4>本日のカレンダー情報:\n";
+ $j=0;
+ $item=null;
+ $html=$cal[0]["sname"]." ".$cal[0]["price"]."</h4>\n";
+ echo $html;
+}//if
+$html=html::setcalendar($calitem);
+echo $html;
+?>
+   </div>
+<!--=======================main      end  =============================-->
    <div class="clr"></div>
-   <!-- footer -->
+<!--=======================footer    start=============================-->
    <div id="footer">
     <h1>footer</h1>
-<?php
-//if(DEBUG){
-// echo "<pre>";
-// print_r($data);
-// echo "</pre>";
-//}
-?>
    </div>
-   <!-- footer -->
+<!--=======================footer    end  =============================-->
 
   </div>
-  <!-- wrapper -->
+<!--=======================wrapper end =================================-->
  </body>
 </html>

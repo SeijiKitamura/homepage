@@ -108,11 +108,11 @@ catch(Exception $e){
      <ul>
       <li>ホーム</li>
       <li> | </li>
-      <li><a href='tirasi.php'>今週のチラシ</a></li>
+      <li><a href='tirasiitem.php'>今週のチラシ</a></li>
       <li> | </li>
       <li><a href="calendar.php">カレンダー</a></li>
       <li> | </li>
-      <li><a href="item.php?lincode=1">商品のご案内</a></li>
+      <li><a href="item.php">商品のご案内</a></li>
       <li> | </li>
       <li>ご注文承り中</li>
       <li> | </li>

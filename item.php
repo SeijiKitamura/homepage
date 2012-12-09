@@ -114,7 +114,7 @@ catch(Exception $e){
 
 <!--=======================logo    start===============================-->
     <div class="logo">
-     <a href="index.html">
+     <a href="index.php">
       <img src="./img/logo2.jpg" alt="スーパーキタムラ">
      </a>
     </div>
@@ -142,9 +142,9 @@ catch(Exception $e){
 <!--=======================timesale start==============================-->
     <div class="timesale">
      <ul>
-      <li><a href='index.php'>ホーム</li>
+      <li><a href='index.php'>ホーム</a></li>
       <li> | </li>
-      <li><a href='tirasi.php'>今週のチラシ</a></li>
+      <li><a href='tirasiitem.php'>今週のチラシ</a></li>
       <li> | </li>
       <li><a href="calendar.php">カレンダー</a></li>
       <li> | </li>

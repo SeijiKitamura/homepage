@@ -75,7 +75,7 @@ catch(Exception $e){
 
 <!--=======================logo    start===============================-->
     <div class="logo">
-     <a href="index.html">
+     <a href="index.php">
       <img src="./img/logo2.jpg" alt="スーパーキタムラ">
      </a>
     </div>
