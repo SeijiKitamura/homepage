@@ -78,7 +78,7 @@ catch(Exception $e){
 
 <!--=======================logo    start===============================-->
     <div class="logo">
-     <a href="index.html">
+     <a href="index.php">
       <img src="./img/logo2.jpg" alt="スーパーキタムラ">
      </a>
     </div>
@@ -114,7 +114,7 @@ catch(Exception $e){
       <li> | </li>
       <li><a href="item.php">商品のご案内</a></li>
       <li> | </li>
-      <li>ご注文承り中</li>
+      <li><a href="mailitem.php">メール商品</a></li>
       <li> | </li>
       <li>サービス</li>
      </ul>

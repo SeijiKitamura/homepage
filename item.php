@@ -150,7 +150,7 @@ catch(Exception $e){
       <li> | </li>
       <li>商品のご案内</li>
       <li> | </li>
-      <li>ご注文承り中</li>
+      <li><a href='mailitem.php'>メール商品</a></li>
       <li> | </li>
       <li>サービス</li>
      </ul>

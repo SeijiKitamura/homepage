@@ -64,7 +64,7 @@ class ML extends DB{
   $this->where=$this->andwhere;
   $this->group=" t.saleday";
   $this->order=" t.saleday";
-  $this->items=$this->getArray();
+  $this->items["data"]=$this->getArray();
  }//public function getDayList(){
 
 //----------------------------------------------------------//
