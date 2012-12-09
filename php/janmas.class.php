@@ -110,10 +110,11 @@ class JANMAS extends DB{
 
   for($i=0;$i<count($this->items["data"]);$i++){
    $this->items["data"][$i]["rownum"]=$i;
+   $this->items["data"][$i]["page"]=floor($i/JANMASLIMIT)+1;
   }//for
 
   $this->setSaleItem();
-  $this->html=html::setitem($this->items["data"]);
+  //$this->html=html::setitem($this->items["data"]);
  }//public function LinItem($lincode){
 
 //----------------------------------------------------------//
@@ -140,10 +141,11 @@ class JANMAS extends DB{
 
   for($i=0;$i<count($this->items["data"]);$i++){
    $this->items["data"][$i]["rownum"]=$i;
+   $this->items["data"][$i]["page"]=floor($i/JANMASLIMIT)+1;
   }//for
 
   $this->setSaleItem();
-  $this->html=html::setitem($this->items["data"]);
+  //$this->html=html::setitem($this->items["data"]);
 
  }//public function getClsItem($clscode){
 

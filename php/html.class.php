@@ -78,20 +78,31 @@ EOF;
   foreach ($data as $rownum=>$rowdata){
    $base=self::item();
 
+   //リンク作成
+   $url ="?lincode=".$rowdata["lincode"]."&clscode=".$rowdata["clscode"];
+   $url.="&jcode=".$rowdata["jcode"]."&page=".$rowdata["page"];
+   $base=str_replace("__LINK__",$url,$base);
+
    //画像がなければ非表示
    $img="./img/".$rowdata["jcode"].".jpg";
    if(! file_exists($img)){
     $pattern="/<img.*/";
     $base=preg_replace($pattern,"",$base);
    }//if
-
    $base=str_replace("__IMGLINK__",$img,$base);
+
    $base=str_replace("__SALEDAY__","",$base);
    if(! preg_match("/^[0-9]+$/",$rowdata["saletype"])){
     $base=str_replace("saletype","saletype_blank",$base);
     $base=str_replace("__SALETYPE__","",$base);
    }//if
-   $base=str_replace("__SALETYPE__",$GLOBALS["SALETYPE"][$rowdata["saletype"]],$base);
+   if(is_numeric($rowdata["saletype"])){
+    $base=str_replace("__SALETYPE__",$GLOBALS["SALETYPE"][$rowdata["saletype"]],$base);
+   }
+   else{
+    $pattern="/<div class='saletype'>.*<\/div>/";
+    $base=preg_replace($pattern,"",$base);
+   }
    $base=str_replace("__MAKER__",$rowdata["maker"],$base);
    $base=str_replace("__SNAME__",$rowdata["sname"],$base);
    $base=str_replace("__TANI__",$rowdata["tani"],$base);
@@ -158,7 +169,6 @@ EOF;
     $pattern="/<img.*/";
     $base=preg_replace($pattern,"",$base);
    }//if
- 
    $base=str_replace("__IMGLINK__",$img,$base);
    $base=str_replace("__SALEDAY__","",$base);
    $base=str_replace("__MAKER__",$rowdata["maker"],$base);
@@ -178,7 +188,14 @@ EOF;
      $base=str_replace("__EN__","",$base);
     }
    }
-   $base=str_replace("__SALETYPE__",$GLOBALS["SALETYPE"][$rowdata["saletype"]],$base);
+   if(is_numeric($rowdata["saletype"])){
+    $base=str_replace("__SALETYPE__",$GLOBALS["SALETYPE"][$rowdata["saletype"]],$base);
+   }
+   else{
+    $pattern="/<div class='saletype'>.*<\/div>/";
+    $base=preg_replace($pattern,"",$base);
+
+   }
    $base=str_replace("__JCODE__","JAN:".$rowdata["jcode"],$base);
    $base=str_replace("__NOTICE__",$rowdata["notice"],$base);
    if(! $rowdata["sday"] && ! $rowdata["eday"]){

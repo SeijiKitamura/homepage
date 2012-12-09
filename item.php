@@ -259,6 +259,14 @@ $navi.="</ul>\n";
 $navi.="<div class='clr'></div>\n";
 echo $navi;
 
+//単品表示
+if($item){
+ $html=html::settanpin($item);
+ echo $html;
+
+ //単品を除く
+ $data=html::outJan($data,$jcode);
+}
 //アイテム表示
 $startitem=($page-1)*JANMASLIMIT;
 $enditem=$startitem+JANMASLIMIT;
