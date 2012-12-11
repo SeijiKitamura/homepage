@@ -52,15 +52,13 @@ catch(Exception $e){
   <meta http-equiv="Content-Style-Type" content="text/css">
   <meta name="ROBOTS" content="index,follow">
   <meta name="description" content="東京都大田区南馬込にある食品スーパーマーケット、スーパーキタムラの公式サイト。年中無休、営業時間AM9:30-PM10:00。">
-  <meta name="keywords" content="キタムラ,スーパーキタムラ,スーパーきたむら,スーパー北村,シェノール,惣菜,パン,お酒,日本酒,焼酎,ワイン,配達">
 
   <!-- タイトル(ページごとに変更) -->
   <title>スーパーキタムラ:食品スーパーマーケット　</title>
 
-  <!-- link(ページごとに変更) -->
   <link rel="icon" href="./img/kitamura.ico" type="type/ico" sizes="16x16" /> 
   <link rel="stylesheet" href="./css/kitamura.css" /> 
-  <link rel="next" href="" /> <!-- 次のページ -->
+  <link rel="next" href="tirasiitem.php" /> <!-- 次のページ -->
   <link rel="prev" href=""/>  <!-- 前のページ -->
 
   <!-- スクリプト(全ページ共通) -->
@@ -94,30 +92,22 @@ catch(Exception $e){
 
 <!--=======================mininavi start==============================-->
     <div class="mininavi">
-     <ul>
-      <li><a href="about.html">会社概要</a></li>
-      <li><a href="access.html">アクセス</a></li>
-      <li><a href="#">求人</a></li>
-      <li><a href="sinsotu.html"> 新卒採用</a></li>
-     </ul>
+<?php
+$base=basename($_SERVER["PHP_SELF"]);
+$html=html::setpagelink($GLOBALS["PAGELINK1"],$base);
+echo $html;
+?>
     </div>
 <!--=======================mininavi end  ==============================-->
 
 <!--=======================timesale start==============================-->
     <div class="timesale">
-     <ul>
-      <li>ホーム</li>
-      <li> | </li>
-      <li><a href='tirasiitem.php'>今週のチラシ</a></li>
-      <li> | </li>
-      <li><a href="calendar.php">カレンダー</a></li>
-      <li> | </li>
-      <li><a href="item.php">商品のご案内</a></li>
-      <li> | </li>
-      <li><a href="mailitem.php">メール商品</a></li>
-      <li> | </li>
-      <li>サービス</li>
-     </ul>
+<?php
+$base=basename($_SERVER["PHP_SELF"]);
+$html=html::setpagelink($GLOBALS["PAGELINK2"],$base);
+echo $html;
+?>
+
     </div>
 <!--=======================timesale end  ==============================-->
      
@@ -162,7 +152,7 @@ if($cal){
 // 広告の品表示
 //----------------------------------------------------------------//
 if($tirasi){
- echo "<h3>広告の品</h3>";
+ echo "<h3><a href='tirasiitem.php'>広告の品</a></h3>";
 
  //5アイテムに絞る
  $item=null;
@@ -173,18 +163,16 @@ if($tirasi){
   $item[]=$tirasi[$i];
  }
  $html=html::setitemTirasi($item);
+ $html=preg_replace("/\?/","tirasiitem.php?",$html);
  echo $html;
 
- if(count($newitem)>5){
-  echo "and more!";
- }//if
 }//if
 
 //----------------------------------------------------------------//
 // メール表示
 //----------------------------------------------------------------//
 if($mailitem){
- echo "<h3> 本日のメール商品</h3>\n";
+ echo "<h3><a href='mailitem.php'>本日のメール商品</a></h3>\n";
  //5アイテムに絞る
  $item=null;
  $j=0;
@@ -194,18 +182,16 @@ if($mailitem){
   $item[]=$mailitem[$i];
  }
  $html=html::setitem($item);
+ $html=preg_replace("/\?/","mailitem.php?",$html);
  echo $html;
 
- if(count($newitem)>5){
-  echo "and more!";
- }//if
 }//if
 
 //----------------------------------------------------------------//
 // 新商品表示
 //----------------------------------------------------------------//
 if($newitem){
- echo "<h3>新商品のご案内</h3>\n";
+ echo "<h3><a href='item.php'>新商品のご案内</a></h3>\n";
  $j=0;
  $item=null;
  //10アイテムに絞る
@@ -217,20 +203,23 @@ if($newitem){
  $html=html::setitem($item);
  $html=preg_replace("/<div class='tani'>.*<\/div>/","",$html);
  $html=preg_replace("/<div class='notice'>.*<\/div>/","",$html);
+ $html=preg_replace("/\?/","item.php?",$html);
  echo $html;
- 
- if(count($newitem)>10){
-  echo "and more!";
- }//if
 }//if
 
+echo "<pre>";
+echo $GLOBALS["MENSEKI"];
+echo "</pre>";
 ?>
    </div>
 <!--=======================main      end  =============================-->
    <div class="clr"></div>
 <!--=======================footer    start=============================-->
    <div id="footer">
-    <h1>footer</h1>
+<?php
+$base=basename($_SERVER["PHP_SELF"]);
+echo html::setfooter($base);
+?>
    </div>
 <!--=======================footer    end  =============================-->
 

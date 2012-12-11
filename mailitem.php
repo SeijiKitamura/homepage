@@ -5,11 +5,22 @@ require_once("./php/tirasi.class.php");
 require_once("./php/maillist.class.php");
 require_once("./php/html.class.php");
 try{
+ $jcode=$_GET["jcode"];
+
+ //引数チェック
+ if($jcode && ! is_numeric($jcode)){
+  throw new exception("JANコードは数字で入力してください");
+ }//if
+
  //メール商品ゲット
  $db=new ML();
- //$db->saleday="2012/11/02";
+ $db->saleday="2012/11/02";
  $db->getMailItem();
  $mailitem=$db->items["data"];
+ if($jcode){
+  $db->getTanpin($jcode);
+  $item=$db->items["data"];
+ }//if
  $db->getDayList();
  $daylist=$db->items["data"];
 
@@ -76,30 +87,21 @@ catch(Exception $e){
 
 <!--=======================mininavi start==============================-->
     <div class="mininavi">
-     <ul>
-      <li><a href="about.html">会社概要</a></li>
-      <li><a href="access.html">アクセス</a></li>
-      <li><a href="#">求人</a></li>
-      <li><a href="sinsotu.html"> 新卒採用</a></li>
-     </ul>
+<?php
+$base=basename($_SERVER["PHP_SELF"]);
+$html=html::setpagelink($GLOBALS["PAGELINK1"],$base);
+echo $html;
+?>
     </div>
 <!--=======================mininavi end  ==============================-->
 
 <!--=======================timesale start==============================-->
     <div class="timesale">
-     <ul>
-      <li><a href='index.php'>ホーム</a></li>
-      <li> | </li>
-      <li><a href='tirasiitem.php'>今週のチラシ</a></li>
-      <li> | </li>
-      <li><a href="calendar.php">カレンダー</a></li>
-      <li> | </li>
-      <li><a href="item.php">商品のご案内</a></li>
-      <li> | </li>
-      <li>メール商品</li>
-      <li> | </li>
-      <li>サービス</li>
-     </ul>
+<?php
+$base=basename($_SERVER["PHP_SELF"]);
+$html=html::setpagelink($GLOBALS["PAGELINK2"],$base);
+echo $html;
+?>
     </div>
 <!--=======================timesale end  ==============================-->
      
@@ -143,30 +145,49 @@ echo $html;
    <div id="main" style="width:780px;">
 <?php
 //----------------------------------------------------------------//
+// 単品表示
+//----------------------------------------------------------------//
+//----------------------------------------------------------------//
 // メール表示
 //----------------------------------------------------------------//
 if($mailitem){
  echo "<h3> 本日のメール商品</h3>\n";
+ if($item){
+  $html=html::settanpin($item);
+  echo $html;
+ }
  $html=html::setitem($mailitem);
  echo $html;
 }//if
 
 if($osusume){
  echo "<h3> 本日のおすすめ商品</h3>\n";
+ if($item){
+  $html=html::settanpin($item);
+  echo $html;
+ }
  $html=html::setitem($osusume);
  echo $html;
-}//if
 
+}//if
 if(! $mailitem && ! $osusume){
  echo date("H時i分")."現在、本日のメールはまだ配信されておりません";
 }//if
+else{
+ echo "<pre>";
+ echo $GLOBALS["MENSEKI"];
+ echo "</pre>";
+}
 ?>
    </div>
 <!--=======================main      end  =============================-->
    <div class="clr"></div>
 <!--=======================footer    start=============================-->
    <div id="footer">
-    <h1>footer</h1>
+<?php
+$base=basename($_SERVER["PHP_SELF"]);
+echo html::setfooter($base);
+?>
    </div>
 <!--=======================footer    end  =============================-->
 

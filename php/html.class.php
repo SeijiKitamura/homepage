@@ -5,8 +5,75 @@
 //----------------------------------------------------------//
 //メソッド一覧
 //----------------------------------------------------------//
+// setpagelink($data,$page)  ページリンク用(<ul>を含むhtmlを返す)
+// setfooter($page)          フッター用($pageは表示するページを代入)
+//----------------------------------------------------------//
 
 class html{
+//----------------------------------------------------------//
+// head用
+//----------------------------------------------------------//
+ public static function sethead($page){
+  $html=<<<EOF
+<meta name="ROBOTS" content="index,follow">
+<meta http-equiv="Content-language" content="ja">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="description" content="__DESCRIPT__">
+
+<title>__TITLE__</title>
+
+<link rel="icon" href="__FAV__" type="type/ico" sizes="16x16" /> 
+<link rel="stylesheet" href="__CSSDIR__" /> 
+<link rel="next" href="__NEXTPAGE__" />
+<link rel="prev" href="__PREVPAGE__"/> 
+
+<script type="text/javascript" src="__JQUERY__"></script>
+EOF;
+  $html=str_replace("__FAV__",FAV,$html);
+  $html=str_replace("__CSSDIR__",CSSPATH,$html);
+  $html=str_replace("__JQUERY__",JQ,$html);
+  return $html;
+ }//public static function sethead($page){
+
+//----------------------------------------------------------//
+// フッター用
+//----------------------------------------------------------//
+ public static function setfooter($page){
+  $html=<<<EOF
+   <div class="corp">__CORP__</div>
+   <div class="timesale">__TIMESALE__</div>
+EOF;
+  $html=str_replace("__CORP__",$GLOBALS["KAISYAMEI"],$html);
+  $replace=html::setpagelink($GLOBALS["PAGELINK2"],$page);
+  $replace.=html::setpagelink($GLOBALS["PAGELINK1"],$page);
+  $html=str_replace("__TIMESALE__",$replace,$html);
+  return $html;
+ }
+//----------------------------------------------------------//
+// ページリンク用(<ul>を含むhtmlを返す)
+//----------------------------------------------------------//
+ public static function setpagelink($data,$page=null){
+  $html ="<ul>\n";
+  foreach($data as $rownum=>$rowdata){
+   $html.="<li>";
+
+   if($rowdata["url"] && $rowdata["url"]!=$page){
+    $html.="<a href='".$rowdata["url"]."'>";
+   }//if
+
+   $html.=$rowdata["local"];
+
+   if($rowdata["url"] && $rowdata["url"]!=$page){
+    $html.="</a>";
+   }//if
+
+   $html.="</li>\n";
+  }//foreach
+  $html.="</ul>\n";
+  return $html;
+ }//public static function setlink($data,$page=null){
 //----------------------------------------------------------//
 // グループ用
 //----------------------------------------------------------//
@@ -106,6 +173,10 @@ EOF;
    $base=str_replace("__MAKER__",$rowdata["maker"],$base);
    $base=str_replace("__SNAME__",$rowdata["sname"],$base);
    $base=str_replace("__TANI__",$rowdata["tani"],$base);
+   if($rowdata["price"]==0){
+    $pattern="/<div class='price'>.*<\/div>/";
+    $base=preg_replace($pattern,"",$base);
+   }
    $pattern="/(^[Pp]?[0-9]+|半額)(割引|倍)?/";
    preg_match($pattern,$rowdata["price"],$match);
    $base=str_replace("__PRICE__",$match[1],$base);
@@ -174,6 +245,10 @@ EOF;
    $base=str_replace("__MAKER__",$rowdata["maker"],$base);
    $base=str_replace("__SNAME__",$rowdata["sname"],$base);
    $base=str_replace("__TANI__",$rowdata["tani"],$base);
+   if($rowdata["price"]==0){
+    $pattern="/<div class='price'>.*<\/div>/";
+    $base=preg_replace($pattern,"",$base);
+   }
    $pattern="/(^[Pp]?[0-9]+|半額)(割引|倍)?/";
    preg_match($pattern,$rowdata["price"],$match);
    $base=str_replace("__PRICE__",$match[1],$base);
@@ -226,7 +301,7 @@ EOF;
  <div class='saleday'>__SALEDAY__</div>
  <div class='datadiv'>
   <h3 class='sname'>
-   <a href='__LINK__' target="_blank">
+   <a href='__LINK__' target="">
     __MAKER__ __SNAME__
    </a>
   </h3>
@@ -286,16 +361,18 @@ EOF;
    //データ表示
    foreach($data as $rownum=>$rowdata){
     if($i==strtotime($rowdata["saleday"])){
-     $url="";//リンク先URLをセット
+     $url ="item.php?lincode=".$rowdata["lincode"];
+     $url.="&clscode=".$rowdata["clscode"];
+     $url.="&jcode=".$rowdata["jcode"];
+     $base=str_replace("__LINK__",$url,$base);
+
      //画像がなければ非表示
      $img="./img/".$rowdata["jcode"].".jpg";
      if(! file_exists($img)){
       $pattern="/<img.*/";
       $base=preg_replace($pattern,"",$base);
      }//if
-
      $base=str_replace("__IMGLINK__",$img,$base);
-     $base=str_replace("__LINK__",$url,$base);
      $base=str_replace("__MAKER__",$rowdata["maker"],$base);
      $base=str_replace("__SNAME__",$rowdata["sname"],$base);
      $base=str_replace("__TANI__",$rowdata["tani"],$base);

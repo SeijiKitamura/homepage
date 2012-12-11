@@ -49,26 +49,22 @@ try{
   $db->getJanItem($jcode);
   $item=$db->items["data"];
  }
-
- //チラシ商品ゲット
- $db=new TIRASI();
- $db->flg0="734";
- $db->saleday="2012/11/29";
- $db->getItemList();
- $tirasi=$db->items["data"];
-
- //メール商品ゲット
- $db=new ML();
- $db->saleday="2012/11/02";
- $db->getMailItem();
- $mailitem=$db->items["data"];
+ $db->getNewItem();
+ $newitem=$db->items["data"];
 
 //カレンダーゲット
  $db=new CL();
  $db->saleday="2012/11/21";
  $db->getCalendar();
  $cal=$db->items["data"];
-
+ if($clscode){
+  foreach($cal as $rownum=>$rowdata){
+   if($rowdata["clscode"]==$clscode){
+    $calcls=$rowdata;
+    break;
+   }//if
+  }//foreach
+ }//if
  
 }//try
 catch(Exception $e){
@@ -130,30 +126,21 @@ catch(Exception $e){
 
 <!--=======================mininavi start==============================-->
     <div class="mininavi">
-     <ul>
-      <li><a href="about.html">会社概要</a></li>
-      <li><a href="access.html">アクセス</a></li>
-      <li><a href="#">求人</a></li>
-      <li><a href="sinsotu.html"> 新卒採用</a></li>
-     </ul>
+<?php
+$base=basename($_SERVER["PHP_SELF"]);
+$html=html::setpagelink($GLOBALS["PAGELINK1"],$base);
+echo $html;
+?>
     </div>
 <!--=======================mininavi end  ==============================-->
 
 <!--=======================timesale start==============================-->
     <div class="timesale">
-     <ul>
-      <li><a href='index.php'>ホーム</a></li>
-      <li> | </li>
-      <li><a href='tirasiitem.php'>今週のチラシ</a></li>
-      <li> | </li>
-      <li><a href="calendar.php">カレンダー</a></li>
-      <li> | </li>
-      <li>商品のご案内</li>
-      <li> | </li>
-      <li><a href='mailitem.php'>メール商品</a></li>
-      <li> | </li>
-      <li>サービス</li>
-     </ul>
+<?php
+$base=basename($_SERVER["PHP_SELF"]);
+$html=html::setpagelink($GLOBALS["PAGELINK2"],$base);
+echo $html;
+?>
     </div>
 <!--=======================timesale end  ==============================-->
      
@@ -207,6 +194,12 @@ echo $html;
 <!--=======================main      start=============================-->
    <div id="main" style="width:780px;">
 <?php
+if(! $lincode &&! $clscode && ! $jcode){
+ $html=html::setitem($newitem);
+ echo "<h4>新商品のご案内</h4>\n";
+ echo $html;
+}
+
 if($clsitem){
  $data=$clsitem;
  $url="?lincode=".$lincode."&clscode=".$clscode;
@@ -259,6 +252,10 @@ $navi.="</ul>\n";
 $navi.="<div class='clr'></div>\n";
 echo $navi;
 
+//カレンダー表示
+if($calcls){
+ echo "<h4>本日のカレンダー情報:".$calcls["sname"]." ".$calcls["price"]."</h4>\n";
+}//if
 //単品表示
 if($item){
  $html=html::settanpin($item);
@@ -278,13 +275,21 @@ $html=html::setitem($itemdata);
 echo $html;
 echo $navi;
 
+if($itemdata){
+ echo "<pre>";
+ echo $GLOBALS["MENSEKI"];
+ echo "</pre>";
+}
 ?>
    </div>
 <!--=======================main      end  =============================-->
    <div class="clr"></div>
 <!--=======================footer    start=============================-->
    <div id="footer">
-    <h1>footer</h1>
+<?php
+$base=basename($_SERVER["PHP_SELF"]);
+echo html::setfooter($base);
+?>
    </div>
 <!--=======================footer    end  =============================-->
 

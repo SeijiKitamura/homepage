@@ -76,7 +76,7 @@ class ML extends DB{
   $this->setwhere();
 
   $this->select =" t.saleday,t.saleday as lastsale,t.clscode,t.sname";
-  $this->select.=",t.tani,t.price,t.notice,t.flg0,t.saletype";
+  $this->select.=",t.jcode,t.tani,t.price,t.notice,t.flg0,t.saletype";
   $this->select.=",t1.clsname";
   $this->select.=",t2.lincode,t2.linname";
   $this->from =TB_SALEITEMS;
@@ -107,6 +107,23 @@ class ML extends DB{
 
   $this->items["data"]=$items;
  }// public function getMailItem(){
+
+//----------------------------------------------------------//
+// 指定日の単品を返す
+//----------------------------------------------------------//
+ public function getTanpin($jcode){
+  $this->items=null;
+  $this->getMailItem();
+
+  foreach($this->items["data"] as $rownum=>$rowdata){
+   if($rowdata["jcode"]==$jcode){
+    $items[]=$rowdata;
+   }//if
+  }//foeach
+
+  $this->items["data"]=$items;
+
+ }
 }//ML
 
 ?>

@@ -15,7 +15,7 @@ try{
  if($saleyear && $salemonth){
   $db->saleday=$saleyear."-".$salemonth."-1";
  }
- //$db->saleday="2012/11/21";
+ $db->saleday="2012/11/21";
  $db->getCalendar();
  $cal=$db->items["data"];
  $db->getItemList();
@@ -88,30 +88,21 @@ catch(Exception $e){
 
 <!--=======================mininavi start==============================-->
     <div class="mininavi">
-     <ul>
-      <li><a href="about.html">会社概要</a></li>
-      <li><a href="access.html">アクセス</a></li>
-      <li><a href="#">求人</a></li>
-      <li><a href="sinsotu.html"> 新卒採用</a></li>
-     </ul>
+<?php
+$base=basename($_SERVER["PHP_SELF"]);
+$html=html::setpagelink($GLOBALS["PAGELINK1"],$base);
+echo $html;
+?>
     </div>
 <!--=======================mininavi end  ==============================-->
 
 <!--=======================timesale start==============================-->
     <div class="timesale">
-     <ul>
-      <li><a href='index.php'>ホーム</a></li>
-      <li> | </li>
-      <li><a href='tirasiitem.php'>今週のチラシ</a></li>
-      <li> | </li>
-      <li>カレンダー</a></li>
-      <li> | </li>
-      <li><a href='item.php'>商品のご案内</a></li>
-      <li> | </li>
-      <li><a href='mailitem.php'>メール商品</a></li>
-      <li> | </li>
-      <li>サービス</li>
-     </ul>
+<?php
+$base=basename($_SERVER["PHP_SELF"]);
+$html=html::setpagelink($GLOBALS["PAGELINK2"],$base);
+echo $html;
+?>
     </div>
 <!--=======================timesale end  ==============================-->
      
@@ -170,7 +161,10 @@ echo $html;
    <div class="clr"></div>
 <!--=======================footer    start=============================-->
    <div id="footer">
-    <h1>footer</h1>
+<?php
+$base=basename($_SERVER["PHP_SELF"]);
+echo html::setfooter($base);
+?>
    </div>
 <!--=======================footer    end  =============================-->
 

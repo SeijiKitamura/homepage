@@ -11,6 +11,15 @@ body{
 img{
  border:0;
 }
+a{
+ text-decoration:none;
+ color:#4169E1;
+}
+a:hover{
+ color:#FF4500;
+ text-decoration:underline;
+}
+
 
 /* wrapper */
 div#wrapper{
@@ -52,6 +61,8 @@ div#main{
 /*footer*/
 div#footer{
  width:980px;
+ border-top:solid 2px #F5F5F5;
+ margin-top:10px;
 }
 
 
@@ -70,8 +81,7 @@ div.hello{
 
 div.mininavi{
  float:right;
- height:50px;
- margin:0 0 0 0;
+ margin:0 0 50px 0;
 }
 
 div.mininavi ul{
@@ -80,6 +90,7 @@ div.mininavi ul{
 
 div.mininavi ul li{
  font-size:12px;
+ float:left;
 }
 
 div.mininavi ul li a{
@@ -89,21 +100,38 @@ div.mininavi ul li a{
  float:left;
  display:block;
  text-align:center;
- color:#000000;
 }
 
 div.timesale{
  width:700px;
- margin:0px 10px 0px 10px;
+ /*margin:0px 10px 0px 10px;*/
+ margin:0px;
  float:left;
  font-size:15px;
 }
 
+div.timesale ul{
+ list-style:none;
+}
+
+div.timesale ul li{
+ float:left;
+ border-right:1px solid;
+ text-align:center;
+ width:110px;
+}
+
+div.timesale ul li a{
+ display:block;
+ text-align:center;
+}
+
+/*
 div#header ul li{
  display:inline;
  margin-right:10px;
 }
-
+*/
 div.clr{
  clear:both;
 }
@@ -401,4 +429,24 @@ ul.itemnavi li a{
  border:solid 1px;
  margin:2px;
  text-align:center;
+}
+div.test{
+ width:600px;
+ float:left;
+}
+div.test ul{
+ list-style:none;
+ padding-left:190px;
+}
+
+div.test ul li{
+}
+div.test ul li a{
+ float:left;
+ width:100px;
+ font-size:12px;
+}
+div.corp{
+ font-size:12px;
+ float:left;
 }

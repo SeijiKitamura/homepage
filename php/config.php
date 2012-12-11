@@ -7,13 +7,71 @@ define("DEBUG",true);
 
 
 //---------------------------------------------------//
-// ディレクトリ系定数
+// Web系ディレクトリ系定数
+//---------------------------------------------------//
+define("HOME","/hp/");             //ルートディレクトリ
+define("IMG" ,HOME."img/");             //画像ディレクトリ
+define("JS"  ,HOME."js/");              //JavaScript Jquery保存場所
+define("PHP" ,HOME."php/");             //PHP
+define("CSS" ,HOME."css/");             //CSS
+
+//---------------------------------------------------//
+// ファイル系定数(Web用)
+//---------------------------------------------------//
+define("FAV"     ,IMG."kitamura.ico");   //ファビコン
+define("LOGO"    ,IMG."logo2.jpg");      //ロゴ
+define("JQ"      ,JS."jquery.js");       //jQueryファイル名
+define("CSSPATH" ,CSS."kitamura.css");   //CSSファイル名
+
+//---------------------------------------------------//
+// リンク系配列(ページ最上段に表示するリンク)
+//---------------------------------------------------//
+$PAGELINK1=array( array("url"  =>"about.html",
+                        "local"=>"会社概要"
+                       )
+                 ,array("url"  =>"access.html",
+                        "local"=>"アクセス"
+                       )
+                 ,array("url"  =>"",
+                        "local"=>"求人"
+                       )
+                 ,array("url"  =>"sinsotu.html",
+                        "local"=>"新卒採用"
+                       )
+                 );
+
+//---------------------------------------------------//
+// リンク系配列(ページ上段に表示するリンク)
+//---------------------------------------------------//
+$PAGELINK2=array( 
+            array("url"  =>"index.php",
+                  "local"=>"ホーム"
+                 )
+           ,array("url"  =>"tirasiitem.php",
+                  "local"=>"今週のチラシ"
+                 )
+           ,array("url"  =>"item.php",
+                  "local"=>"商品のご案内"
+                 )
+           ,array("url"  =>"mailitem.php",
+                  "local"=>"メール商品"
+                 )
+           ,array("url"  =>"calendar.php",
+                  "local"=>"カレンダー"
+                 )
+                );
+//---------------------------------------------------//
+// ファイルディレクトリ系定数(cron用)
 //---------------------------------------------------//
 define("SITEDIR","/var/www/hp/");  //このサイトのトップディレクトリ
-define("IMGDIR" ,SITEDIR."img/");  //画像保存場所
-define("JSDIR"  ,SITEDIR."js/");   //JavaScript Jquery保存場所
-define("PHPDIR" ,SITEDIR."php/");  //PHP
-define("CSSDIR" ,SITEDIR."css/");  //css
+define("IMGDIR" ,SITEDIR.IMG);  //画像保存場所
+define("JSDIR"  ,SITEDIR.JS);   //JavaScript Jquery保存場所
+define("PHPDIR" ,SITEDIR.PHP);  //PHP
+define("CSSDIR" ,SITEDIR.CSS);  //css
+//define("IMGDIR" ,SITEDIR."img/");  //画像保存場所
+//define("JSDIR"  ,SITEDIR."js/");   //JavaScript Jquery保存場所
+//define("PHPDIR" ,SITEDIR."php/");  //PHP
+//define("CSSDIR" ,SITEDIR."css/");  //css
 define("DATADIR",PHPDIR."data/"); //更新データ
 define("LOGDIR" ,DATADIR."log/"); //ログデータ
 //---------------------------------------------------//
@@ -908,10 +966,22 @@ ___MD5___
 スーパーキタムラ
 EOF;
 
+$MENSEKI=<<<EOF
+免責:表示されている商品について
+品切れ、メーカー欠品、スポット商品などにより店頭に在庫がなく販売できない場合もございます。
+また、こちらに表示しております価格と店頭価格に差異があった場合、誠に恐れ入りますが店頭価格にて販売させていただきます。
+EOF;
+
+$KAISYAMEI=<<<EOF
+株式会社　スーパーキタムラ<br />
+営業時間:AM9:30 - PM 10:00 <br />
+定休日:なし(年中無休)<br />
+EOF;
+
 //---------------------------------------------------//
 // データ表示系定数                                  //
 //---------------------------------------------------//
-define("JANMASLIMIT",15);//1画面に表示させるアイテム数 
+define("JANMASLIMIT",10);//1画面に表示させるアイテム数 
 define("NAVISTART",5);   //ナビ表示開始ページ(現在ページより前ページ）
 define("NAVISPAN",10);   //ナビ表示ページ数 
 define("SALESTART",30); //新商品の抽出基準。本日より何日前までを新商品とするか

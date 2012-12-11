@@ -11,6 +11,7 @@
 // getLinItem($lincode)   指定ラインの商品を抽出
 // getClsItem($clscode)   指定クラスの商品を抽出
 // getJanItem($jcode)     単品を抽出
+// getNewItem()           新商品表示(2日前を新商品とする)
 // setSaleItem()          セール商品の価格を反映させる
 // outJan()               指定単品を除く
 
