@@ -11,11 +11,12 @@
 
 class html{
 //----------------------------------------------------------//
-// head用
+// head
 //----------------------------------------------------------//
- public static function sethead($page){
+ private static function head(){
   $html=<<<EOF
-<meta name="ROBOTS" content="index,follow">
+<meta name="ROBOTS" content="__INDEX__">
+<meta name="ROBOTS" content="__FOLLOW__">
 <meta http-equiv="Content-language" content="ja">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Script-Type" content="text/javascript">
@@ -31,10 +32,13 @@ class html{
 
 <script type="text/javascript" src="__JQUERY__"></script>
 EOF;
-  $html=str_replace("__FAV__",FAV,$html);
-  $html=str_replace("__CSSDIR__",CSSPATH,$html);
-  $html=str_replace("__JQUERY__",JQ,$html);
   return $html;
+ }//private static function head(){
+
+//----------------------------------------------------------//
+// head用
+//----------------------------------------------------------//
+ public static function sethead($data){
  }//public static function sethead($page){
 
 //----------------------------------------------------------//

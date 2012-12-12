@@ -280,6 +280,45 @@ class ImportData extends db{
    throw $e;
   }
  }// public function setMailItem(){
+
+//---------------------------------------------------------//
+// ページ情報を更新
+// 更新方法:該当データを全削除後、CSVデータを登録
+//---------------------------------------------------------//
+ public function setPageConf(){
+  $this->filename=PAGECONF;
+
+  //データゲット
+  $this->getData();
+  
+  try{
+   //トランザクション開始
+   $this->BeginTran();
+
+   //データ削除
+   $this->from=TB_PAGECONF;
+   $this->where="id>0";
+   $this->delete();
+
+   //データ更新
+   foreach($this->items["data"] as $rownum=>$rowdata){
+    if (! $rowdata["status"]) continue;  //エラーデータを除く
+    foreach($rowdata as $col=>$val){
+     if($col=="status") continue;
+     //echo $col." ".$val."\n";
+     $this->updatecol[$col]=$val;
+    }//foreach
+    $this->from=TB_PAGECONF;
+    $this->where="id=0";
+    $this->update();
+   }//foreach
+   $this->Commit();
+  }//try
+  catch(Exception $e){
+   $this->RollBack();
+   throw $e;
+  }//catch
+ }// public function setPageConf(){
 }//class IMPORTDATA extends db{
 
 ?>

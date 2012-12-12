@@ -9,7 +9,7 @@ define("DEBUG",true);
 //---------------------------------------------------//
 // Web系ディレクトリ系定数
 //---------------------------------------------------//
-define("HOME","/hp/");             //ルートディレクトリ
+define("HOME","hp/");             //ルートディレクトリ
 define("IMG" ,HOME."img/");             //画像ディレクトリ
 define("JS"  ,HOME."js/");              //JavaScript Jquery保存場所
 define("PHP" ,HOME."php/");             //PHP
@@ -63,7 +63,7 @@ $PAGELINK2=array(
 //---------------------------------------------------//
 // ファイルディレクトリ系定数(cron用)
 //---------------------------------------------------//
-define("SITEDIR","/var/www/hp/");  //このサイトのトップディレクトリ
+define("SITEDIR","/var/www/");  //このサイトのトップディレクトリ
 define("IMGDIR" ,SITEDIR.IMG);  //画像保存場所
 define("JSDIR"  ,SITEDIR.JS);   //JavaScript Jquery保存場所
 define("PHPDIR" ,SITEDIR.PHP);  //PHP
@@ -80,16 +80,17 @@ define("LOGDIR" ,DATADIR."log/"); //ログデータ
 // ファイル名定数(これがそのままテーブル名となる)
 //----------------------------------------------------------//
 define("CAL"      ,"calendar");          //カレンダー
-define("TITLES"   ,"tirasititle");       //チラシタイトル
+define("TITLES"   ,"tirasititle");       //チラシタイトル(削除予定)
 define("ITEMS"    ,"tirasiitem");        //チラシデータ
 define("JANMAS"   ,"janmas");            //単品マスタ
 define("CLSMAS"   ,"clsmas");            //クラスマスタ
 define("LINMAS"   ,"linmas");            //部門マスタ
 define("RESERVE"  ,"reserve");           //ご予約商品マスタ
 define("USER"     ,"usermas");           //ご客様マスタ
-define("MAILLIST" ,"maillist");          //メール
+define("MAILLIST" ,"maillist");          //メール(削除予定)
 define("MAILITEMS","mailitems");         //メールアイテム
 define("SALEITEMS","saleitems");         //アイテム
+define("PAGECONF" ,"pageconfig");        //ページごとの設定
 //---------------------------------------------------//
 
 //---------------------------------------------------//
@@ -104,6 +105,7 @@ define("CLSCSV"     ,DATADIR.CLSMAS.".csv");   //クラスマスタ
 define("LINCSV"     ,DATADIR.LINMAS.".csv");   //部門マスタ
 define("RESERVECSV" ,DATADIR.RESERVE.".csv");   //ご予約商品マスタ
 define("MAILITEMSCSV",DATADIR.MAILITEMS.".csv");//メールアイテム
+define("PAGECONFCSV",DATADIR.PAGECONF.".csv");  //ページごとの設定
 //---------------------------------------------------//
 
 
@@ -119,17 +121,18 @@ define("MAILITEMSCSV",DATADIR.MAILITEMS.".csv");//メールアイテム
 // DB テーブル名定数
 //---------------------------------------------------//
 define("TABLE_PREFIX"   ,"he_");                  //プレフィックス
-define("TB_CAL"         ,TABLE_PREFIX.CAL);       //カレンダー(削除予定)
-define("TB_TITLES"      ,TABLE_PREFIX.TITLES);    //チラシタイトル
-define("TB_ITEMS"       ,TABLE_PREFIX.ITEMS);     //チラシデータ(削除予定)
+define("TB_CAL"         ,TABLE_PREFIX.CAL);       //カレンダー
+define("TB_TITLES"      ,TABLE_PREFIX.TITLES);    //チラシタイトル(削除予定)
+define("TB_ITEMS"       ,TABLE_PREFIX.ITEMS);     //チラシデータ
 define("TB_JANMAS"      ,TABLE_PREFIX.JANMAS);    //単品マスタ
 define("TB_CLSMAS"      ,TABLE_PREFIX.CLSMAS);    //クラスマスタ
 define("TB_LINMAS"      ,TABLE_PREFIX.LINMAS);    //部門マスタ
-define("TB_RESERVE"     ,TABLE_PREFIX.RESERVE);   //ご予約(削除予定)
+define("TB_RESERVE"     ,TABLE_PREFIX.RESERVE);   //ご予約
 define("TB_USER"        ,TABLE_PREFIX.USER);      //お客様マスタ
 define("TB_MAILLIST"    ,TABLE_PREFIX.MAILLIST);  //メール(削除予定)
 define("TB_MAILITEMS"   ,TABLE_PREFIX.MAILITEMS); //メール(削除予定）
 define("TB_SALEITEMS"   ,TABLE_PREFIX.SALEITEMS); //アイテム
+define("TB_PAGECONF"    ,TABLE_PREFIX.PAGECONF);  //ページ設定
 
 //---------------------------------------------------//
 // DB テーブル列系定数
@@ -836,6 +839,36 @@ $TABLES=array(TB_TITLES=>array(
                                                  ,"local"  =>"フラグ2"
                                                 )//flg2  
                                   )//TB_SALEITEMS
+              ,TB_PAGECONF=>array(
+                               "id"    =>array( "type"   =>"int"
+                                               ,"null"   =>"not null"
+                                               ,"extra"  =>"auto"
+                                               ,"default"=>"0"
+                                               ,"primary"=>1
+                                               ,"local"  =>"番号"
+                                              )//id
+                             ,"pagename" =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"ページ名"
+                                                )//pagename  
+                             ,"attr"     =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"属性"
+                                                )//attr  
+                             ,"val"      =>array( "type"   =>"varchar(255)"
+                                                 ,"null"   =>"not null"
+                                                 ,"extra"  =>""
+                                                 ,"default"=>"''"
+                                                 ,"primary"=>""
+                                                 ,"local"  =>"値"
+                                                )//val
+                                  )//TB_PAGECONF
             );//TABLES
 
 //---------------------------------------------------//
@@ -882,7 +915,7 @@ $CSVCOLUMNS=array(   CAL   =>array( "saleday"
                                     ,"flg1" //subtitle
                                     ,"flg2" //specialflg
                                    )//TB_ITEMS
-                  ,TB_JANMAS=>array(
+                  ,TB_JANMAS=>array( //後日、JANMASに変更すること！
                                      "jcode"
                                     ,"clscode"
                                     ,"sname"
@@ -890,17 +923,17 @@ $CSVCOLUMNS=array(   CAL   =>array( "saleday"
                                     ,"price"
                                     ,"lastsale"
                                    )//TB_JANMAS
-                  ,TB_CLSMAS=>array(
+                  ,TB_CLSMAS=>array(//後日、CLSMASに変更すること！
                                      "clscode"
                                     ,"clsname"
                                     ,"lincode"
                                    )//TB_CLSMAS
-                  ,TB_LINMAS=>array(
+                  ,TB_LINMAS=>array(//後日、LINMASに変更すること！
                                      "lincode"
                                     ,"linname"
                                     ,"dpscode"
                                    )//TB_LINMAS
-                 ,TB_RESERVE=>array(
+                 ,TB_RESERVE=>array(//後日、RESERVEに変更すること！
                                      "grp1"
                                     ,"grp1name"
                                     ,"grp2"
@@ -916,6 +949,11 @@ $CSVCOLUMNS=array(   CAL   =>array( "saleday"
                                     ,"view_end"
                                     ,"flg"
                                     )//TB_RESERVE
+                  ,PAGECONF=>array ( 
+                                     "pagename"
+                                    ,"attr"
+                                    ,"val"
+                                   )//PAGECONF
                  );//CSVCOLUMNS
 //---------------------------------------------------//
 

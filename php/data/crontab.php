@@ -32,7 +32,7 @@ try{
 
  }//try
  catch (Exception $e){
-  WriteLig($e->getMessage());
+  WriteLog($e->getMessage());
   goto TIRASI_ITEM;
  }//catch
 
@@ -47,7 +47,7 @@ TIRASI_ITEM:
   WriteLog(ITEMS,$db->items["data"]);
  }//try
  catch (Exception $e){
-  WriteLig($e->getMessage());
+  WriteLog($e->getMessage());
   goto CAL_ITEM;
  }//catch
 
@@ -62,7 +62,7 @@ CAL_ITEM:
   WriteLog(CAL,$db->items["data"]);
  }//try
  catch (Exception $e){
-  WriteLig($e->getMessage());
+  WriteLog($e->getMessage());
   goto CAL_ITEM;
  }//catch
 
@@ -77,8 +77,25 @@ MAIL_ITEM:
   WriteLog(MAILITEMS,$db->items["data"]);
  }//try
  catch (Exception $e){
-  WriteLig($e->getMessage());
+  WriteLog($e->getMessage());
+  goto PAGE_CONF;
  }//catch
+
+//-------------------------------------------------------------//
+PAGE_CONF:
+ WriteLog("ページ詳細更新");
+ try{
+  //データ更新
+  $db->setMailItem();
+
+  //ログ書き込み
+  WriteLog(PAGECONF,$db->items["data"]);
+ }//try
+ catch(Exception $e){
+  WriteLog($e->getMessage());
+ }//catch
+
+
 }//try
 catch(Exception $e){
  echo $e->getMessage();
