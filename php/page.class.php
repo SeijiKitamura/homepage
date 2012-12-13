@@ -1,6 +1,7 @@
 <?php
 require_once("config.php");
 require_once("db.class.php");
+require_once("html.class.php");
 
 class PAGE extends DB{
  public $pagename;
@@ -64,5 +65,50 @@ class PAGE extends DB{
   $this->getArray();
   $this->items=$this->ary;
  }// public function getPage($page){
+ 
+
+//-------------------------------------------------------//
+// ヘッダーを返す                                        //
+//-------------------------------------------------------//
+ public function setHeader($base){
+  //ページ情報をゲット
+  $this->getPage($base);
+  $head=$this->items[0];
+
+  //ページ上部のリンクをゲット
+  $this->getGroup(2);
+  $topgrp=$this->items;
+
+  //ページ中央のリンクをゲット
+  $this->getGroup(1);
+  $centergrp=$this->items;
+  
+  $html =html::sethead($head);
+  $html.=html::setheader($base,$topgrp,$centergrp);
+
+  echo $html;
+ }// public function setHeader($base){
+
+//-------------------------------------------------------//
+// フッターを返す                                        //
+//-------------------------------------------------------//
+ public function setFooter($base){
+  //ページ情報をゲット
+  $this->getPage($base);
+  $head=$this->items[0];
+
+  //ページ上部のリンクをゲット
+  $this->getGroup(2);
+  $topgrp=$this->items;
+
+  //ページ中央のリンクをゲット
+  $this->getGroup(1);
+  $centergrp=$this->items;
+  
+  $html=html::setfooter($base,$topgrp,$centergrp);
+
+  echo $html;
+ }//public function setFooter($base){
+
 }//class page
 ?>

@@ -9,7 +9,7 @@ define("DEBUG",true);
 //---------------------------------------------------//
 // Web系ディレクトリ系定数
 //---------------------------------------------------//
-define("HOME","hp/");             //ルートディレクトリ
+define("HOME","/hp/");             //ルートディレクトリ
 define("IMG" ,HOME."img/");             //画像ディレクトリ
 define("JS"  ,HOME."js/");              //JavaScript Jquery保存場所
 define("PHP" ,HOME."php/");             //PHP
@@ -20,8 +20,9 @@ define("CSS" ,HOME."css/");             //CSS
 //---------------------------------------------------//
 define("FAV"     ,IMG."kitamura.ico");   //ファビコン
 define("LOGO"    ,IMG."logo2.jpg");      //ロゴ
+define("LOGOMSG" ,"スーパーキタムラ");   //ロゴメッセージ
 define("JQ"      ,JS."jquery.js");       //jQueryファイル名
-define("CSSPATH" ,CSS."kitamura.css");   //CSSファイル名
+define("CSSPATH" ,CSS."kitamura.css");   //CSSファイル名(削除予定)
 
 //---------------------------------------------------//
 // リンク系配列(ページ最上段に表示するリンク)
@@ -63,7 +64,7 @@ $PAGELINK2=array(
 //---------------------------------------------------//
 // ファイルディレクトリ系定数(cron用)
 //---------------------------------------------------//
-define("SITEDIR","/var/www/");  //このサイトのトップディレクトリ
+define("SITEDIR","/var/www");  //このサイトのトップディレクトリ
 define("IMGDIR" ,SITEDIR.IMG);  //画像保存場所
 define("JSDIR"  ,SITEDIR.JS);   //JavaScript Jquery保存場所
 define("PHPDIR" ,SITEDIR.PHP);  //PHP

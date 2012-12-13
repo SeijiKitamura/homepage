@@ -1,3 +1,4 @@
+<!--
 <html>
 <head>
  <meta charset="utf-8">
@@ -5,6 +6,7 @@
  <link rel="stylesheet" href="../css/test.css" /> 
 </head>
 <body>
+-->
 <?php
 require_once("tirasi.class.php");
 require_once("calendar.class.php");
@@ -16,14 +18,10 @@ require_once("page.class.php");
 try{
  echo "success1";
  $db=new PAGE();
- $db->getGroup(2);
- echo "<pre>";
- print_r($db->items);
  echo "</pre>";
  $db->getPage("sinsotu.html");
- echo "<pre>";
- print_r($db->items);
- echo "</pre>";
+ $html=html::sethead($db->items[0]);
+ echo $html;
  echo "success2";
  return;
  $db=new JANMAS();

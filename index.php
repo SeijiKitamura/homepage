@@ -4,7 +4,13 @@ require_once("./php/calendar.class.php");
 require_once("./php/tirasi.class.php");
 require_once("./php/maillist.class.php");
 require_once("./php/html.class.php");
+require_once("./php/page.class.php");
 try{
+ //ヘッダーを表示
+ $base=basename($_SERVER["PHP_SELF"]);
+ $page=new PAGE();
+ $page->setHeader($base);
+
  //分類グループゲット
  $db=new JANMAS();
  $db->getLinList();
@@ -40,100 +46,17 @@ catch(Exception $e){
 }
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
-
-<html lang="ja">
- <head>
-  <!-- META系(全ページ共通) -->
-  <meta http-equiv="Content-language" content="ja">
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta http-equiv="Content-Script-Type" content="text/javascript">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <meta name="ROBOTS" content="index,follow">
-  <meta name="description" content="東京都大田区南馬込にある食品スーパーマーケット、スーパーキタムラの公式サイト。年中無休、営業時間AM9:30-PM10:00。">
-
-  <!-- タイトル(ページごとに変更) -->
-  <title>スーパーキタムラ:食品スーパーマーケット　</title>
-
-  <link rel="icon" href="./img/kitamura.ico" type="type/ico" sizes="16x16" /> 
-  <link rel="stylesheet" href="./css/kitamura.css" /> 
-  <link rel="next" href="tirasiitem.php" /> <!-- 次のページ -->
-  <link rel="prev" href=""/>  <!-- 前のページ -->
-
-  <!-- スクリプト(全ページ共通) -->
-  <script type="text/javascript" src="./js/jquery.js"></script>
-  <script>
-  </script>
- </head>
- <body>
-
-<!--=======================wrapper start===============================-->
-  <div id="wrapper">
-
-<!--=======================header  start===============================-->
-   <div id="header">
-
-<!--=======================logo    start===============================-->
-    <div class="logo">
-     <a href="index.php">
-      <img src="./img/logo2.jpg" alt="スーパーキタムラ">
-     </a>
-    </div>
-<!--=======================logo    end  ===============================-->
-
-<!--=======================hello   start===============================-->
-    <div class="hello">
-     <p>
-
-     </p>
-    </div>
-<!--=======================hello   end  ===============================-->
-
-<!--=======================mininavi start==============================-->
-    <div class="mininavi">
-<?php
-$base=basename($_SERVER["PHP_SELF"]);
-$html=html::setpagelink($GLOBALS["PAGELINK1"],$base);
-echo $html;
-?>
-    </div>
-<!--=======================mininavi end  ==============================-->
-
-<!--=======================timesale start==============================-->
-    <div class="timesale">
-<?php
-$base=basename($_SERVER["PHP_SELF"]);
-$html=html::setpagelink($GLOBALS["PAGELINK2"],$base);
-echo $html;
-?>
-
-    </div>
-<!--=======================timesale end  ==============================-->
-     
-   <div class="clr"></div>
-   </div>
-<!--=======================header  end  ===============================-->
-
-<!--=======================navi start    ==============================-->
-   <div id="navi">
-   </div>
-<!--=======================navi end      ==============================-->
-
-<!--=======================leftside start==============================-->
-   <div id="leftside">
+<!-- :-------------------  leftside start  --------------------------  -->
+  <div id="leftside">
 <?php
 $html=html::setgroup($grp,"item.php?lincode=","lincode","linname");
 //taniとnoticeを除外
 echo $html;
 ?>
    </div>
-<!--=======================leftside end  ==============================-->
+<!-- :-------------------  leftside end    --------------------------  -->
 
-<!--=======================rightside start=============================-->
-<!--=======================rightside end  =============================-->
-
-<!--=======================main      start=============================-->
+<!-- --------------------  main    start   --------------------------  -->
    <div id="main" style="width:780px;">
 <?php
 //----------------------------------------------------------------//
@@ -212,18 +135,9 @@ echo $GLOBALS["MENSEKI"];
 echo "</pre>";
 ?>
    </div>
-<!--=======================main      end  =============================-->
-   <div class="clr"></div>
-<!--=======================footer    start=============================-->
-   <div id="footer">
-<?php
-$base=basename($_SERVER["PHP_SELF"]);
-echo html::setfooter($base);
-?>
-   </div>
-<!--=======================footer    end  =============================-->
+<!-- --------------------  main      end   --------------------------  -->
 
-  </div>
-<!--=======================wrapper end =================================-->
- </body>
-</html>
+<!-- --------------------  footer  start  ---------------------------  -->
+<?php
+$page->setFooter($base);
+?>

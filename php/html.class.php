@@ -15,46 +15,154 @@ class html{
 //----------------------------------------------------------//
  private static function head(){
   $html=<<<EOF
-<meta name="ROBOTS" content="__INDEX__">
-<meta name="ROBOTS" content="__FOLLOW__">
-<meta http-equiv="Content-language" content="ja">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta name="description" content="__DESCRIPT__">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+ <head>
+  <meta name="ROBOTS" content="__index__">
+  <meta name="ROBOTS" content="__follow__">
+  <meta http-equiv="Content-language" content="ja">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Script-Type" content="text/javascript">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta name="description" content="__description__">
+  
+  <link rel="icon" href="__FAV__" type="type/ico" sizes="16x16" /> 
+  <link rel="stylesheet" href="__CSS____css__" /> 
+  <link rel="next" href="__next__" />
+  <link rel="prev" href="__prev__"/> 
+  
+  <title> __title__ </title>
+  
+  <script type="text/javascript" src="__JQUERY__"></script>
+ </head>
 
-<title>__TITLE__</title>
-
-<link rel="icon" href="__FAV__" type="type/ico" sizes="16x16" /> 
-<link rel="stylesheet" href="__CSSDIR__" /> 
-<link rel="next" href="__NEXTPAGE__" />
-<link rel="prev" href="__PREVPAGE__"/> 
-
-<script type="text/javascript" src="__JQUERY__"></script>
 EOF;
   return $html;
  }//private static function head(){
 
 //----------------------------------------------------------//
-// head用
+// head用($dataは単一データとする）
 //----------------------------------------------------------//
  public static function sethead($data){
+  $html=self::head();
+  foreach($data as $col=>$val){
+   $pattern="__".$col."__";
+   $replace=$val;
+   $html=str_replace($pattern,$val,$html);
+  }//foreach
+
+  //CSSディレクトリをセット
+  $pattern="__CSS__";
+  $val=CSS;//config.php
+  $html=str_replace($pattern,$val,$html);
+
+  //ファビコンをセット
+  $pattern="__FAV__";
+  $val=FAV;//config.php
+  $html=str_replace($pattern,$val,$html);
+
+  //Javascriptをセット
+  $pattern="__JQUERY__";
+  $val=JQ;//config.php
+  $html=str_replace($pattern,$val,$html);
+
+  return $html;
  }//public static function sethead($page){
+
+//----------------------------------------------------------//
+// ヘッダー雛形
+//----------------------------------------------------------//
+ private static function header_tmp(){
+  $html=<<<EOF
+ <body>
+  <div id="wrapper">
+<!-- -------------- div header start ---------------------- -->
+   <div id="header">
+
+<!-- -------------- div logo   start ---------------------- -->
+    <div class="logo">
+     <a href="index.php">
+      <img src="__LOGO__" alt="__LOGOMSG__">
+     </a>
+    </div>
+<!-- -------------- div logo   end   ---------------------- -->
+
+<!-- -------------- div mininavi start -------------------- -->
+    <div class="mininavi">
+    __MININAVI__
+    </div>
+<!-- -------------- div mininavi end   -------------------- -->
+
+<!-- -------------- div timesale start -------------------- -->
+    <div class="timesale">
+    __TIMESALE__
+    </div>
+<!-- -------------- div timesale end   -------------------- -->
+    <div class='clr'></div>
+   </div>
+<!-- -------------- div header end   ---------------------- -->
+EOF;
+  return $html;
+ }//private static function header_tmp(){
+
+//----------------------------------------------------------//
+// ヘッダー出力
+//----------------------------------------------------------//
+ public static function setheader($base,$topgrp,$centergrp){
+  $html=self::header_tmp();
+  //ロゴをセット
+  $pattern="__LOGO__";
+  $replace=LOGO;
+  $html=str_replace($pattern,$replace,$html);
+
+  //ロゴメッセージをセット
+  $pattern="__LOGOMSG__";
+  $replace=LOGOMSG;
+  $html=str_replace($pattern,$replace,$html);
+
+  //トップグループをセット
+  $pattern="__MININAVI__";
+  $replace=self::setpagelink($topgrp,$base);
+  $html=str_replace($pattern,$replace,$html);
+
+  //センターグループをセット
+  $pattern="__TIMESALE__";
+  $replace=self::setpagelink($centergrp,$base);
+  $html=str_replace($pattern,$replace,$html);
+
+  return $html;
+ }
+
+//----------------------------------------------------------//
+// フッター
+//----------------------------------------------------------//
+private static function footer(){
+ $html=<<<EOF
+   <div class="clr"></div>
+   <div id="footer">
+    <div class="corp">__CORP__</div>
+    <div class="timesale">__TIMESALE__</div>
+   </div>
+  </div>
+ </body>
+</html>
+EOF;
+ return $html;
+}
 
 //----------------------------------------------------------//
 // フッター用
 //----------------------------------------------------------//
- public static function setfooter($page){
-  $html=<<<EOF
-   <div class="corp">__CORP__</div>
-   <div class="timesale">__TIMESALE__</div>
-EOF;
+ public static function setfooter($base,$topgrp,$centergrp){
+  $html=self::footer();
   $html=str_replace("__CORP__",$GLOBALS["KAISYAMEI"],$html);
-  $replace=html::setpagelink($GLOBALS["PAGELINK2"],$page);
-  $replace.=html::setpagelink($GLOBALS["PAGELINK1"],$page);
+  $replace =self::setpagelink($centergrp,$base);
+  $replace.=self::setpagelink($topgrp,$base);
   $html=str_replace("__TIMESALE__",$replace,$html);
   return $html;
  }
+
 //----------------------------------------------------------//
 // ページリンク用(<ul>を含むhtmlを返す)
 //----------------------------------------------------------//
@@ -67,7 +175,7 @@ EOF;
     $html.="<a href='".$rowdata["url"]."'>";
    }//if
 
-   $html.=$rowdata["local"];
+   $html.=$rowdata["title"];
 
    if($rowdata["url"] && $rowdata["url"]!=$page){
     $html.="</a>";

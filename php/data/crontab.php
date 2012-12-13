@@ -86,7 +86,7 @@ PAGE_CONF:
  WriteLog("ページ詳細更新");
  try{
   //データ更新
-  $db->setMailItem();
+  $db->setPageConf();
 
   //ログ書き込み
   WriteLog(PAGECONF,$db->items["data"]);
