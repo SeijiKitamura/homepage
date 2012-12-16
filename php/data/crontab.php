@@ -78,8 +78,23 @@ MAIL_ITEM:
  }//try
  catch (Exception $e){
   WriteLog($e->getMessage());
-  goto PAGE_CONF;
+  goto GOYOYAKU;
  }//catch
+
+//-------------------------------------------------------------//
+GOYOYAKU:
+ WriteLog("ご予約商品更新");
+ try{
+  //データ更新
+  $db->setGoyoyaku();
+
+  //ログ書き込み
+  WriteLog(GOYOYAKU,$db->items["data"]);
+ }//try
+ catch(Exception $e){
+  WriteLog($e->getMessage());
+  goto PAGE_CONF;
+ }
 
 //-------------------------------------------------------------//
 PAGE_CONF:

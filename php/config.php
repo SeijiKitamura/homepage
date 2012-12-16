@@ -86,10 +86,11 @@ define("ITEMS"    ,"tirasiitem");        //チラシデータ
 define("JANMAS"   ,"janmas");            //単品マスタ
 define("CLSMAS"   ,"clsmas");            //クラスマスタ
 define("LINMAS"   ,"linmas");            //部門マスタ
-define("RESERVE"  ,"reserve");           //ご予約商品マスタ
+define("RESERVE"  ,"reserve");           //ご予約商品マスタ(削除予定)
 define("USER"     ,"usermas");           //ご客様マスタ
 define("MAILLIST" ,"maillist");          //メール(削除予定)
 define("MAILITEMS","mailitems");         //メールアイテム
+define("GOYOYAKU" ,"goyoyaku");          //ご注文商品
 define("SALEITEMS","saleitems");         //アイテム
 define("PAGECONF" ,"pageconfig");        //ページごとの設定
 //---------------------------------------------------//
@@ -98,14 +99,15 @@ define("PAGECONF" ,"pageconfig");        //ページごとの設定
 // ファイルパス系定数
 //---------------------------------------------------//
 define("JQUERY"     ,JSDIR."jquery.js");
-define("CALCSV"     ,DATADIR.CAL.".csv");      //カレンダー
-define("TITLECSV"   ,DATADIR.TITLES.".csv");   //チラシタイトル
-define("ITEMCSV"    ,DATADIR.ITEMS.".csv");    //チラシデータ
-define("JANCSV"     ,DATADIR.JANMAS.".csv");   //単品マスタ
-define("CLSCSV"     ,DATADIR.CLSMAS.".csv");   //クラスマスタ
-define("LINCSV"     ,DATADIR.LINMAS.".csv");   //部門マスタ
+define("CALCSV"     ,DATADIR.CAL.".csv");       //カレンダー
+define("TITLECSV"   ,DATADIR.TITLES.".csv");    //チラシタイトル
+define("ITEMCSV"    ,DATADIR.ITEMS.".csv");     //チラシデータ
+define("JANCSV"     ,DATADIR.JANMAS.".csv");    //単品マスタ
+define("CLSCSV"     ,DATADIR.CLSMAS.".csv");    //クラスマスタ
+define("LINCSV"     ,DATADIR.LINMAS.".csv");    //部門マスタ
 define("RESERVECSV" ,DATADIR.RESERVE.".csv");   //ご予約商品マスタ
 define("MAILITEMSCSV",DATADIR.MAILITEMS.".csv");//メールアイテム
+define("GOYOYAKUCSV",DATADIR.GOYOYAKU.".csv");  //ご予約商品
 define("PAGECONFCSV",DATADIR.PAGECONF.".csv");  //ページごとの設定
 //---------------------------------------------------//
 
@@ -950,6 +952,19 @@ $CSVCOLUMNS=array(   CAL   =>array( "saleday"
                                     ,"view_end"
                                     ,"flg"
                                     )//TB_RESERVE
+                  ,GOYOYAKU=>array (
+                                     "saletype"
+                                    ,"flg0"      //グループ番号
+                                    ,"flg1"      //グループ名
+                                    ,"flg2"      //表示番号
+                                    ,"clscode"
+                                    ,"jcode"
+                                    ,"maker"
+                                    ,"sname"
+                                    ,"tani"
+                                    ,"price"
+                                    ,"notice"
+                                   )//GOYOYAKU
                   ,PAGECONF=>array ( 
                                      "pagename"
                                     ,"attr"
@@ -967,7 +982,7 @@ $SALETYPE=array(
                 ,2=>"おすすめ品"
                 ,3=>"カレンダー"
                 ,4=>"早期ご予約"
-                ,5=>"オードブル・お弁当注文"
+                ,5=>"お弁当注文"
                 );
 //---------------------------------------------------//
 // メール系定数

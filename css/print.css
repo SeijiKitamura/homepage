@@ -1,0 +1,112 @@
+* {
+ font-size:11pt;
+ color:#000000;
+ background-color:#FFFFFF;
+ margin:0;
+ padding:0;
+}
+
+body{
+ width:640px;
+}
+
+a{ 
+ text-decoration:none;
+ color:#000000;
+}
+
+img{
+ border:0;
+}
+
+div.clr{ 
+ clear:both;
+}
+
+div#wrapper{
+ width:100%;
+ margin:0;
+}
+
+div#header{
+ height:120px;
+}
+
+div.logo{
+ float:left;
+ width:210px;
+ height:100px;
+}
+
+div.item{
+ width:120px;
+ height:200px;
+ margin:2px;
+ padding:3px;
+ float:left;
+ border:solid 1px #A9A9A9;
+}
+
+div.imgdiv a img {
+ width:100%;
+}
+
+div.saletype{
+ display:none;
+}
+
+h3.sname{
+ height:2.4em;
+}
+div.tani{
+ float:left;
+}
+div.price{
+ text-align:right;
+ color:red;
+}
+div.price span{
+ font-size:6pt;
+ color:red;
+}
+div.notice{
+ font-size:8pt;
+}
+div.lastsale{
+ display:none;
+}
+
+div.tanpin{
+ width:80%;
+ height:200px;
+ border:solid 1px #A9A9A9;
+ margin:2px;
+ padding:3px;
+}
+
+div.tanpin div.imgdiv{
+ width:250px;
+ float:left;
+}
+
+div.tanpin div.datadiv{
+ float:left;
+}
+
+div.tanpin div.datadiv div.price{
+ font-size:18pt;
+ text-align:left;
+ float:left;
+}
+
+div.tanpin div.datadiv div.jcode{
+ display:none;
+}
+/* 非表示系 */
+div.mininavi,
+div.timesale,
+div#leftside,
+div#footer{
+ display:none;
+}
+

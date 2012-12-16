@@ -1,60 +1,40 @@
 <?php
 //----------------------------------------------------------//
-//  tirasi.class.php 
-//  広告系クラス(db.class.phpをスーパークラス)
+//  goyoyaku.class.php 
+//  ご予約商品系クラス(db.class.phpをスーパークラス)
 //  このクラスを使用するときは必ずtry catchを使用すること
 //----------------------------------------------------------//
 //メソッド一覧
 //----------------------------------------------------------//
-//  getLinList()         指定チラシのラインリストを返す
+//  getLinList()         ご予約商品のラインリストを返す
 //  getClsList($lincode) 指定ラインのクラスリストを返す
+//  getGrpList()         ご予約商品のグループリストを返す
 //  getItemList()        商品リストを返す
 //  getLinItem($lincode) 指定ラインの商品リストを返す
 //  getClsItem($clscode) 指定クラスの商品リストを返す
+//  getGrpItem($group)   指定グループの商品リストを返す
 //  getJanItem($jcode)   指定商品を返す
-//  getTitle()           指定チラシのタイトル、アイテム数を表示(未完)
 //----------------------------------------------------------//
 require_once("db.class.php");
 require_once("function.php");
 
-class TIRASI extends DB{
- public $items;   //データを格納
- public $flg0;    //チラシ番号
- public $saleday; //表示したい日(この日付以降が表示される）
- public $title;
+class GOYOYAKU extends DB{
+ public $items;       //データを格納
+ protected $saletype; //セールタイプ番号
+ protected $andwhere; //where句
 
- protected $saletype;//セールタイプ番号
- protected $andwhere;//where句
- 
  function __construct(){
   parent::__construct();
+  $this->saletype=5;   //config.php $SALETYPE
+ }// function __construct(){
 
-  //表示したい日
-  $this->saleday=date("Y-m-d");
-
-  //掲載号確定
-  $this->select="*";
-  $this->from =TB_SALEITEMS;
-  $this->where =" flg1<='".$this->saleday."'";
-  $this->where.=" and flg2>='".$this->saleday."'";
-  $this->order =" saleday";
-  $titles=$this->getArray();
-  $this->flg0=$titles[0]["flg0"];
-
-  //セールタイプ番号ゲット
-  $this->saletype=0;
-
-  //where句生成
- }//__construct
- 
+ //ベースとなるwhere句
  protected function setwhere(){
-  $this->andwhere =" flg0='".$this->flg0."'";
-  $this->andwhere.=" and saleday>='".$this->saleday."'";
-  $this->andwhere.=" and saletype=".$this->saletype;
+  $this->andwhere =" saletype='".$this->saletype."'";
  }
 
 //----------------------------------------------------------//
-// 単一チラシの指定日以降のラインリストを返す
+// ご予約商品のラインリストを返す
 //----------------------------------------------------------//
  public function getLinList(){
   $this->items=null;
@@ -74,12 +54,13 @@ class TIRASI extends DB{
   $this->group =" t2.lincode,t2.linname";
   $this->order =" t2.lincode";
   $this->items["data"]=$this->getArray();
- }//public function getLinList(){
+ 
+ }// public function getLinList(){
 
 //----------------------------------------------------------//
-// 単一チラシの指定日以降のクラスリストを返す
+// ご予約商品指定ラインのクラスリストを返す
 //----------------------------------------------------------//
- public function getClsList($lincode){
+  public function getClsList($lincode){
   $this->items=null;
 
   $this->setwhere();
@@ -98,39 +79,45 @@ class TIRASI extends DB{
   $this->group =" t1.clscode,t1.clsname";
   $this->order =" t1.clscode";
   $this->items["data"]=$this->getArray();
-
  }//public function getClsList(){
 
 //----------------------------------------------------------//
-// 単一チラシの指定日以降のアイテムリストを返す
+// ご予約商品のグループリストを返す
+//----------------------------------------------------------//
+  public function getGrpList(){
+  $this->items=null;
+
+  $this->setwhere();
+
+  $this->select =" t.flg0 as grpcode,t.flg1 as grpname";
+  $this->select.=",count(t.jcode) as cnt";
+  $this->from =TB_SALEITEMS." as t ";
+  $this->where=$this->andwhere;
+  $this->group =" t.flg0,t.flg1";
+  $this->order =" t.flg0";
+  $this->items["data"]=$this->getArray();
+ }//public function getGrpList(){
+
+//----------------------------------------------------------//
+// ご予約商品すべてのアイテムリストを返す
 //----------------------------------------------------------//
  public function getItemList(){
   $this->items=null;
 
   $this->setwhere();
 
-  $this->select =" t.flg0,t.clscode,t.jcode,t.sname";
-  $this->select.=",t.tani,t.price,t.notice,t.flg1,t.flg2,t.saletype";
+  $this->select =" t.flg0 as grpcode,t.flg1 as grpname ,t.flg2 as datanum";
+  $this->select.=",t.clscode,t.jcode,t.sname";
+  $this->select.=",t.tani,t.price,t.notice,t.saletype";
   $this->select.=",t1.clsname";
   $this->select.=",t2.lincode,t2.linname";
-  $this->select.=",min(t.saleday) as sday";
-  $this->select.=",max(t.saleday) as eday";
-  $this->from =" (select * from ".TB_SALEITEMS;
-  $this->from.=" where ".$this->andwhere;
-  $this->from.=" ) as t";
+  $this->from =TB_SALEITEMS." as t ";
   $this->from.=" inner join ".TB_CLSMAS." as t1 on";
   $this->from.=" t.clscode=t1.clscode";
   $this->from.=" inner join ".TB_LINMAS." as t2 on";
   $this->from.=" t1.lincode=t2.lincode";
   $this->where =$this->andwhere;
-  $this->group =" t.flg0,t.clscode,t.jcode,t.sname";
-  $this->group.=",t.tani,t.price,t.notice,t.flg1,t.flg2,t.saletype";
-  $this->group.=",t1.clsname";
-  $this->group.=",t2.lincode,t2.linname";
-  $this->order =" min(t.saleday)";
-  $this->order.=",max(t.saleday)";
-  $this->order.=",t.flg1,t.flg2";
-  $this->order.=",t.clscode,t.jcode";
+  $this->order =" t.flg0,t.flg2";
   $this->items["data"]=$this->getArray();
  }//public function getItemList(){
 
@@ -173,6 +160,26 @@ class TIRASI extends DB{
  }//public function getClsItem($clscode){
 
 //----------------------------------------------------------//
+//商品一覧から特定グループの商品を抽出
+//----------------------------------------------------------//
+ public function getGrpItem($grp){
+  $this->items=null;
+
+  //データゲット
+  $this->getItemList();
+  
+  //該当商品抽出
+  foreach($this->items["data"] as $rownum=>$rowdata){
+   if($rowdata["grpcode"]==$grp){
+    $item[]=$rowdata;
+   }//if
+  }//foreach
+
+  $this->items["data"]=$item;
+ }//public function getClsItem($clscode){
+
+
+//----------------------------------------------------------//
 //商品一覧から特定商品を抽出
 //----------------------------------------------------------//
  public function getJanItem($jcode){
@@ -191,11 +198,5 @@ class TIRASI extends DB{
 
   $this->items["data"]=$item;
  }//public function getJanItem($jcode){
-
-//----------------------------------------------------------//
-// 指定チラシのタイトル、イベント、アイテム数を返す
-//----------------------------------------------------------//
-
-}//TIRASI
-
+}//class GOYOYAKU extends DB{
 ?>

@@ -28,7 +28,8 @@ class html{
   <meta name="description" content="__description__">
   
   <link rel="icon" href="__FAV__" type="type/ico" sizes="16x16" /> 
-  <link rel="stylesheet" href="__CSS____css__" /> 
+  <link rel="stylesheet" href="__CSS____css__" media="screen"/> 
+  <link rel="stylesheet" href="__CSS__print.css" media="print"/> 
   <link rel="next" href="__next__" />
   <link rel="prev" href="__prev__"/> 
   
@@ -312,6 +313,68 @@ EOF;
   $html.="<div class='clr'></div>\n";
   return $html;
  }//public static function setitem($data){
+
+ public static function setitemGoyoyaku($data){
+  $html="";
+  foreach ($data as $rownum=>$rowdata){
+   $base=self::item();
+
+   //リンク作成
+   $url ="?grpcode=".$rowdata["grpcode"];
+   $url.="&jcode=".$rowdata["jcode"];
+   $base=str_replace("__LINK__",$url,$base);
+
+   //画像がなければ非表示
+   $img="./img/".$rowdata["jcode"].".jpg";
+   if(! file_exists($img)){
+    $pattern="/<img.*/";
+    $base=preg_replace($pattern,"",$base);
+   }//if
+   $base=str_replace("__IMGLINK__",$img,$base);
+
+   $base=str_replace("__SALEDAY__","",$base);
+   if(! preg_match("/^[0-9]+$/",$rowdata["saletype"])){
+    $base=str_replace("saletype","saletype_blank",$base);
+    $base=str_replace("__SALETYPE__","",$base);
+   }//if
+   if(is_numeric($rowdata["saletype"])){
+    $base=str_replace("__SALETYPE__",$GLOBALS["SALETYPE"][$rowdata["saletype"]],$base);
+   }
+   else{
+    $pattern="/<div class='saletype'>.*<\/div>/";
+    $base=preg_replace($pattern,"",$base);
+   }
+   $base=str_replace("__MAKER__",$rowdata["maker"],$base);
+   $base=str_replace("__SNAME__",$rowdata["sname"],$base);
+   $base=str_replace("__TANI__",$rowdata["tani"],$base);
+   if($rowdata["price"]==0){
+    $pattern="/<div class='price'>.*<\/div>/";
+    $base=preg_replace($pattern,"",$base);
+   }
+   $pattern="/(^[Pp]?[0-9]+|半額)(割引|倍)?/";
+   preg_match($pattern,$rowdata["price"],$match);
+   $base=str_replace("__PRICE__",$match[1],$base);
+   if($match[2]){
+    $base=str_replace("__EN__",$match[2],$base);
+   }
+   else{
+    if(preg_match("/^[0-9]+$/",$match[1])){
+     $base=str_replace("__EN__","円",$base);
+    }
+    else{
+     $base=str_replace("__EN__","",$base);
+    }
+   }
+   $base=str_replace("__NOTICE__",$rowdata["notice"],$base);
+   $base=str_replace("__JCODE__","",$base);
+   $base=str_replace("__LASTSALE__",$rowdata["lastsale"],$base);
+   $html.=$base;
+  }//foreach
+  
+  $html.="<div class='clr'></div>\n";
+  return $html;
+ }//public static function setitemGoyoyaku($data){
+
 
 //----------------------------------------------------------//
 // 単品用

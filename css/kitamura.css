@@ -27,9 +27,13 @@ div#wrapper{
  margin:0 auto;
 }
 
+div#header{
+ width:890px;
+}
+
 /* navi */
 div#navi{
- width:980px;
+ width:960px;
  margin:0 auto;
 }
 
@@ -54,7 +58,7 @@ div#rightside{
 
 /*main*/
 div#main{
- width:600px;
+ width:800px;
  float:left;
 }
 
@@ -81,7 +85,7 @@ div.hello{
 
 div.mininavi{
  float:right;
- margin:0 0 50px 0;
+ margin:0 0 0 0;
 }
 
 div.mininavi ul{
@@ -103,8 +107,7 @@ div.mininavi ul li a{
 }
 
 div.timesale{
- width:700px;
- /*margin:0px 10px 0px 10px;*/
+ width:660px;
  margin:0px;
  float:left;
  font-size:15px;
@@ -115,10 +118,10 @@ div.timesale ul{
 }
 
 div.timesale ul li{
- float:left;
- border-right:1px solid;
- text-align:center;
  width:110px;
+ float:left;
+ border-right:1px solid #A5A5A5;
+ text-align:center;
 }
 
 div.timesale ul li a{
@@ -126,12 +129,6 @@ div.timesale ul li a{
  text-align:center;
 }
 
-/*
-div#header ul li{
- display:inline;
- margin-right:10px;
-}
-*/
 div.clr{
  clear:both;
 }
