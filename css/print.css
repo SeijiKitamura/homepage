@@ -59,9 +59,12 @@ h3.sname{
  height:2.4em;
 }
 div.tani{
+ width:50px;
  float:left;
+ text-align:right;
 }
 div.price{
+ font-size:18pt;
  text-align:right;
  color:red;
 }
@@ -101,6 +104,10 @@ div.tanpin div.datadiv div.price{
 
 div.tanpin div.datadiv div.jcode{
  display:none;
+}
+
+div.goyoyaku_footer{
+ margin-top:20pt;
 }
 /* 非表示系 */
 div.mininavi,

@@ -23,7 +23,7 @@ if($salemonth && ! is_numeric($salemonth)){
  if($saleyear && $salemonth){
   $db->saleday=$saleyear."-".$salemonth."-1";
  }
- $db->saleday="2012/11/21";
+ //$db->saleday="2012/11/21";
  $db->getCalendar();
  $cal=$db->items["data"];
  $db->getItemList();

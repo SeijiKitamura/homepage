@@ -77,6 +77,18 @@ echo $html;
 <!--=======================main      start=============================-->
    <div id="main">
 <?php
+//開始日、終了日を表示
+$grpname=$grpitem[0]["grpname"];
+$kaisi=date("Y年m月d日",strtotime($grpitem[0]["kaisi"]));
+$owari=date("Y年m月d日",strtotime($grpitem[0]["owari"]));
+if(! $grpcode){
+ echo "<h2>全商品一覧</h2>";
+ echo "<h3>".$kaisi."から".$owari."まで</h3>";
+}//if
+else{
+ echo "<h2>".$grpname."商品一覧"."</h2>";
+ echo "<h3>".$kaisi."から".$owari."まで</h3>";
+}//else
 //単品表示
 if($item){
  $html=html::settanpin($item);
@@ -89,9 +101,9 @@ if($jcode){
 }
 $html=html::setitemGoyoyaku($grpitem);
 echo $html;
-echo "<pre>";
-echo $GLOBALS["MENSEKI"];
-echo "</pre>";
+echo "<div class='goyoyaku_footer'>";
+echo $GLOBALS["MENSEKI2"];
+echo "</div>";
 ?>
    </div>
 <!--=======================main      end  =============================-->
