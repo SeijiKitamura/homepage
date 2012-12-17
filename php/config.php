@@ -918,14 +918,15 @@ $CSVCOLUMNS=array(   CAL   =>array( "saleday"
                                     ,"flg1" //subtitle
                                     ,"flg2" //specialflg
                                    )//TB_ITEMS
-                  ,TB_JANMAS=>array( //後日、JANMASに変更すること！
+                  ,JANMAS   =>array(
                                      "jcode"
                                     ,"clscode"
                                     ,"sname"
                                     ,"stdprice"
                                     ,"price"
+                                    ,"salestart"
                                     ,"lastsale"
-                                   )//TB_JANMAS
+                                   )//JANMAS
                   ,TB_CLSMAS=>array(//後日、CLSMASに変更すること！
                                      "clscode"
                                     ,"clsname"

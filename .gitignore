@@ -2,3 +2,5 @@
 *.JPG
 *.csv
 *.log
+php/data/*
+img/*

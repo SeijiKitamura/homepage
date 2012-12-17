@@ -249,6 +249,7 @@ function UPLOADIMAGE($jcode){
 //-------------------------------------------//
 function GETJAN($jcode){
  $j=(string) $jcode;
+ $j=str_replace(".0","",$j);
  if(CHKKETA($j)){
   $j=ADDZERO($j);
   if(! CHKCD($j)){
