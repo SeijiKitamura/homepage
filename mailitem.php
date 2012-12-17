@@ -71,9 +71,11 @@ if($mailitem){
  echo "<h3> 本日のメール商品</h3>\n";
  if($item){
   $html=html::settanpin($item);
+  $html=str_replace("__LASTSALE__","限り",$html);
   echo $html;
  }
  $html=html::setitem($mailitem);
+ $html=str_replace("__LASTSALE__","限り",$html);
  echo $html;
 }//if
 
@@ -81,8 +83,10 @@ if($osusume){
  echo "<h3> 本日のおすすめ商品</h3>\n";
  if($item){
   $html=html::settanpin($item);
+  $html=str_replace("__LASTSALE__","限り",$html);
   echo $html;
  }
+ $html=str_replace("__LASTSALE__","限り",$html);
  $html=html::setitem($osusume);
  echo $html;
 

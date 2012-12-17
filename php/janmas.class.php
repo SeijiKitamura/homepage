@@ -106,7 +106,8 @@ class JANMAS extends DB{
   $this->from.=" t1.lincode=t2.lincode";
   $this->where =$this->andwhere;
   $this->where.=" and t2.lincode=".$lincode;
-  $this->order =" t2.lincode,t1.clscode,t.jcode";
+  //$this->order =" t2.lincode,t1.clscode,t.jcode";
+  $this->order =" t.lastsale desc,t2.lincode,t1.clscode,t.jcode";
   $this->items["data"]=$this->getArray();
 
   for($i=0;$i<count($this->items["data"]);$i++){
@@ -137,7 +138,8 @@ class JANMAS extends DB{
   $this->from.=" t1.lincode=t2.lincode";
   $this->where =$this->andwhere;
   $this->where.=" and t.clscode=".$clscode;
-  $this->order =" t2.lincode,t1.clscode,t.jcode";
+  //$this->order =" t2.lincode,t1.clscode,t.jcode";
+  $this->order =" t.lastsale desc,t2.lincode,t1.clscode,t.jcode";
   $this->items["data"]=$this->getArray();
 
   for($i=0;$i<count($this->items["data"]);$i++){

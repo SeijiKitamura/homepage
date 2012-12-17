@@ -69,6 +69,17 @@ div#footer{
  margin-top:10px;
 }
 
+div#footer div.footerlink ul{
+ list-style:none;
+}
+
+div#footer div.footerlink ul li{
+ width:110px;
+ float:left;
+ font-size:12px;
+ text-align:center;
+}
+
 
 div.logo{
  float:left;
@@ -249,16 +260,17 @@ div.datadiv  div.notice{
 }
 
 div.datadiv  div.lastsale{
- font-size:12px;
+ font-size:10px;
  width:100%;
  height:1.2em;
  overflow:hidden;
- text-align:right;
+ text-align:center;
 }
 
 /* 単品系 */
 div.tanpin{
- width:500px;
+ /*width:500px;*/
+ width:680px;
  height:250px;
  border:solid 1px #A9A9A9;
  margin:3px;
@@ -268,7 +280,7 @@ div.tanpin div.imgdiv{
  width:45%;
  height:95%;
  float:left;
- border:solid 1px ;
+ border:solid 0px ;
 }
 
 div.tanpin div.datadiv{
@@ -298,11 +310,11 @@ div.tanpin div.datadiv div.lastsale{
 }
 /* カレンダー系*/
 div.calendar{
- width:600px;
+ width:780px;
 }
 
 div.calendar div.youbi{
- width:83px;
+ width:100px;
  height:1.5em;
  float:left;
  text-align:center;
@@ -312,7 +324,7 @@ div.calendar div.youbi{
 }
 
 div.calendar div.calitem{
- width:83px;
+ width:100px;
  height:110px;
  float:left;
  border-top :solid 1px #A9A9A9;

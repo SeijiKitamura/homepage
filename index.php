@@ -35,7 +35,6 @@ try{
 
 //カレンダーゲット
  $db=new CL();
- $db->saleday="2012/11/21";
  $db->getCalendar();
  $cal=$db->items["data"];
 
@@ -46,7 +45,7 @@ catch(Exception $e){
 }
 ?>
 
-<!-- :-------------------  leftside start  --------------------------  -->
+<!-- *********************  leftside start   ***************** -->
   <div id="leftside">
 <?php
 $html=html::setgroup($grp,"item.php?lincode=","lincode","linname");
@@ -54,20 +53,20 @@ $html=html::setgroup($grp,"item.php?lincode=","lincode","linname");
 echo $html;
 ?>
    </div>
-<!-- :-------------------  leftside end    --------------------------  -->
+<!-- *********************  leftside end     ***************** -->
 
-<!-- --------------------  main    start   --------------------------  -->
-   <div id="main" style="width:780px;">
+   <div id="main">
 <?php
+
 //----------------------------------------------------------------//
 // カレンダー情報
 //----------------------------------------------------------------//
 if($cal){
- echo "<h4>本日のカレンダー情報:\n";
+ echo "<h2>本日のカレンダー情報</h2>\n";
  $j=0;
  $item=null;
- $html=$cal[0]["sname"]." ".$cal[0]["price"]."</h4>\n";
- echo $html;
+ $html=$cal[0]["sname"]." ".$cal[0]["price"];
+ echo "<h3>".$html."</h3>\n";
 }//if
 
 
@@ -75,7 +74,7 @@ if($cal){
 // 広告の品表示
 //----------------------------------------------------------------//
 if($tirasi){
- echo "<h3><a href='tirasiitem.php'>広告の品</a></h3>";
+ echo "<h2><a href='tirasiitem.php'>広告の品</a></h2>";
 
  //5アイテムに絞る
  $item=null;
@@ -95,7 +94,7 @@ if($tirasi){
 // メール表示
 //----------------------------------------------------------------//
 if($mailitem){
- echo "<h3><a href='mailitem.php'>本日のメール商品</a></h3>\n";
+ echo "<h2><a href='mailitem.php'>本日のメール商品</a></h2>\n";
  //5アイテムに絞る
  $item=null;
  $j=0;
@@ -106,6 +105,7 @@ if($mailitem){
  }
  $html=html::setitem($item);
  $html=preg_replace("/\?/","mailitem.php?",$html);
+ $html=preg_replace("/__LASTSALE__/","限り",$html);
  echo $html;
 
 }//if
@@ -114,7 +114,7 @@ if($mailitem){
 // 新商品表示
 //----------------------------------------------------------------//
 if($newitem){
- echo "<h3><a href='item.php'>新商品のご案内</a></h3>\n";
+ echo "<h2><a href='item.php'>新商品のご案内</a></h2>\n";
  $j=0;
  $item=null;
  //10アイテムに絞る
@@ -127,6 +127,7 @@ if($newitem){
  $html=preg_replace("/<div class='tani'>.*<\/div>/","",$html);
  $html=preg_replace("/<div class='notice'>.*<\/div>/","",$html);
  $html=preg_replace("/\?/","item.php?",$html);
+ $html=preg_replace("/__LASTSALE__/","更新",$html);
  echo $html;
 }//if
 

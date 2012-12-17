@@ -56,7 +56,7 @@ try{
 
 //カレンダーゲット
  $db=new CL();
- $db->saleday="2012/11/21";
+ //$db->saleday="2012/11/21";
  $db->getCalendar();
  $cal=$db->items["data"];
  if($clscode){
@@ -109,11 +109,12 @@ echo $html;
 <!--=======================leftside end  ==============================-->
 
 <!--=======================main      start=============================-->
-   <div id="main" style="width:780px;">
+   <div id="main">
 <?php
 if(! $lincode &&! $clscode && ! $jcode){
  $html=html::setitem($newitem);
  echo "<h4>新商品のご案内</h4>\n";
+ $html=str_replace("__LASTSALE__","更新",$html);
  echo $html;
 }
 
@@ -141,6 +142,7 @@ elseif(! $clscode){
 }
 $html.="</ul>";
 $html.="<div class='clr'></div>\n";
+$html=str_replace("__LASTSALE__","更新",$html);
 echo $html;
 
 //echo "<pre>";
@@ -189,6 +191,7 @@ for($i=$startitem;$i<$enditem;$i++){
  $itemdata[]=$data[$i];
 }//for
 $html=html::setitem($itemdata);
+$html=str_replace("__LASTSALE__","更新",$html);
 echo $html;
 echo $navi;
 

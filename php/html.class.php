@@ -143,7 +143,7 @@ private static function footer(){
    <div class="clr"></div>
    <div id="footer">
     <div class="corp">__CORP__</div>
-    <div class="timesale">__TIMESALE__</div>
+    <div class="footerlink">__TIMESALE__</div>
    </div>
   </div>
  </body>
@@ -288,7 +288,7 @@ EOF;
    $base=str_replace("__TANI__",$rowdata["tani"],$base);
    if($rowdata["price"]==0){
     $pattern="/<div class='price'>.*<\/div>/";
-    $base=preg_replace($pattern,"",$base);
+    $base=preg_replace($pattern,"<div class='price'></div>",$base);
    }
    $pattern="/(^[Pp]?[0-9]+|半額)(割引|倍)?/";
    preg_match($pattern,$rowdata["price"],$match);
@@ -306,7 +306,8 @@ EOF;
    }
    $base=str_replace("__NOTICE__",$rowdata["notice"],$base);
    $base=str_replace("__JCODE__","",$base);
-   $base=str_replace("__LASTSALE__",$rowdata["lastsale"],$base);
+   $lastsale=date("n月j日",strtotime($rowdata["lastsale"]))."__LASTSALE__";
+   $base=str_replace("__LASTSALE__",$lastsale,$base);
    $html.=$base;
   }//foreach
   
