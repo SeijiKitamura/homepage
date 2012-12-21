@@ -1,3 +1,21 @@
+<?php
+require_once("./php/auth.class.php");
+try{
+ print_r($_POST);
+ //POSTで前のページからメールアドレスを受け取る
+ if(! $_POST["usermail"]){
+  throw new exception("メールアドレスを入力してください");
+ }
+ $mail=$_POST["usermail"];
+ $db=new AUTH();
+ $db->checkMail($mail);
+ $msg =$mail."へ確認メールを送信しました。<br />";
+ $msg.="メールに表示されているURLをクリックして次の画面に進んでください。";
+}//try
+catch(Exception $e){
+ $msg="エラー:".$e->getMessage();
+}//catch
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -13,17 +31,20 @@
   <meta name="keywords" content="キタムラ,スーパーキタムラ,スーパーきたむら,スーパー北村,シェノール,惣菜,パン,お酒,日本酒,焼酎,ワイン,配達">
 
   <!-- タイトル(ページごとに変更) -->
-  <title>新卒採用|スーパーキタムラ</title>
+  <title>メール確認:スーパーキタムラ　食品スーパーマーケット　</title>
 
   <!-- link(ページごとに変更) -->
   <link rel="icon" href="./img/kitamura.ico" type="type/ico" sizes="16x16" /> 
   <link rel="stylesheet" href="./css/kitamura.css" /> 
-  <link rel="next" href="index.html" /> <!-- 次のページ -->
+  <link rel="next" href="" /> <!-- 次のページ -->
   <link rel="prev" href=""/>  <!-- 前のページ -->
 
   <!-- スクリプト(全ページ共通) -->
   <script type="text/javascript" src="./js/jquery.js"></script>
+  <script type="text/javascript" src="./js/jquery.cookie.js"></script>
   <script>
+$(function(){
+});
   </script>
  </head>
  <body>
@@ -43,6 +64,7 @@
 
     <!-- hello -->
     <div class="hello">
+     <h1>確認メール</h1>
     </div>
     <!-- hello -->
 
@@ -52,13 +74,26 @@
       <li><a href="about.html">会社概要</a></li>
       <li><a href="access.html">アクセス</a></li>
       <li>求人</li>
-      <li>新卒採用</li>
+      <li><a href="sinsotu.html"> 新卒採用</a></li>
      </ul>
     </div>
     <!-- mininavi -->
 
     <!-- timesale -->
     <div class="timesale">
+     <ul>
+      <li><a href="index.html">ホーム</a></li>
+      <li> | </li>
+      <li><a href='tirasi.php'>今週のチラシ</a></li>
+      <li> | </li>
+      <li><a href="calendar.php">カレンダー</a></li>
+      <li> | </li>
+      <li><a href="item.php">商品のご案内</a></li>
+      <li> | </li>
+      <li>ご注文承り中</li>
+      <li> | </li>
+      <li>サービス</li>
+     </ul>
     </div>
     <!-- timesale -->
      
@@ -70,45 +105,64 @@
    <div id="navi">
     <!-- allcate -->
     <div id="allcate">
+      <h2></h2>
     </div>
     <!-- allcate -->
 
     <!-- search -->
     <div id="search">
-     <h2>新卒採用について</h2>
     </div>
     <!-- search -->
    </div>
    <!-- navi -->
-
    <!-- leftside -->
-   <div id="leftside">
-    <ul>
-     <li><a href="oitati.html">事業内容</a></li>
-     <li><a href="saiyo.html">採用方針</a></li>
-     <li><a href="sigoto.html">仕事内容</a></li>
-     <li><a href="jyouken.html">応募条件・スケジュール</a></li>
-     <li><a href="senpai.html">先輩からのご挨拶</a></li>
-     <li><a href="jisseki.html">採用実績</a></li>
-    </ul>
+   <div id="leftside" style="margin:0px !important;">
    </div>
    <!-- leftside -->
 
    <!-- rightside -->
    <div id="rightside">
+    <!-- tirasiitem-->
+    <div class="tirasiitem">
+    </div>
+    <!-- tirasiitem-->
+
    </div>
    <!-- rightside -->
 
    <!-- main -->
-   <div id="main">
-    <div>
-     <h2>平成24年度新卒エントリー開始！！</h2>
-     詳しくは採用担当まで連絡ください。
+    <div id="main">
+
+     <!-- entry -->
+     <div class="entry">
+     <p> <?php echo  $msg; ?> </p>
+     </div>
+     <!-- entry -->
+
+    <!-- calendar -->
+    <div class="calendaritem">
     </div>
+    <!-- calendar -->
+
+    <!-- tirasiitem -->
+    <div class="tirasiitem">
+     <!-- tanpin -->
+     <div id="tanpin">
+     </div>
+     <!-- tanpin -->
+
+
+     <!-- janmas -->
+     <div class='janmas'>
+     </div>
+     <!-- janmas -->
+
+    </div>
+    <!-- tirasiitem -->
    </div>
    <!-- main -->
-
    <div class="clr"></div>
+   <!--div class="clr"></div-->
    <!-- footer -->
    <div id="footer">
     <h1>footer</h1>
