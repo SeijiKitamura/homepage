@@ -90,6 +90,29 @@ class PAGE extends DB{
  }// public function setHeader($base){
 
 //-------------------------------------------------------//
+// ヘッダーを返す(商品以外)                              //
+//-------------------------------------------------------//
+ public function setHeader2($base){
+  //ページ情報をゲット
+  $this->getPage($base);
+  $head=$this->items[0];
+
+  //ページ上部のリンクをゲット
+  //$this->getGroup(2);
+  //$topgrp=$this->items;
+
+  //ページ中央のリンクをゲット
+  $this->getGroup(2);
+  $centergrp=$this->items;
+  
+  $html =html::sethead($head);
+  $html.=html::setheader($base,$topgrp,$centergrp);
+
+  echo $html;
+ }// public function setHeader($base){
+
+
+//-------------------------------------------------------//
 // フッターを返す                                        //
 //-------------------------------------------------------//
  public function setFooter($base){

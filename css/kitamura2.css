@@ -1,0 +1,235 @@
+body *{
+ margin:0;
+ padding:0;
+}
+
+body{
+        font-family:'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,Verdana,'ＭＳ Ｐゴシック',sans-serif;
+}
+
+/* イニシャライズ */
+img{
+ border:0;
+}
+a{
+ text-decoration:none;
+ color:#4169E1;
+}
+a:hover{
+ color:#FF4500;
+ text-decoration:underline;
+}
+
+div.clr{
+ clear:both;
+}
+
+/* 全ページ共通 */
+div#wrapper{
+ width:1000px;
+ margin:0 auto;
+}
+
+/* 全ページ共通 */
+div#header{
+ width:890px;
+}
+
+/* 全ページ共通 */
+div#header > div.logo{
+ float:left;
+ width:230px;
+ height:90px;
+}
+
+/* 全ページ共通 */
+div.mininavi{
+ float:right;
+ margin:0 0 0 0;
+}
+
+div.mininavi>ul{
+ list-style:none;
+}
+
+div.mininavi>ul>li{
+ font-size:12px;
+ float:left;
+}
+
+div.mininavi>ul>li>a{
+ width:90px;
+ /*border-right:1px solid #000000;*/
+ text-decoration:none;
+ float:left;
+ display:block;
+ text-align:center;
+}
+
+/* 全ページ共通 */
+div.timesale{
+ width:660px;
+ margin-top:40px;
+ float:left;
+ font-size:15px;
+}
+
+div.timesale>ul{
+ list-style:none;
+}
+
+div.timesale>ul>li{
+ width:150px;
+ float:left;
+ border-right:1px solid #A5A5A5;
+ text-align:center;
+}
+
+div.timesale>ul>li>a{
+ display:block;
+ text-align:center;
+}
+
+
+/* 全ページ共通 */
+/*leftside*/
+div#leftside{
+ width:160px;
+ height:600px;
+ margin-right:5px;
+ float:left;
+ /*padding-left:10px;*/
+ padding:10px;
+ border:solid 1px #F5F5F5;
+}
+
+/* 全ページ共通 */
+ul.group{
+ list-style:none;
+ margin:0;
+ padding:0;
+}
+
+ul.group>li>a{
+ display:block;
+ width:150px;
+ height:1.2em;
+ text-decoration:none;
+ color:#4169E1;
+ font-size:14px;
+ margin-bottom:5px;
+ overflow:hidden;
+}
+
+ul.group>li>a:hover{
+ color:#FF4500;
+ text-decoration:underline;
+}
+
+/* 全ページ共通 */
+/*main*/
+div#main{
+ width:800px;
+ float:left;
+}
+
+dl.enkaku>dt,
+dl.about>dt,
+dl.kyujin>dt,
+dl.oubo>dt,
+dl.eigyojikan>dt{
+ width:100px;
+ height:2.4em;
+ float:left;
+ padding:8px;
+ text-align:right;
+ border-left:solid 1px #A5A5A5;
+ border-top:solid 1px #A5A5A5;
+ border-right:solid 1px #A5A5A5;
+}
+
+dl.enkaku>dd,
+dl.about>dd,
+dl.kyujin>dd,
+dl.oubo>dd,
+dl.eigyojikan>dd{
+ width:550px;
+ height:2.4em;
+ border-top:solid 1px #A5A5A5;
+ border-right:solid 1px #A5A5A5;
+ padding:8px;
+ float:left;
+}
+
+.rowend{
+ border-bottom:solid 1px #A5A5A5;
+}
+
+.colend{
+ border-right:solid 1px #A5A5A5;
+}
+
+div.map >img{
+ margin:40px;
+}
+
+div#main>h1{
+ background-color:#006400;
+ padding-left:10px;
+ font-size:20px;
+ color:#FFFFFF;
+}
+
+div#main>h2{
+ margin-top:20px;
+ font-size:18px;
+}
+
+
+div#main>h3{
+ margin-top:20px;
+ font-size:16px;
+}
+
+div#main>ul{
+ list-style:none;
+}
+
+div#main>ul>li>div{
+ width:100px;
+ float:left;
+ text-align:center;
+ border-top:solid 1px #A5A5A5;
+ border-left:solid 1px #A5A5A5;
+}
+div#main>ul>li>div.zaiseki{
+ border-right:solid 1px #A5A5A5;
+} 
+/* 全ページ共通 */
+/*footer*/
+div#footer{
+ width:980px;
+ border-top:solid 2px #F5F5F5;
+ margin-top:10px;
+}
+
+div.corp{
+ font-size:12px;
+ float:left;
+}
+
+div#footer>div.footerlink>ul{
+ list-style:none;
+}
+
+div#footer>div.footerlink>ul>li{
+ width:110px;
+ float:left;
+ font-size:12px;
+ text-align:center;
+}
+
+
+
+
+
