@@ -233,7 +233,7 @@ class JANMAS extends DB{
   $this->group =" t.jcode";
   $this->order =" t.jcode,t.price desc";
   $items=$this->getArray();
-
+  if(! is_array($item)) return false;
   foreach($this->items["data"] as $rownum=>$rowdata){
    foreach($items as $rownum1=>$rowdata1){
     if($rowdata["jcode"]==$rowdata1["jcode"]){

@@ -98,7 +98,7 @@ class ML extends DB{
   $this->items=null;
 
   $this->getItemList();
-
+  if(! is_array($this->items["data"])) return false;
   foreach($this->items["data"] as $rownum=>$rowdata){
    if(strtotime($rowdata["saleday"])==strtotime($this->saleday)){
     $items[]=$rowdata;

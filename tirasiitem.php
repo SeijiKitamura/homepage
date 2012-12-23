@@ -59,7 +59,7 @@ catch(Exception $e){
 <?php
 $html="";
 $html="<ul class='group'>\n";
-if(! $clslist){
+if(! $clslist && $linlist){
  foreach($linlist as $rownum=>$rowdata){
   $html.="<li>";
   $html.="<a href='?lincode=".$rowdata["lincode"]."'>";

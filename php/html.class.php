@@ -255,6 +255,7 @@ EOF;
 //----------------------------------------------------------//
  public static function setitem($data){
   $html="";
+  if(! is_array($data)) return false;
   foreach ($data as $rownum=>$rowdata){
    $base=self::item();
 
@@ -317,6 +318,7 @@ EOF;
 
  public static function setitemGoyoyaku($data){
   $html="";
+  if (! is_array($data)) return false;
   foreach ($data as $rownum=>$rowdata){
    $base=self::item();
 
@@ -604,6 +606,9 @@ EOF;
   $flg1="";//サブタイトル
 
   $html="<div class='tirasiitem'>\n";
+
+  if(! is_array($data)) return false;
+
   foreach($data as $rownum=>$rowdata){
    //開始日、終了日が変更なら日付表示
    if($sday!=strtotime($rowdata["sday"]) || $eday!=strtotime($rowdata["eday"])){

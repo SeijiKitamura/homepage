@@ -36,23 +36,25 @@ catch(Exception $e){
 <!--=======================leftside start==============================-->
    <div id="leftside">
 <?php
-$html="";
-$html.="<ul class='group'>";
-foreach ($daylist as $rownum =>$rowdata){
- $html.="<li>";
- if(strtotime($rowdata["saleday"])!=strtotime($db->saleday)){
-  $html.="<a href='?".$db->saleday."'>";
-  $html.=date("m月d日",strtotime($rowdata["saleday"]))."(".$rowdata["cnt"].")";
-  $html.="</a>";
- }//if
- else{
-  $html.=date("m月d日",strtotime($rowdata["saleday"]))."(".$rowdata["cnt"].")";
+if(is_array($daylist)){
+ $html="";
+ $html.="<ul class='group'>";
+ foreach ($daylist as $rownum =>$rowdata){
+  $html.="<li>";
+  if(strtotime($rowdata["saleday"])!=strtotime($db->saleday)){
+   $html.="<a href='?".$db->saleday."'>";
+   $html.=date("m月d日",strtotime($rowdata["saleday"]))."(".$rowdata["cnt"].")";
+   $html.="</a>";
+  }//if
+  else{
+   $html.=date("m月d日",strtotime($rowdata["saleday"]))."(".$rowdata["cnt"].")";
+  }
+  $html.="</li>";
  }
- $html.="</li>";
+ $html.="</ul>";
+ $html.="<div class='clr'></div>";
+ echo $html;
 }
-$html.="</ul>";
-$html.="<div class='clr'></div>";
-echo $html;
 ?>
    </div>
 <!--=======================leftside end  ==============================-->
