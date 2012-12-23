@@ -16,7 +16,6 @@ try{
 
  //メール商品ゲット
  $db=new ML();
- $db->saleday="2012/11/02";
  $db->getMailItem();
  $mailitem=$db->items["data"];
  if($jcode){

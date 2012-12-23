@@ -27,8 +27,6 @@ try{
  
  //チラシ商品ゲット
  $db=new TIRASI();
- $db->flg0="734";
- $db->saleday="2012/11/29";
  $db->getItemList();
  $tirasiitem=$db->items["data"];
  $db->getLinList();

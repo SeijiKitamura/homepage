@@ -22,14 +22,11 @@ try{
  
  //チラシ商品ゲット
  $db=new TIRASI();
- $db->flg0="734";
- $db->saleday="2012/11/29";
  $db->getItemList();
  $tirasi=$db->items["data"];
 
  //メール商品ゲット
  $db=new ML();
- $db->saleday="2012/11/02";
  $db->getMailItem();
  $mailitem=$db->items["data"];
 

@@ -6,11 +6,15 @@ define("DEBUG",true);
 //---------------------------------------------------//
 
 define("HOME","/hp/");             //ルートディレクトリ
-define("SITEDIR","/var/www");      //保存場所(cron用)
+define("SITEDIR","/var/www");  //保存場所(cron用)
+//define("SITEDIR","/home/kitamura/public_html"); //保存場所(cron用)
 
 define("DBHOST"  ,"172.16.0.13");  //サーバー名
 define("DBNAME"  ,"homepage");     //データベース名
 define("DBUSER"  ,"kennpin1");     //DBユーザー名
+//define("DBHOST"  ,"localhost");  //サーバー名
+//define("DBNAME"  ,"kitamura_homepage");     //データベース名
+//define("DBUSER"  ,"kitamura_mysql");     //DBユーザー名
 define("DBPASS"  ,"1");            //DBパスワード
 define("TABLE_PREFIX"   ,"he_");   //テーブルプレフィックス
 
@@ -419,16 +423,16 @@ $CSVCOLUMNS=array(   CAL   =>array(  "saleday"
                                     ,"salestart"
                                     ,"lastsale"
                                    )//JANMAS
-                  ,TB_CLSMAS=>array(//後日、CLSMASに変更すること！
+                  ,CLSMAS   =>array(
                                      "clscode"
                                     ,"clsname"
                                     ,"lincode"
-                                   )//TB_CLSMAS
-                  ,TB_LINMAS=>array(//後日、LINMASに変更すること！
+                                   )//CLSMAS
+                  ,LINMAS   =>array(
                                      "lincode"
                                     ,"linname"
                                     ,"dpscode"
-                                   )//TB_LINMAS
+                                   )//LINMAS
                   ,GOYOYAKU=>array (
                                      "saletype"
                                     ,"saleday"
