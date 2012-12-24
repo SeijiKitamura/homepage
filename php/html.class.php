@@ -168,6 +168,7 @@ EOF;
 // ページリンク用(<ul>を含むhtmlを返す)
 //----------------------------------------------------------//
  public static function setpagelink($data,$page=null){
+  if (! is_array($data)) return false;
   $html ="<ul>\n";
   foreach($data as $rownum=>$rowdata){
    $html.="<li>";

@@ -1,0 +1,7 @@
+<Files update.php>
+ AddHandler application/x-httpd-phpcgi .php
+</Files>
+
+<Files janmas.update.php>
+ AddHandler application/x-httpd-phpcgi .php
+</Files>

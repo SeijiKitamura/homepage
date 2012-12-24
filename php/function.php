@@ -392,6 +392,37 @@ function ADDZERO($jcode){
  return $zero.$j.$b;
 }
 //--------------------------------------------------------------//
+
+function WriteLog($log,$data=null){
+ //ファイル名セット
+ $path=LOGDIR.date("Ymd").".log";
+ if(! file_exists($path)){
+  $fp=fopen($path,"w");
+ }//if
+ else{
+  $fp=fopen($path,"a");
+ }//else
+
+ //ファイル名なし、データなし
+ if(! $data){
+  $log=date("Y-m-d H:i:s")." ".$log."\n";
+  fwrite($fp,$log);
+ }//if
+
+ if($data){
+  //エラーデータ抽出
+  foreach($data as $rownum=>$rowdata){
+   if($rowdata["status"]) continue;
+   $l=$log." ".($rownum+1)."行 ".$rowdata["err"];
+   fwrite($fp,$l);
+  }//foreach
+ }//if
+
+ fclose($fp);
+}
+
+
+
 $ary=array("test"=>1,
            "last"=>3);
 

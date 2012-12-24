@@ -59,7 +59,7 @@ try{
  //$db->saleday="2012/11/21";
  $db->getCalendar();
  $cal=$db->items["data"];
- if($clscode){
+ if($clscode && $cal){
   foreach($cal as $rownum=>$rowdata){
    if($rowdata["clscode"]==$clscode){
     $calcls=$rowdata;

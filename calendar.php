@@ -73,7 +73,7 @@ echo $html;
 //----------------------------------------------------------------//
 // カレンダー情報
 //----------------------------------------------------------------//
-$fname=DATADIR.$saleyear.$salemonth.".html";
+$fname=SITEDIR.HOME.$saleyear.$salemonth.".html";
 $html=file_get_contents($fname);
 //if($cal){
 // echo "<h4>本日のカレンダー情報:\n";
