@@ -18,6 +18,9 @@ if($saleyear && ! is_numeric($saleyear)){
 if($salemonth && ! is_numeric($salemonth)){
  throw new exception("月は数字で入力してください");
 }
+
+if(! $saleyear) $saleyear=date("Y");
+if(! $salemonth) $salemonth=date("m");
 //カレンダーゲット
  $db=new CL();
  if($saleyear && $salemonth){
@@ -26,8 +29,8 @@ if($salemonth && ! is_numeric($salemonth)){
  //$db->saleday="2012/11/21";
  $db->getCalendar();
  $cal=$db->items["data"];
- $db->getItemList();
- $calitem=$db->items["data"];
+ //$db->getItemList();
+ //$calitem=$db->items["data"];
  //当月のカレンダー日数
  $db->getMonthCount();
  $monthcal[]=$db->items["data"];
@@ -70,14 +73,16 @@ echo $html;
 //----------------------------------------------------------------//
 // カレンダー情報
 //----------------------------------------------------------------//
-if($cal){
- echo "<h4>本日のカレンダー情報:\n";
- $j=0;
- $item=null;
- $html=$cal[0]["sname"]." ".$cal[0]["price"]."</h4>\n";
- echo $html;
-}//if
-$html=html::setcalendar($calitem);
+$fname=DATADIR.$saleyear.$salemonth.".html";
+$html=file_get_contents($fname);
+//if($cal){
+// echo "<h4>本日のカレンダー情報:\n";
+// $j=0;
+// $item=null;
+// $html=$cal[0]["sname"]." ".$cal[0]["price"]."</h4>\n";
+// echo $html;
+//}//if
+//$html=html::setcalendar($calitem);
 echo $html;
 ?>
    </div>

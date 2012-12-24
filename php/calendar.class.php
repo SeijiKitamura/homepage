@@ -225,7 +225,7 @@ class CL extends DB{
     $this->saleday=$rowdata["saleday"];
     $this->getItemList();
     $html=html::setcalendar($this->items["data"]);
-    $filename=SITEDIR.HOME."cal/".date("Y",strtotime($rowdata["saleday"])).date("m",strtotime($rowdata["saleday"])).".html";
+    $filename=DATADIR.date("Y",strtotime($rowdata["saleday"])).date("m",strtotime($rowdata["saleday"])).".html";
     file_put_contents($filename,$html);
    }//if
       
