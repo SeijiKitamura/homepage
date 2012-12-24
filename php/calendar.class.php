@@ -16,7 +16,7 @@
 //----------------------------------------------------------//
 require_once("db.class.php");
 require_once("function.php");
-
+require_once("html.class.php");
 class CL extends DB{
  public $items;   //データを格納
  public $saleday; //表示したい日(この日付以降が表示される）
@@ -203,6 +203,36 @@ class CL extends DB{
   $this->items["data"]["tuki"]=$tuki;
   $this->items["data"]["cnt"]=$cnt;
  }//public function getMonthCount(){
-}//TIRASI
+ 
+ public function setHTML(){
+  //登録されているデータをゲット
+  $this->select="saleday";
+  $this->from =TB_SALEITEMS;
+  $this->where="saletype=".$this->saletype;
+  $this->group=$this->select;
+  $this->order=$this->select;
+  $daylist=$this->getArray();
+
+  if(! is_array($daylist)){
+   //YYYYMM.htmlを削除
+   return false;
+  }//if
+
+  $nen=0;
+  $tuki=0;
+  foreach ($daylist as $rownum=>$rowdata){
+   if($tuki!=date("m",strtotime($rowdata["saleday"]))){
+    $this->saleday=$rowdata["saleday"];
+    $this->getItemList();
+    $html=html::setcalendar($this->items["data"]);
+    $filename=SITEDIR.HOME."cal/".date("Y",strtotime($rowdata["saleday"])).date("m",strtotime($rowdata["saleday"])).".html";
+    file_put_contents($filename,$html);
+   }//if
+      
+   $nen=date("Y",strtotime($rowdata["saleday"]));
+   $tuki=date("m",strtotime($rowdata["saleday"]));
+  }//foreach
+ }//public function setHTML(){
+}//CL
 
 ?>
