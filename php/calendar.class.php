@@ -95,6 +95,33 @@ class CL extends DB{
 
  }//public function getClsList(){
 
+
+//----------------------------------------------------------//
+// 指定日の月以降の年月リストを返す
+//----------------------------------------------------------//
+ public function getMonthList(){
+  $uk=strtotime($this->saleday);
+  $sday=date("Y-m-1",$uk);
+  $this->andwhere =" saleday >= '".$sday."'";
+  $this->andwhere.=" and saletype=".$this->saletype;
+  $this->select="t.nen,t.tuki,count(saleday) as cnt";
+  $this->from ="  (select";
+  $this->from.="  date_format(saleday,'%Y') as nen";
+  $this->from.=" ,date_format(saleday,'%m') as tuki";
+  $this->from.=" ,saleday";
+  $this->from.=" ,sname";
+  $this->from.=" from ".TB_SALEITEMS;
+  $this->from.=" where ".$this->andwhere;
+  $this->from.=" group by ";
+  $this->from.="  date_format(saleday,'%Y')";
+  $this->from.=" ,date_format(saleday,'%m')";
+  $this->from.=" ,saleday";
+  $this->from.=" ,sname) as t";
+  $this->group=" t.nen,t.tuki";
+  $this->order=" t.nen,t.tuki";
+  $this->items["data"]=$this->getArray();
+ }//public function getMonthList(){
+
 //----------------------------------------------------------//
 // 指定月のカレンダー情報を返す
 //----------------------------------------------------------//
@@ -168,6 +195,8 @@ class CL extends DB{
   $this->getItemList();
   
   //該当商品抽出
+  if(! $this->items["data"]) return false;
+
   foreach($this->items["data"] as $rownum=>$rowdata){
    if(strtotime($rowdata["saleday"])==strtotime($this->saleday)){
     $item[]=$rowdata;
@@ -204,6 +233,9 @@ class CL extends DB{
   $this->items["data"]["cnt"]=$cnt;
  }//public function getMonthCount(){
  
+//----------------------------------------------------------//
+//カレンダーHTMLを作成する
+//----------------------------------------------------------//
  public function setHTML(){
   //登録されているデータをゲット
   $this->select="saleday";

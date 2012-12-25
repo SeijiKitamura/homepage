@@ -23,22 +23,17 @@ if(! $saleyear) $saleyear=date("Y");
 if(! $salemonth) $salemonth=date("m");
 //カレンダーゲット
  $db=new CL();
- if($saleyear && $salemonth){
-  $db->saleday=$saleyear."-".$salemonth."-1";
- }
- //$db->saleday="2012/11/21";
+ $db->saleday=$saleyear."-".$salemonth."-1";
+
+ //当日のカレンダー情報ゲット
+ $db->saleday=date("Y-m-d");
  $db->getCalendar();
  $cal=$db->items["data"];
- //$db->getItemList();
- //$calitem=$db->items["data"];
- //当月のカレンダー日数
- $db->getMonthCount();
- $monthcal[]=$db->items["data"];
 
- //翌月のカレンダー日数
- $db->saleday=date("Y-m-d",strtotime("1month",strtotime($db->saleday)));
- $db->getMonthCount();
- $monthcal[]=$db->items["data"];
+ //当月以降のカレンダーリストゲット
+ $db->saleday=date("Y-m-d");
+ $db->getMonthList();
+ $monthlist=$db->items["data"];
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
@@ -48,21 +43,26 @@ catch(Exception $e){
 <!--=======================leftside start==============================-->
    <div id="leftside">
 <?php
-$html="";
-$html ="<ul class='group'>";
-$html.="<li>";
-$html.=$monthcal[0]["nen"]."年".$monthcal[0]["tuki"]."月";
-$html.="(".$monthcal[0]["cnt"].")";
-$html.="</li>\n";
-if($monthcal[1]["cnt"]>0){
- $html.="<li><a href='?saleyear=".$monthcal[1]["nen"]."&salemonth=".$monthcal[1]["tuki"]."'>\n";
- $html.=$monthcal[1]["nen"]."年".$monthcal[1]["tuki"]."月";
- $html.="(".$monthcal[1]["cnt"].")";
- $html.="</a></li>\n";
+if($monthlist){
+ $html="";
+ $html ="<ul class='group'>";
+ foreach($monthlist as $rownum=>$rowdata){
+  $html.="<li>";
+  if($rowdata["nen"]!=$saleyear || $rowdata["tuki"]!=$salemonth){
+   $html.="<a href='?saleyear=".$rowdata["nen"]."&salemonth=".$rowdata["tuki"]."'>";
+  }//if
+  
+  $html.=$rowdata["nen"]."年".$rowdata["tuki"]."月(".$rowdata["cnt"].")";
+
+  if($rowdata["nen"]!=$saleyear || $rowdata["tuki"]!=$salemonth){
+   $html.="</a>";
+  }//if
+  $html.="</li>\n";
+ }//foreach
+ $html.="</ul>";
+ $html.="<div class='clr'></div>\n";
+ echo $html;
 }
-$html.="</ul>";
-$html.="<div class='clr'></div>\n";
-echo $html;
 ?>
    </div>
 <!--=======================leftside end  ==============================-->
