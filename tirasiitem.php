@@ -11,6 +11,7 @@ try{
  $lincode=$_GET["lincode"];
  $clscode=$_GET["clscode"];
  $jcode=$_GET["jcode"];
+ $hiduke=$_GET["hiduke"];
 
  //引数チェック
  if($lincode &&! is_numeric($lincode)){
@@ -25,8 +26,13 @@ try{
   throw new exception("JANコードは数字で入力してください。");
  }//if
  
+ if($hiduke && ! CHKDATE($hiduke)){
+  throw new exception("日付を確認してください。");
+ }
+
  //チラシ商品ゲット
  $db=new TIRASI();
+ if($hiduke) $db->saleday=$hiduke;
  $db->getItemList();
  $tirasiitem=$db->items["data"];
  $db->getLinList();
@@ -51,6 +57,7 @@ try{
 }//try
 catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
+ print_r($err);
 }
 ?>
 

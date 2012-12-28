@@ -32,15 +32,6 @@ class TIRASI extends DB{
   //表示したい日
   $this->saleday=date("Y-m-d");
 
-  //掲載号確定
-  $this->select="*";
-  $this->from =TB_SALEITEMS;
-  $this->where =" flg1<='".$this->saleday."'";
-  $this->where.=" and flg2>='".$this->saleday."'";
-  $this->order =" saleday";
-  $titles=$this->getArray();
-  $this->flg0=$titles[0]["flg0"];
-
   //セールタイプ番号ゲット
   $this->saletype=0;
 
@@ -48,6 +39,15 @@ class TIRASI extends DB{
  }//__construct
  
  protected function setwhere(){
+  //掲載号確定
+  $this->select="saleday,flg0";
+  $this->from =TB_SALEITEMS;
+  $this->where =" saletype=".$this->saletype;
+  $this->where.=" and saleday>='".$this->saleday."'";
+  $this->order =" saleday";
+  $titles=$this->getArray();
+  $this->flg0=$titles[0]["flg0"];
+
   $this->andwhere =" flg0='".$this->flg0."'";
   $this->andwhere.=" and saleday>='".$this->saleday."'";
   $this->andwhere.=" and saletype=".$this->saletype;

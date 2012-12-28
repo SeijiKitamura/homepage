@@ -609,7 +609,8 @@ EOF;
   $html="<div class='tirasiitem'>\n";
 
   if(! is_array($data)) return false;
-
+  $datacnt=0;
+  $titlecnt=0;
   foreach($data as $rownum=>$rowdata){
    //開始日、終了日が変更なら日付表示
    if($sday!=strtotime($rowdata["sday"]) || $eday!=strtotime($rowdata["eday"])){
@@ -617,17 +618,36 @@ EOF;
     $owari=date("n月j日",strtotime($rowdata["eday"]));
     if($kaisi==$owari) $kikan=$kaisi."限り";
     else $kikan=$kaisi."から".$owari."まで";
-    $html.="<div class='clr'></div>\n";
-    $html.="<h4>".$kikan."</h4>\n";
+    //$html.="<div class='clr'></div>\n";
+    //$html.="<h4>".$kikan."</h4>\n";
    }//if
 
    //サブタイトル変更なら表示
    if($flg1!=$rowdata["flg1"]){
     $title=$rowdata["flg1"];
-    $html.="<div class='clr'></div>\n";
-    $html.="<h3>".$title."</h3>\n";
+    //$html.="<div class='clr'></div>\n";
+    //$html.="<h3>".$title."</h3>\n";
    }//if
 
+   if($sday!=strtotime($rowdata["sday"]) || $eday!=strtotime($rowdata["eday"]) || $flg1!=$rowdata["flg1"]){
+    $titlecnt++;
+    if($titlecnt > PAGETITLE){ //config.php(PAGETITLEごとに改ページ)
+     $html.="<div class='pageview'>\n";
+     $html.="<pre>".$GLOBALS["MENSEKI"]."</pre>\n";
+     $html.="</div>\n";
+     $html.="<div class='pagebreak'></div>\n";
+     $html.="<div class='pageview'>\n";
+     $html.="<div class='clr'></div>\n";
+     $html.="<img src='".IMG.LOGONAME."'>\n";
+     //$html.="<h3>".$kikan." ".$title."</h3>\n";
+     $html.="</div>\n";
+     $datacnt=1;
+     $titlecnt=1;
+    }
+    $html.="<div class='clr'></div>\n";
+    //$html.="<h3>".$kikan." ".$title."</h3>\n";
+    $html.="<h3>".$title." ".$kikan."</h3>\n";
+   }
    //アイテム表示
    $base=self::item();
 
@@ -670,6 +690,22 @@ EOF;
    $sday=strtotime($rowdata["sday"]);
    $eday=strtotime($rowdata["eday"]);
    $flg1=$rowdata["flg1"];
+
+   $datacnt++;
+   if($datacnt % PAGEITEM ===0){ //config.php(PAGEITEMごとに改ページ)
+    $html.="<div class='pageview'>\n";
+    $html.="<div class='clr'></div>\n";
+    $html.="<pre>".$GLOBALS["MENSEKI"]."</pre>\n";
+    $html.="</div>\n";
+    $html.="<div class='pagebreak'></div>\n";
+    $html.="<div class='pageview'>\n";
+    $html.="<div class='clr'></div>\n";
+    $html.="<img src='".IMG.LOGONAME."'>\n";
+    $html.="<h3>".$kikan." ".$title."</h3>\n";
+    $html.="</div>\n";
+    $datacnt=1;
+    $titlecnt=1;
+   }
   }//foreach
   $html.="<div class='clr'></div>\n";
   $html.="</div>\n";

@@ -23,6 +23,15 @@ div.clr{
  clear:both;
 }
 
+div.pagebreak{
+ page-break-after:always;
+}
+
+div.pageview{
+ display:block;
+}
+
+
 div#wrapper{
  width:100%;
  margin:0;
@@ -39,29 +48,39 @@ div.logo{
 }
 
 div.item{
- width:120px;
- height:200px;
+ width:130px;
  margin:2px;
  padding:3px;
  float:left;
  border:solid 1px #A9A9A9;
 }
 
+div.imgdiv {
+ width:120px;
+ height:180px;
+ margin:5px;
+}
 div.imgdiv a img {
  width:100%;
 }
 
-div.saletype{
- display:none;
+div.datadiv{
+ width:120px;
+ margin:5px;
 }
 
 h3.sname{
+ width:90%;
  height:2.4em;
+ overflow:hidden;
 }
 div.tani{
  width:50px;
+ height:1.4em;
+ font-size:6pt;
  float:left;
- text-align:right;
+ text-align:left;
+ overflow:hidden;
 }
 div.price{
  font-size:18pt;
@@ -73,10 +92,17 @@ div.price span{
  color:red;
 }
 div.notice{
+ width:90%;
+ height:2.4em;
  font-size:8pt;
+ overflow:hidden;
 }
+
 div.lastsale{
- display:none;
+ width:90%;
+ height:1.4em;
+ font-size:8pt;
+ overflow:hidden;
 }
 
 div.tanpin{
