@@ -21,6 +21,8 @@ try{
  catch(Exception $e){ echo $e->getMessage()."<br/>"; }
  try{ $db->setClsMas();}
  catch(Exception $e){ echo $e->getMessage()."<br/>"; }
+ try{ $db->setPageConf();}
+ catch(Exception $e){ echo $e->getMessage()."<br/>"; }
  
  try{
   $db=new CL();

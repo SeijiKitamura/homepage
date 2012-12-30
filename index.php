@@ -59,11 +59,10 @@ echo $html;
 // カレンダー情報
 //----------------------------------------------------------------//
 if($cal){
- echo "<h2>本日のカレンダー情報</h2>\n";
  $j=0;
  $item=null;
  $html=$cal[0]["sname"]." ".$cal[0]["price"];
- echo "<h3>".$html."</h3>\n";
+ echo "<h2>本日のカレンダー情報 | ".$html."</h2>\n";
 }//if
 
 
@@ -71,7 +70,6 @@ if($cal){
 // 広告の品表示
 //----------------------------------------------------------------//
 if($tirasi){
- echo "<h2><a href='tirasiitem.php'>広告の品</a></h2>";
 
  //5アイテムに絞る
  $item=null;
@@ -83,6 +81,7 @@ if($tirasi){
  }
  $html=html::setitemTirasi($item);
  $html=preg_replace("/\?/","tirasiitem.php?",$html);
+ echo "<h2><a href='tirasiitem.php'>広告の品</a></h2>";
  echo $html;
 
 }//if

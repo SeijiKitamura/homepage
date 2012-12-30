@@ -18,10 +18,11 @@ define("DBUSER"  ,"kennpin1");     //DBユーザー名
 define("DBPASS"  ,"1");            //DBパスワード
 define("TABLE_PREFIX"   ,"he_");   //テーブルプレフィックス
 
-define("LOGONAME","logo2.jpg");          //ロゴファイル名
-define("LOGOMSG" ,"スーパーキタムラ");   //ロゴメッセージ
-define("FAVNAME" ,"kitamura.ico");       //ファビコンファイル名
-define("JQNAME"  ,"jquery.js");          //jQueryファイル名
+define("LOGONAME" ,"logo2.jpg");          //ロゴファイル名
+define("LOGOMSG"  ,"スーパーキタムラ");   //ロゴメッセージ
+define("CORPNAME" ,"スーパーキタムラ");   //会社名
+define("FAVNAME"  ,"kitamura.ico");       //ファビコンファイル名
+define("JQNAME"   ,"jquery.js");          //jQueryファイル名
 
 
 define("JANMASLIMIT",10);//1画面に表示させるアイテム数 

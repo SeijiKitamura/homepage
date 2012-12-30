@@ -25,6 +25,9 @@ class html{
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta http-equiv="Content-Script-Type" content="text/javascript">
   <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="__CACHEDATE__">
   <meta name="description" content="__description__">
   
   <link rel="icon" href="__FAV__" type="type/ico" sizes="16x16" /> 
@@ -33,7 +36,7 @@ class html{
   <link rel="next" href="__next__" />
   <link rel="prev" href="__prev__"/> 
   
-  <title> __title__ </title>
+  <title> __title__ | __CORPNAME__ </title>
   
   <script type="text/javascript" src="__JQUERY__"></script>
  </head>
@@ -68,6 +71,16 @@ EOF;
   $val=JQ;//config.php
   $html=str_replace($pattern,$val,$html);
 
+  //会社名をセット
+  $pattern="__CORPNAME__";
+  $val=CORPNAME;//config.php
+  $html=str_replace($pattern,$val,$html);
+
+  //キャッシュ有効日をセット
+  $pattern="__CACHEDATE__";
+  $val=gmdate("D,d M Y H:i:s",strtotime("1day"))." GMT";
+  $html=str_replace($pattern,$val,$html);
+
   return $html;
  }//public static function sethead($page){
 
@@ -84,7 +97,7 @@ EOF;
 <!-- -------------- div logo   start ---------------------- -->
     <div class="logo">
      <a href="index.php">
-      <img src="__LOGO__" alt="__LOGOMSG__">
+      <img src="__LOGO__" alt="__CORPNAME__">
      </a>
     </div>
 <!-- -------------- div logo   end   ---------------------- -->
@@ -118,8 +131,8 @@ EOF;
   $html=str_replace($pattern,$replace,$html);
 
   //ロゴメッセージをセット
-  $pattern="__LOGOMSG__";
-  $replace=LOGOMSG;
+  $pattern="__CORPNAME__";
+  $replace=CORPNAME;
   $html=str_replace($pattern,$replace,$html);
 
   //トップグループをセット
