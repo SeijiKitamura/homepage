@@ -16,24 +16,6 @@ catch(Exception $e){
 }
 ?>
 
-<!-- *********************  leftside start   ***************** -->
-  <div id="leftside">
-<?php
- $html="";
- foreach($grp as $rownum=>$rowdata){
-  $html.="<li>";
-  $html.="<a href='".$rowdata["url"]."'>";
-  $html.=$rowdata["title"];
-  $html.="</a>";
-  $html.="</li>\n";
- }//foreach
- $html="<ul class='group'>".$html."</ul>";
- echo $html;
-
-?>
-   </div>
-<!-- *********************  leftside end     ***************** -->
-
    <div id="main">
     <dl class="about">
      <dt>会社名</dt>
@@ -61,6 +43,25 @@ catch(Exception $e){
     </dl>
    </div>
 <!-- --------------------  main      end   --------------------------  -->
+
+<!-- *********************  leftside start   ***************** -->
+  <div id="leftside">
+<?php
+ $html="";
+ foreach($grp as $rownum=>$rowdata){
+  $html.="<li>";
+  $html.="<a href='".$rowdata["url"]."'>";
+  $html.=$rowdata["title"];
+  $html.="</a>";
+  $html.="</li>\n";
+ }//foreach
+ $html="<ul class='group'>".$html."</ul>";
+ echo $html;
+
+?>
+   </div>
+<!-- *********************  leftside end     ***************** -->
+
 
 <!-- --------------------  footer start  ---------------------------  -->
 <?php

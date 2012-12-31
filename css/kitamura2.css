@@ -130,7 +130,7 @@ ul.group>li>a:hover{
 /*main*/
 div#main{
  width:800px;
- float:left;
+ float:right;
 }
 
 dl.enkaku>dt,

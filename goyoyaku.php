@@ -49,32 +49,6 @@ catch(Exception $e){
 }
 ?>
 
-<!--=======================leftside start==============================-->
-   <div id="leftside">
-<?php
-if($grplist){
- $html="";
- $html="<ul class='group'>\n";
- foreach($grplist as $rownum=>$rowdata){
-  $html.="<li>";
-  if($grpcode!=$rowdata["grpcode"]){
-   $html.="<a href='?grpcode=".$rowdata["grpcode"]."'>";
-  }
- 
-  $html.=$rowdata["grpname"]." "."(".$rowdata["cnt"].")";
- 
-  if($grpcode!=$rowdata["grpcode"]){
-   $html.="</a>";
-  }
-  $html.="</li>\n";
- }//foreach
- $html.="</ul>\n";
- echo $html;
-}
-?>
-   </div>
-<!--=======================leftside end  ==============================-->
-
 <!--=======================main      start=============================-->
    <div id="main">
 <?php
@@ -108,6 +82,33 @@ echo "</div>";
 ?>
    </div>
 <!--=======================main      end  =============================-->
+
+<!--=======================leftside start==============================-->
+   <div id="leftside">
+<?php
+if($grplist){
+ $html="";
+ $html="<ul class='group'>\n";
+ foreach($grplist as $rownum=>$rowdata){
+  $html.="<li>";
+  if($grpcode!=$rowdata["grpcode"]){
+   $html.="<a href='?grpcode=".$rowdata["grpcode"]."'>";
+  }
+ 
+  $html.=$rowdata["grpname"]." "."(".$rowdata["cnt"].")";
+ 
+  if($grpcode!=$rowdata["grpcode"]){
+   $html.="</a>";
+  }
+  $html.="</li>\n";
+ }//foreach
+ $html.="</ul>\n";
+ echo $html;
+}
+?>
+   </div>
+<!--=======================leftside end  ==============================-->
+
 
 <!--=======================footer    start=============================-->
 <?php

@@ -16,28 +16,6 @@ catch(Exception $e){
 }
 ?>
 
-<!-- *********************  leftside start   ***************** -->
-  <div id="leftside">
-<?php
- $html="";
- foreach($grp as $rownum=>$rowdata){
-  $html.="<li>";
-  if($rowdata["url"]!=$base){
-   $html.="<a href='".$rowdata["url"]."'>";
-  }
-  $html.=$rowdata["title"];
-  if($rowdata["url"]!=$base){
-   $html.="</a>";
-  }
-  $html.="</li>\n";
- }//foreach
- $html="<ul class='group'>".$html."</ul>";
- echo $html;
-
-?>
-   </div>
-<!-- *********************  leftside end     ***************** -->
-
    <div id="main">
     <dl class="enkaku">
      <dt>1958年</dt>
@@ -82,6 +60,29 @@ catch(Exception $e){
      <dd>ホーム館閉店</dd>
    </div>
 <!-- --------------------  main      end   --------------------------  -->
+
+<!-- *********************  leftside start   ***************** -->
+  <div id="leftside">
+<?php
+ $html="";
+ foreach($grp as $rownum=>$rowdata){
+  $html.="<li>";
+  if($rowdata["url"]!=$base){
+   $html.="<a href='".$rowdata["url"]."'>";
+  }
+  $html.=$rowdata["title"];
+  if($rowdata["url"]!=$base){
+   $html.="</a>";
+  }
+  $html.="</li>\n";
+ }//foreach
+ $html="<ul class='group'>".$html."</ul>";
+ echo $html;
+
+?>
+   </div>
+<!-- *********************  leftside end     ***************** -->
+
 
 <!-- --------------------  footer start  ---------------------------  -->
 <?php

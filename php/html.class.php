@@ -29,7 +29,8 @@ class html{
   <meta http-equiv="cache-control" content="no-cache">
   <meta http-equiv="expires" content="__CACHEDATE__">
   <meta name="description" content="__description__">
-  
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2,user-scalable=yes">
+  <meta name="format-detection" content="telephone=no">
   <link rel="icon" href="__FAV__" type="type/ico" sizes="16x16" /> 
   <link rel="stylesheet" href="__CSS____css__" media="screen"/> 
   <link rel="stylesheet" href="__CSS__print.css" media="print"/> 
@@ -81,6 +82,11 @@ EOF;
   $val=gmdate("D,d M Y H:i:s",strtotime("1day"))." GMT";
   $html=str_replace($pattern,$val,$html);
 
+  if(is_mobile()){
+   $pattern="/\.css/";
+   $replace=".smart.css";
+   $html=preg_replace($pattern,$replace,$html);
+  }
   return $html;
  }//public static function sethead($page){
 
@@ -155,7 +161,7 @@ private static function footer(){
  $html=<<<EOF
    <div class="clr"></div>
    <div id="footer">
-    <div class="corp">__CORP__</div>
+    <!-- div class="corp">__CORP__</div -->
     <div class="footerlink">__TIMESALE__</div>
    </div>
   </div>
@@ -170,7 +176,7 @@ EOF;
 //----------------------------------------------------------//
  public static function setfooter($base,$topgrp,$centergrp){
   $html=self::footer();
-  $html=str_replace("__CORP__",$GLOBALS["KAISYAMEI"],$html);
+  //$html=str_replace("__CORP__",$GLOBALS["KAISYAMEI"],$html);
   $replace =self::setpagelink($centergrp,$base);
   $replace.=self::setpagelink($topgrp,$base);
   $html=str_replace("__TIMESALE__",$replace,$html);
@@ -734,4 +740,25 @@ EOF;
   return $item;
  }//public static function outJan($data,$jcode){
 }//class html{
+
+function is_mobile () {
+ $useragents = array(
+ 'iPhone', // Apple iPhone
+ 'iPod', // Apple iPod touch
+ 'Android', // 1.5+ Android
+ 'dream', // Pre 1.5 Android
+ 'CUPCAKE', // 1.5+ Android
+ 'blackberry9500', // Storm
+ 'blackberry9530', // Storm
+ 'blackberry9520', // Storm v2
+ 'blackberry9550', // Storm v2
+ 'blackberry9800', // Torch
+ 'webOS', // Palm Pre Experimental
+ 'incognito', // Other iPhone browser
+ 'webmate' // Other iPhone browser
+ );
+ $pattern = '/'.implode('|', $useragents).'/i';
+ return preg_match($pattern, $_SERVER['HTTP_USER_AGENT']);
+}
+
 ?>

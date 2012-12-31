@@ -42,16 +42,6 @@ catch(Exception $e){
 }
 ?>
 
-<!-- *********************  leftside start   ***************** -->
-  <div id="leftside">
-<?php
-$html=html::setgroup($grp,"item.php?lincode=","lincode","linname");
-//taniとnoticeを除外
-echo $html;
-?>
-   </div>
-<!-- *********************  leftside end     ***************** -->
-
    <div id="main">
 <?php
 
@@ -127,12 +117,23 @@ if($newitem){
  echo $html;
 }//if
 
-echo "<pre>";
+echo "<div>";
 echo $GLOBALS["MENSEKI"];
-echo "</pre>";
+echo "</div>";
 ?>
    </div>
 <!-- --------------------  main      end   --------------------------  -->
+
+<!-- *********************  leftside start   ***************** -->
+  <div id="leftside">
+<?php
+$html=html::setgroup($grp,"item.php?lincode=","lincode","linname");
+//taniとnoticeを除外
+echo $html;
+?>
+   </div>
+<!-- *********************  leftside end     ***************** -->
+
 
 <!-- --------------------  footer  start  ---------------------------  -->
 <?php

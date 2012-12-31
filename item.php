@@ -73,41 +73,6 @@ catch(Exception $e){
  $err[]="エラー:".$e->getMessage();
 }
 ?>
-<!--=======================leftside start==============================-->
-   <div id="leftside">
-<?php
-$html="";
-$html="<ul class='group'>\n";
-if(! $clslist){
- foreach($linlist as $rownum=>$rowdata){
-  $html.="<li>";
-  $html.="<a href='?lincode=".$rowdata["lincode"]."'>";
-  $html.=$rowdata["linname"]." "."(".$rowdata["cnt"].")";
-  $html.="</a>";
-  $html.="</li>\n";
- }//foreach
-}//if
-elseif($clslist){
- foreach($clslist as $rownum=>$rowdata){
-  $html.="<li>";
-  if($rowdata["clscode"]!=$clscode){
-   $html.="<a href='?lincode=".$lincode."&clscode=".$rowdata["clscode"]."'>";
-   $html.=$rowdata["clsname"]." "."(".$rowdata["cnt"].")";
-   $html.="</a>";
-  }
-  else{
-   $html.=$rowdata["clsname"]." "."(".$rowdata["cnt"].")";
-  }
-  $html.="</li>\n";
- }//foreach
-}//elseif
-$html.="</ul>\n";
-echo $html;
-
-?>
-   </div>
-<!--=======================leftside end  ==============================-->
-
 <!--=======================main      start=============================-->
    <div id="main">
 <?php
@@ -196,13 +161,49 @@ echo $html;
 echo $navi;
 
 if($itemdata){
- echo "<pre>";
+ echo "<div>";
  echo $GLOBALS["MENSEKI"];
- echo "</pre>";
+ echo "</div>";
 }
 ?>
    </div>
 <!--=======================main      end  =============================-->
+
+<!--=======================leftside start==============================-->
+   <div id="leftside">
+<?php
+$html="";
+$html="<ul class='group'>\n";
+if(! $clslist){
+ foreach($linlist as $rownum=>$rowdata){
+  $html.="<li>";
+  $html.="<a href='?lincode=".$rowdata["lincode"]."'>";
+  $html.=$rowdata["linname"]." "."(".$rowdata["cnt"].")";
+  $html.="</a>";
+  $html.="</li>\n";
+ }//foreach
+}//if
+elseif($clslist){
+ foreach($clslist as $rownum=>$rowdata){
+  $html.="<li>";
+  if($rowdata["clscode"]!=$clscode){
+   $html.="<a href='?lincode=".$lincode."&clscode=".$rowdata["clscode"]."'>";
+   $html.=$rowdata["clsname"]." "."(".$rowdata["cnt"].")";
+   $html.="</a>";
+  }
+  else{
+   $html.=$rowdata["clsname"]." "."(".$rowdata["cnt"].")";
+  }
+  $html.="</li>\n";
+ }//foreach
+}//elseif
+$html.="</ul>\n";
+echo $html;
+
+?>
+   </div>
+<!--=======================leftside end  ==============================-->
+
 
 <!--=======================footer    start=============================-->
 <?php

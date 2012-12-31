@@ -15,27 +15,6 @@ catch(Exception $e){
 }
 ?>
 
-<!-- *********************  leftside start   ***************** -->
-  <div id="leftside">
-<?php
- $html="";
- foreach($grp as $rownum=>$rowdata){
-  $html.="<li>";
-  if($rowdata["pagename"]!=$base){
-   $html.="<a href='".$rowdata["url"]."'>";
-  }
-  $html.=$rowdata["title"];
-  if($rowdata["pagename"]!=$base){
-   $html.="</a>";
-  }
-  $html.="</li>\n";
- }//foreach
- $html="<ul class='group'>".$html."</ul>";
- echo $html;
-?>
-   </div>
-<!-- *********************  leftside end     ***************** -->
-
    <div id="main">
     <h1>会社の生い立ち</h1>
     <h2>創業</h2>
@@ -83,6 +62,28 @@ catch(Exception $e){
 
    </div>
 <!-- --------------------  main      end   --------------------------  -->
+
+<!-- *********************  leftside start   ***************** -->
+  <div id="leftside">
+<?php
+ $html="";
+ foreach($grp as $rownum=>$rowdata){
+  $html.="<li>";
+  if($rowdata["pagename"]!=$base){
+   $html.="<a href='".$rowdata["url"]."'>";
+  }
+  $html.=$rowdata["title"];
+  if($rowdata["pagename"]!=$base){
+   $html.="</a>";
+  }
+  $html.="</li>\n";
+ }//foreach
+ $html="<ul class='group'>".$html."</ul>";
+ echo $html;
+?>
+   </div>
+<!-- *********************  leftside end     ***************** -->
+
 
 <!-- --------------------  footer start  ---------------------------  -->
 <?php
