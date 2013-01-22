@@ -292,6 +292,9 @@ function CHKCD($jcode){
   return false;
  }
 
+ //4桁1000番台はスルー
+ if(preg_match("/^1[0-9]{3}$/",$j)) return true;
+
  //元CDゲット
  $c=substr($j,-1,1);
 
