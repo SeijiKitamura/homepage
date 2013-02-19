@@ -32,6 +32,14 @@ div.pageview{
 }
 
 
+h2{
+ font-size:18pt;
+}
+
+h3{
+ font-size:14pt;
+}
+
 div#wrapper{
  width:100%;
  margin:0;
@@ -91,9 +99,17 @@ div.price span{
  font-size:6pt;
  color:red;
 }
+
 div.notice{
  width:90%;
  height:2.4em;
+ font-size:8pt;
+ overflow:hidden;
+}
+
+div.goyoyaku div.notice{
+ width:90%;
+ height:4.4em;
  font-size:8pt;
  overflow:hidden;
 }

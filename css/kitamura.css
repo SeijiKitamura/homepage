@@ -249,6 +249,12 @@ div.datadiv  div.notice{
  text-align:right;
 }
 
+
+div.goyoyaku div.datadiv  div.notice{
+ height:6.5em;
+ text-align:left;
+}
+
 div.datadiv  div.lastsale{
  font-size:10px;
  width:100%;

@@ -165,7 +165,7 @@ div.datadiv h3.sname{
  margin:0;
  word-break:break-all;
  overflow:hidden;
- font-size:20px;
+ font-size:16px;
 }
 
 div.datadiv  h3.sname a{
@@ -204,6 +204,11 @@ div.datadiv  div.notice{
  height:2.5em;
  overflow:hidden;
  text-align:right;
+}
+
+div#goyoyaku div.datadiv div.notice{
+ height:4.5em;
+ text-align:left;
 }
 
 div.datadiv  div.lastsale{

@@ -338,6 +338,7 @@ EOF;
 
  public static function setitemGoyoyaku($data){
   $html="";
+  $html="<div class='goyoyaku'>\n";
   if (! is_array($data)) return false;
   foreach ($data as $rownum=>$rowdata){
    $base=self::item();
@@ -395,6 +396,7 @@ EOF;
   }//foreach
   
   $html.="<div class='clr'></div>\n";
+  $html.="</div>\n";
   return $html;
  }//public static function setitemGoyoyaku($data){
 
