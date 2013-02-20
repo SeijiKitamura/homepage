@@ -24,6 +24,8 @@ if(! $salemonth) $salemonth=date("m");
 //カレンダーゲット
  $db=new CL();
  $db->saleday=$saleyear."-".$salemonth."-1";
+ $db->getItemList();
+ $calitem=$db->items["data"];
 
  //当日のカレンダー情報ゲット
  $db->saleday=date("Y-m-d");
@@ -48,14 +50,14 @@ catch(Exception $e){
 //----------------------------------------------------------------//
 $fname=SITEDIR.HOME.$saleyear.$salemonth.".html";
 $html=file_get_contents($fname);
-//if($cal){
-// echo "<h4>本日のカレンダー情報:\n";
-// $j=0;
-// $item=null;
-// $html=$cal[0]["sname"]." ".$cal[0]["price"]."</h4>\n";
-// echo $html;
-//}//if
-//$html=html::setcalendar($calitem);
+if($cal){
+ echo "<h4>本日のカレンダー情報:\n";
+ $j=0;
+ $item=null;
+ $html=$cal[0]["sname"]." ".$cal[0]["price"]."</h4>\n";
+ echo $html;
+}//if
+$html=html::setcalendar($calitem);
 echo $html;
 ?>
    </div>
