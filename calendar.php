@@ -48,15 +48,15 @@ catch(Exception $e){
 //----------------------------------------------------------------//
 // カレンダー情報
 //----------------------------------------------------------------//
-$fname=SITEDIR.HOME.$saleyear.$salemonth.".html";
-$html=file_get_contents($fname);
-if($cal){
- echo "<h4>本日のカレンダー情報:\n";
- $j=0;
- $item=null;
- $html=$cal[0]["sname"]." ".$cal[0]["price"]."</h4>\n";
- echo $html;
-}//if
+//$fname=SITEDIR.HOME.$saleyear.$salemonth.".html";
+//$html=file_get_contents($fname);
+//if($cal){
+// echo "<h4>本日のカレンダー情報:\n";
+// $j=0;
+// $item=null;
+// $html=$cal[0]["sname"]." ".$cal[0]["price"]."</h4>\n";
+// echo $html;
+//}//if
 $html=html::setcalendar($calitem);
 echo $html;
 ?>

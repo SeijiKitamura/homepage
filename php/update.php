@@ -7,6 +7,8 @@ try{
  $db=new ImportData();
  echo date("Y-m-d H:i:s")." 更新処理開始<br/>";
  //CSVデータ更新
+ try{ $db->setJanMas();}    
+ catch(Exception $e){ echo $e->getMessage()."<br/>"; }
  try{ $db->setItem();}    
  catch(Exception $e){ echo $e->getMessage()."<br/>"; }
  try{ $db->setCal();}

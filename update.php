@@ -5,6 +5,8 @@ try{
  //インスタンス生成
  $db=new ImportData();
  echo "更新処理開始<br/>";
+ try{ $db->setJanMas();}    
+ catch(Exception $e){ echo $e->getMessage()."<br/>"; }
  try{ $db->setItem();}    
  catch(Exception $e){ echo $e->getMessage()."<br/>"; }
  try{ $db->setCal();}

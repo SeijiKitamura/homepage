@@ -7,17 +7,15 @@ define("DEBUG",true);
 
 define("HOME","/hp/");             //ルートディレクトリ
 define("SITEDIR","/var/www");  //保存場所(cron用)
+//define("SITEDIR","/home/kitamura/public_html"); //保存場所(cron用)
+
 define("DBHOST"  ,"172.16.0.13");  //サーバー名
 define("DBNAME"  ,"homepage");     //データベース名
 define("DBUSER"  ,"kennpin1");     //DBユーザー名
-define("DBPASS"  ,"1");            //DBパスワード
-
-//define("SITEDIR","/virtual/kitamuraj/public_html/www2.kita-grp.co.jp");
 //define("DBHOST"  ,"localhost");  //サーバー名
-//define("DBNAME"  ,"kitamuraj_test");     //データベース名
-//define("DBUSER"  ,"kitamuraj_test");     //DBユーザー名
-//define("DBPASS"  ,"ld7dKruu");            //DBパスワード 
-
+//define("DBNAME"  ,"kitamura_homepage");     //データベース名
+//define("DBUSER"  ,"kitamura_mysql");     //DBユーザー名
+define("DBPASS"  ,"1");            //DBパスワード
 define("TABLE_PREFIX"   ,"he_");   //テーブルプレフィックス
 
 define("LOGONAME" ,"logo2.jpg");          //ロゴファイル名
@@ -141,18 +139,18 @@ define("PAGECONFCSV",DATADIR.PAGECONF.".csv");  //ページごとの設定
 //---------------------------------------------------//
 // DB テーブル名定数
 //---------------------------------------------------//
-define("TB_CAL"         ,TABLE_PREFIX.CAL);       //カレンダー
-define("TB_TITLES"      ,TABLE_PREFIX.TITLES);    //チラシタイトル(削除予定)
 define("TB_ITEMS"       ,TABLE_PREFIX.ITEMS);     //チラシデータ
 define("TB_JANMAS"      ,TABLE_PREFIX.JANMAS);    //単品マスタ
 define("TB_CLSMAS"      ,TABLE_PREFIX.CLSMAS);    //クラスマスタ
 define("TB_LINMAS"      ,TABLE_PREFIX.LINMAS);    //部門マスタ
-define("TB_RESERVE"     ,TABLE_PREFIX.RESERVE);   //ご予約
-define("TB_USER"        ,TABLE_PREFIX.USER);      //お客様マスタ
-define("TB_MAILLIST"    ,TABLE_PREFIX.MAILLIST);  //メール(削除予定)
-define("TB_MAILITEMS"   ,TABLE_PREFIX.MAILITEMS); //メール(削除予定）
 define("TB_SALEITEMS"   ,TABLE_PREFIX.SALEITEMS); //アイテム
 define("TB_PAGECONF"    ,TABLE_PREFIX.PAGECONF);  //ページ設定
+define("TB_CAL"         ,TABLE_PREFIX.CAL);       //カレンダー(削除予定)
+define("TB_TITLES"      ,TABLE_PREFIX.TITLES);    //チラシタイトル(削除予定)
+define("TB_RESERVE"     ,TABLE_PREFIX.RESERVE);   //ご予約(削除予定)
+define("TB_USER"        ,TABLE_PREFIX.USER);      //お客様マスタ(削除予定)
+define("TB_MAILLIST"    ,TABLE_PREFIX.MAILLIST);  //メール(削除予定)
+define("TB_MAILITEMS"   ,TABLE_PREFIX.MAILITEMS); //メール(削除予定）
 
 //---------------------------------------------------//
 // DB テーブル列系定数
